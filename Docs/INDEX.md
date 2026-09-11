@@ -2,9 +2,9 @@
 
 Навигация по всей рабочей папке: [E:/Game/README](../../README.md). [File organization F1](Changes/FILE_ORGANIZATION_F1_2026-09-11.md): Releases для готовых ZIP, Archive для старых версий, References для внешних исходников; игровой UE-проект на прежнем месте.
 
-Последнее изменение: [Git LFS baseline B1](Changes/GIT_BASELINE_B1_2026-09-11.md), 11 сентября — локальный commit `7bb0048…`, Evidence вне Git, remote нет.
+Последнее изменение: [Phased ops remote SKIP + ops](Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md), 11 сентября.
 
-Предыдущее: [Repo check / doc fix](Changes/REPO_CHECK_FIX_2026-09-11.md), 11 сентября — повторная проверка после F1, правка README и удаление пустого leftover `.git`.
+Предыдущее: [Off-device backup B1](Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md), 11 сентября — копия на `D:\Backups\CalmyPiratesCo-2026-09-11`, проверки PASS.
 
 Новый отдельный артефакт: [Windows share P1](Changes/WINDOWS_SHARE_P1_2026-09-11.md), 11 сентября — текущая самостоятельная Windows-игра в ZIP для друга, исправленный cook динамических моделей и проверка из распакованной копии.
 

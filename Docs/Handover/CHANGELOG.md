@@ -1,5 +1,13 @@
 # Журнал продолжения проекта
 
+## 2026-09-11 — Phased ops: remote SKIP + ops hardening
+
+[Отчёт](../Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md): remote пропущен (нет URL). JPG/JPEG в LFS (30 файлов renormalize). Unity Archive `safe.directory` добавлен. Supermemory MCP auth OK.
+
+## 2026-09-11 — Off-device backup B1
+
+[Отчёт](../Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md): копия на `D:\Backups\CalmyPiratesCo-2026-09-11` (проект без Intermediate/DDC/.vs + Releases). ZIP SHA256 и git HEAD совпали; Evidence 3793. Robocopy FAILED=0. Remote не создавался.
+
 ## 2026-09-11 — Git LFS baseline B1
 
 [Отчёт](../Changes/GIT_BASELINE_B1_2026-09-11.md): по запросу пользователя создан локальный первый коммит `7bb0048b431705a61b74406882677373d01a55d7` (2880 tracked, 1826 LFS). В `.gitignore` добавлены `Evidence/` и `.codex/`. Remote/push нет. Gameplay и ZIP не менялись. Следующее — off-device backup Evidence/Releases; remote только по явному разрешению.

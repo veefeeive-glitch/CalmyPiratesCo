@@ -1,5 +1,9 @@
 # Calmy Pirates Co. — начать продолжение здесь
 
+**Последнее изменение: [Phased ops remote SKIP + ops](Docs/Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md), 11 сентября.** Remote не создан (нет URL). JPG→LFS, Unity `safe.directory`, Supermemory MCP auth. Backup B1 и Git baseline прежние.
+
+**Последнее изменение: [Off-device backup B1](Docs/Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md), 11 сентября.** Копия на `D:\Backups\CalmyPiratesCo-2026-09-11` (проект без Intermediate/DDC/.vs + Releases + MANIFEST). ZIP SHA256 и git HEAD `47efb30…` совпали; Evidence 3793=3793. Оригинал на E: не трогали. Remote по-прежнему нет.
+
 **Последнее изменение: [Git LFS baseline B1](Docs/Changes/GIT_BASELINE_B1_2026-09-11.md), 11 сентября.** Локальный первый коммит `7bb0048b431705a61b74406882677373d01a55d7` на `main`: 2880 tracked / 1826 LFS. Evidence/Builds/Binaries/Saved исключены из Git и остаются на диске. Remote и push нет. Gameplay/DLL/ZIP не менялись.
 
 **Последнее изменение: [Repo check / doc fix](Docs/Changes/REPO_CHECK_FIX_2026-09-11.md), 11 сентября.** Повторная проверка после F1: ZIP P1 SHA256 совпал, editor DLL = S1 `dd75bb31…`, скрытые ссылки целы, `verify_project_docs` PASS. Исправлен устаревший README проекта (T1/9 сентября → актуальные Releases/S1/R6). Удалён пустой обломок `References/desktop-fly/.git`; настоящий desktop-fly git в скрытом `desktop-fly-reference` без изменений. Git UE по-прежнему 0 commits/0 tracked/нет remote; `Windows-Current` от 4 сентября ≠ share ZIP. Gameplay не трогался.
@@ -80,7 +84,7 @@ R8 лучше проработан по методике, но не принят
 
 ### Открытые технические проблемы
 
-1. **Git baseline локальный, remote нет:** [B1](Docs/Changes/GIT_BASELINE_B1_2026-09-11.md) — commit `7bb0048b431705a61b74406882677373d01a55d7`, LFS включён. `Evidence/` не в Git (~854 MB на диске). Клон без LFS fetch и без отдельной копии Evidence/Builds неполный. Push/remote — только по явному запросу. Off-device backup по-прежнему отдельная задача.
+1. **Git baseline локальный + off-device backup B1; remote нет:** commit `7bb0048…` / docs HEAD `47efb30…`; LFS включён. Backup: `D:\Backups\CalmyPiratesCo-2026-09-11` ([отчёт](Docs/Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md)). `Evidence/` не в Git. Push/remote — только по URL от пользователя.
 2. **BridgeMenu исходные отказы исправлены в R2:** input/visibility/paused rendering и server camera verification. Рубка BR0–BR3 стала обычным входом; Ship/Door fixtures по-прежнему выбирают прежние starts. PASS входа не равен завершённому рейсу/production menu.
 3. **Выход импортера:** оба R6 import-процесса сохранили модели и упали при shutdown в SemanticSearch, exit 3. Отключение одним CLI-флагом не помогло. Чистые последующие загрузки/тесты passed; сам shutdown не исправлен. R7/R8 импортеры ещё не доказали чистое выполнение.
 4. **Null в `GetCarryLocation` исправлен в Grip/Health R1:** добавлена отдельная проверка `HeldCargo->Mesh`. Старые automation warnings `World has no context!` остаются отдельным пунктом.
@@ -109,7 +113,7 @@ UE 5.8.2; Blender 5.2.1 LTS; Visual Studio Community 2026 / MSVC 14.50 / Windows
 
 ## 6. Следующая работа — порядок
 
-1. Off-device backup: как минимум `Evidence/`, share ZIP в Releases, при необходимости Builds. Remote для Git — только после явного разрешения. Локальный baseline уже есть (B1).
+1. Off-device backup B1 на `D:\Backups\...` выполнен. Remote для Git — только после явного URL. Периодически обновлять backup после крупных итераций.
 2. Взять актуальный R8 и обе картинки, оценить будущую внешнюю модель пользователя. Не начинать заново с R6B по старому README.
 3. Для действительно лучших героев — непрерывный skinned surface, веса плеч/локтей, пальцы/позы, low-poly силуэт и UV/material readability. Не выдавать ещё один жёсткий loft за законченного героя.
 4. Импортировать только выбранный кандидат, пересоздать коллизии, обновить два mesh paths, build → automation → Character/Helper/Ship/Water → GPU позы/крупные планы → длительный стенд. Старые файлы оставить.

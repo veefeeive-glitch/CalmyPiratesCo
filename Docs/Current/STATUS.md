@@ -1,5 +1,9 @@
 # Текущее состояние — 2026-09-11
 
+**11 сентября — [Phased ops: remote SKIP + ops](../Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md).** Remote SKIP; JPG LFS; Unity safe.directory; Supermemory MCP OK. Не gameplay.
+
+**11 сентября — [Off-device backup B1](../Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md).** Копия на `D:\Backups\CalmyPiratesCo-2026-09-11`; ZIP/git/Evidence/key paths PASS; 6 nested Intermediate + 2 reparse probes задокументированы. Remote нет. Не gameplay PASS.
+
 **11 сентября — [Git LFS baseline B1](../Changes/GIT_BASELINE_B1_2026-09-11.md).** Локальный commit `7bb0048b431705a61b74406882677373d01a55d7` на `main` (2880 files / 1826 LFS). Evidence и Builds не в Git. Remote/push нет. Это не gameplay PASS и не off-device backup.
 
 **11 сентября — [проверка репо / doc fix](../Changes/REPO_CHECK_FIX_2026-09-11.md).** После F1 подтверждены ZIP P1 SHA256, DLL S1, рабочие ссылки и DOCS_PASS. README проекта приведён к текущему состоянию; пустой `References/desktop-fly/.git` удалён. На момент той проверки Git ещё был пуст; baseline B1 — отдельная следующая запись. Windows-Current от 4 сентября не является share ZIP. Это не новый gameplay PASS.
@@ -38,7 +42,7 @@
 
 | ID старого аудита | Статус | Что важно сейчас |
 |---|---|---|
-| A01 сохранность | Частично | Локальный Git+LFS B1 есть; Evidence вне Git; нужен off-device backup и отдельно разрешённый remote |
+| A01 сохранность | Частично | Git+LFS B1 + off-device backup на D:; Evidence вне Git; remote ещё нет |
 | A02 упаковка | Открыт | Windows-Current старый; package_windows продвигает до smoke и удаляет previous |
 | A03 цельный рейс | Открыт | Смена/аварии/питание разнесены по лабораториям |
 | A04 сеть | Частично | Проверены отдельные Host/Client/LateJoin сценарии, не четыре человека/плохая сеть/качка |
