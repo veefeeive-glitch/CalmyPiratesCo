@@ -1,6 +1,7 @@
 #include "Gameplay/CalmyCargo.h"
 #include "Gameplay/CalmyCharacter.h"
 #include "Gameplay/CalmyCrewHelper.h"
+#include "Core/CargoGrip.h"
 #include "Core/TeamCarryPace.h"
 #include "Gameplay/CalmyShift.h"
 #include "Gameplay/CalmyOcean.h"
@@ -129,10 +130,9 @@ void ACalmyCargo::OnRep_Condition()
 
 FVector ACalmyCargo::GetGripPoint(bool bRightHand, bool bFarSide) const
 {
-    // Proxy face coordinates, in unscaled local centimetres. The actor transform
-    // applies each cargo kind's actual scale exactly once; both views share them.
-    const float Side=bRightHand?1.f:-1.f;
-    return GetActorTransform().TransformPosition(FVector(bFarSide?50.f:-50.f,Side*(bFarSide?-30.f:30.f),12.f));
+	// Per-kind handle-biased locals in actor centimetres; actor scale applies once.
+	return GetActorTransform().TransformPosition(
+		FCalmyCargoGrip::HandleLocal(static_cast<uint8>(Kind), bRightHand, bFarSide));
 }
 
 bool ACalmyCargo::HasNearbyHelper(const ACalmyCharacter* Holder) const

@@ -1,5 +1,7 @@
 # Calmy Pirates Co. — начать продолжение здесь
 
+**Последнее изменение: [Grip R2a](Docs/Changes/GRIP_R2A_HANDLES_2026-09-11.md), 11 сентября.** Kind-specific grip locals (смещение к R3 ручкам) + измерение wrist при yaw. 43/43 automation; Helper + LP4 GripViews PASS (static ~1.2/0.8 см, moving ~1.2 см). DLL `A935E36D…`. Пальцы/skin, mesh sockets, proxy/package не делались.
+
 **Последнее изменение: [Crew R8 runtime](Docs/Changes/CREW_R8_RUNTIME_2026-09-11.md), 11 сентября.** Runtime на **CrewR8**. Recovery: Overlap пола на моторе, чуть сильнее pull, soft-finish запас, ResetBodies после вставания. Automation 42/42; Character + Helper network PASS; DLL `fbe951fa…`. Grips/proxy/package не начинались.
 
 **Последнее изменение: [Crew R8 import](Docs/Changes/CREW_R8_IMPORT_2026-09-11.md), 11 сентября.** Импорт Content; первая попытка runtime откатилась из‑за recovery — закрыто отчётом выше.

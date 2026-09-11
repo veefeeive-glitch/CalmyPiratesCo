@@ -1,5 +1,9 @@
 # Журнал продолжения проекта
 
+## 2026-09-11 — Grip R2a (handles + moving wrist)
+
+[Отчёт](../Changes/GRIP_R2A_HANDLES_2026-09-11.md): kind-specific grip locals; moving yaw probe ≤5 см. 43/43 automation; Helper + LP4 GripViews PASS; DLL `A935E36D…`. Пальцы/skin/sockets/package нет.
+
 ## 2026-09-11 — Crew R8 runtime (recovery)
 
 [Отчёт](../Changes/CREW_R8_RUNTIME_2026-09-11.md): пути на CrewR8; recovery Overlap/мотор/soft-finish/ResetBodies. 42/42 automation; Character+Helper PASS; DLL `fbe951fa…`. Grips не начинались.

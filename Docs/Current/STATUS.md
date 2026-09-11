@@ -1,6 +1,8 @@
 # Текущее состояние — 2026-09-11
 
-**11 сентября — [Crew R8 runtime](../Changes/CREW_R8_RUNTIME_2026-09-11.md).** В игре **CrewR8**; recovery motor укреплён. 42/42 automation; Character+Helper network PASS; DLL `fbe951fa…`. Grips/proxy/package нет.
+**11 сентября — [Grip R2a](../Changes/GRIP_R2A_HANDLES_2026-09-11.md).** Kind-specific хваты + moving yaw ≤5 см. 43/43; Helper+GripViews PASS; DLL `A935E36D…`. Пальцы/skin/package нет.
+
+**11 сентября — [Crew R8 runtime](../Changes/CREW_R8_RUNTIME_2026-09-11.md).** В игре **CrewR8**; recovery motor укреплён. 42/42 automation; Character+Helper network PASS; DLL `fbe951fa…`.
 
 **11 сентября — [Crew R8 import](../Changes/CREW_R8_IMPORT_2026-09-11.md).** Content импортирован; первая runtime-попытка откатилась — закрыта runtime-отчётом выше.
 
@@ -63,7 +65,7 @@
 
 ## Ближайшая работа
 
-Следующее: dynamic grips/пальцы/skin; в физике моря — отдельный плавающий proxy, based movement и подвижный dry hull до большого R7. [Текущий этап W1 и точные границы](../Changes/WATER_INTERACTION_W1_2026-09-10.md). Не называть моторный подъём полноценной Euphoria, а локальное response-поле — полной fluid simulation.
+Следующее: пальцы/skin или mesh handle sockets; в физике моря — отдельный плавающий proxy, based movement и подвижный dry hull до большого R7. [Grip R2a](../Changes/GRIP_R2A_HANDLES_2026-09-11.md) закрыл только kind-specific locals + moving yaw. Не называть моторный подъём полноценной Euphoria, а локальное response-поле — полной fluid simulation.
 
 1. Пользователь выбрал пока локальное хранение; off-device backup/проверка переноса остаются будущей задачей.
 2. Выбор последнего героя R8/внешнего candidate пользователя; непрерывная skinned одежда/веса/пальцы вместо нового набора жёстких труб.

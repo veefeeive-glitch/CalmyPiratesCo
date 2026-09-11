@@ -110,14 +110,28 @@ void UCalmyR3Review::Tick(float DT)
     else if(Stage==41 && Age-StageTime>3 && ShotReady(TEXT("04b-world-grip")))
     {
         UE_LOG(LogTemp,Display,TEXT("GRIP_REVIEW player_error_cm=%.3f joints_cm=%.3f"),P->GetCrewPresentation()->GetWorldHandContactError(),P->GetCrewPresentation()->MaximumJointSeparation());
-        NPC->SetActorLocation(P->GetActorLocation()+FVector(215,0,0));NPC->AssignLeader(P);
-        Aim(P->GetActorLocation()+FVector(90,0,5),P->GetActorLocation()+FVector(100,-340,130));Stage=42;StageTime=Age;
+        MaxMovingHandError=0;Stage=411;StageTime=Age;
+    }
+    else if(Stage==411)
+    {
+        // Cargo yaw follows the holder; sample wrist error while turning in place.
+        const float T=Age-StageTime;
+        P->SetActorRotation(FRotator(0.f,FMath::Sin(T*2.2f)*40.f,0.f));
+        MaxMovingHandError=FMath::Max(MaxMovingHandError,P->GetCrewPresentation()->GetWorldHandContactError());
+        if(T>2.5f)
+        {
+            UE_LOG(LogTemp,Display,TEXT("GRIP_REVIEW moving_player_error_cm=%.3f"),MaxMovingHandError);
+            if(MaxMovingHandError>5.f){Fail(TEXT("moving_hand_contact_failed"));return;}
+            P->SetActorRotation(FRotator::ZeroRotator);
+            NPC->SetActorLocation(P->GetActorLocation()+FVector(215,0,0));NPC->AssignLeader(P);
+            Aim(P->GetActorLocation()+FVector(90,0,5),P->GetActorLocation()+FVector(100,-340,130));Stage=42;StageTime=Age;
+        }
     }
     else if(Stage==42 && Age-StageTime>5 && ShotReady(TEXT("04c-helper-grip")))
     {
         const float PlayerError=P->GetCrewPresentation()->GetWorldHandContactError();
         const float HelperError=NPC->GetCrewPresentation()->GetWorldHandContactError();
-        UE_LOG(LogTemp,Display,TEXT("GRIP_REVIEW player_error_cm=%.3f helper_error_cm=%.3f helper_state=%d"),PlayerError,HelperError,int32(NPC->Assistance));
+        UE_LOG(LogTemp,Display,TEXT("GRIP_REVIEW player_error_cm=%.3f helper_error_cm=%.3f moving_player_error_cm=%.3f helper_state=%d"),PlayerError,HelperError,MaxMovingHandError,int32(NPC->Assistance));
         if(PlayerError>3 || HelperError>3 || NPC->Assistance!=ECalmyHelperState::Assisting) {Fail(TEXT("world_hand_contact_failed"));return;}
         NPC->ReleaseLeader();P->ReleaseCargo();PC->GetHUD()->bShowHUD=false;PC->SetViewTarget(P);
         P->SetActorLocation(FVector(3100,0,Ocean->HeightAt(FVector(3100,0,0))-20));P->GetCharacterMovement()->SetMovementMode(MOVE_Custom,1);

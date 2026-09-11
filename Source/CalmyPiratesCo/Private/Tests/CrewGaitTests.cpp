@@ -2,6 +2,7 @@
 #include "Core/TeamCarryPace.h"
 #include "Core/CrewArmIK.h"
 #include "Core/CrewImpact.h"
+#include "Core/CargoGrip.h"
 #include "Misc/AutomationTest.h"
 #if WITH_DEV_AUTOMATION_TESTS
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCalmyImpactTest,"CalmyPiratesCo.Character.ImpactDamage",EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
@@ -49,5 +50,32 @@ bool FCalmyTeamPaceTest::RunTest(const FString&)
     TestEqual(TEXT("Hard lower bound"),FCalmyTeamCarryPace::Evaluate(10000,10000),.55f);
     TestEqual(TEXT("Negative inputs do not accelerate"),FCalmyTeamCarryPace::Evaluate(-10,-500),1.f);
     return true;
+}
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCalmyCargoGripTest,"CalmyPiratesCo.Cargo.HandleGrips",EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
+bool FCalmyCargoGripTest::RunTest(const FString&)
+{
+	using EKind = FCalmyCargoGrip::EKind;
+	for (EKind Kind : {EKind::Standard, EKind::Bulky, EKind::Unstable, EKind::Fragile})
+	{
+		const FVector NearL = FCalmyCargoGrip::HandleLocal(Kind, false, false);
+		const FVector NearR = FCalmyCargoGrip::HandleLocal(Kind, true, false);
+		const FVector FarL = FCalmyCargoGrip::HandleLocal(Kind, false, true);
+		const FVector FarR = FCalmyCargoGrip::HandleLocal(Kind, true, true);
+		TestTrue(TEXT("Left and right near handles differ"), !NearL.Equals(NearR, .5f));
+		TestTrue(TEXT("Near and far handles differ"), !NearL.Equals(FarL, .5f) && !NearR.Equals(FarR, .5f));
+		TestTrue(TEXT("Far side mirrors hand lateral axis"), FMath::Sign(NearL.Y) != FMath::Sign(FarL.Y) || FMath::IsNearlyZero(NearL.Y));
+		TestTrue(TEXT("Near-hand span fits a two-handed carry"), FCalmyCargoGrip::NearHandSpan(Kind) > 60.f && FCalmyCargoGrip::NearHandSpan(Kind) < 120.f);
+		for (const FVector& P : {NearL, NearR, FarL, FarR})
+		{
+			TestTrue(TEXT("Handle stays inside authored cargo proxy"), P.GetAbsMax() <= 60.f);
+		}
+	}
+	TestTrue(TEXT("Standard rails sit higher than fragile handles"),
+		FCalmyCargoGrip::HandleLocal(EKind::Standard, true, false).Z >
+		FCalmyCargoGrip::HandleLocal(EKind::Fragile, true, false).Z + 5.f);
+	TestTrue(TEXT("Bulky two-person ends are farther apart on X than standard"),
+		FMath::Abs(FCalmyCargoGrip::HandleLocal(EKind::Bulky, true, true).X) >
+		FMath::Abs(FCalmyCargoGrip::HandleLocal(EKind::Standard, true, true).X));
+	return true;
 }
 #endif
