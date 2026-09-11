@@ -1,0 +1,333 @@
+{
+  "style": "authored flat-shaded low-poly",
+  "units": "metres; pivot_cm in manifest",
+  "parts": [
+    {
+      "name": "SM_Deckhand_Torso",
+      "triangles": 984,
+      "vertices": 536,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        0,
+        -6
+      ],
+      "materials": [
+        "NW5_oilskin",
+        "NW5_navy",
+        "NW5_cream",
+        "NW5_cloth",
+        "NW5_rubber",
+        "NW5_lens"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_Head",
+      "triangles": 626,
+      "vertices": 346,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        0,
+        51
+      ],
+      "materials": [
+        "NW5_skin",
+        "NW5_eye",
+        "NW5_lip",
+        "NW5_oilskin",
+        "NW5_cloth",
+        "NW5_navy"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_UpperArmL",
+      "triangles": 120,
+      "vertices": 64,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -27,
+        44
+      ],
+      "materials": [
+        "NW5_oilskin",
+        "NW5_navy"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ForearmL",
+      "triangles": 352,
+      "vertices": 192,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -29,
+        17
+      ],
+      "materials": [
+        "NW5_oilskin",
+        "NW5_navy",
+        "NW5_rubber"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ThighL",
+      "triangles": 104,
+      "vertices": 56,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -12,
+        -6
+      ],
+      "materials": [
+        "NW5_cloth",
+        "NW5_navy"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ShinL",
+      "triangles": 192,
+      "vertices": 104,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -12,
+        -44
+      ],
+      "materials": [
+        "NW5_navy",
+        "NW5_rubber",
+        "NW5_cream"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_UpperArmR",
+      "triangles": 120,
+      "vertices": 64,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        27,
+        44
+      ],
+      "materials": [
+        "NW5_oilskin",
+        "NW5_navy"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ForearmR",
+      "triangles": 352,
+      "vertices": 192,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        29,
+        17
+      ],
+      "materials": [
+        "NW5_oilskin",
+        "NW5_navy",
+        "NW5_rubber"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ThighR",
+      "triangles": 148,
+      "vertices": 80,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        12,
+        -6
+      ],
+      "materials": [
+        "NW5_cloth",
+        "NW5_navy"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ShinR",
+      "triangles": 192,
+      "vertices": 104,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        12,
+        -44
+      ],
+      "materials": [
+        "NW5_navy",
+        "NW5_rubber",
+        "NW5_cream"
+      ]
+    },
+    {
+      "name": "SM_Misha_Torso",
+      "triangles": 984,
+      "vertices": 536,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        0,
+        -6
+      ],
+      "materials": [
+        "NW5_rust",
+        "NW5_navy",
+        "NW5_cream",
+        "NW5_cloth",
+        "NW5_rubber",
+        "NW5_lens"
+      ]
+    },
+    {
+      "name": "SM_Misha_Head",
+      "triangles": 788,
+      "vertices": 430,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        0,
+        51
+      ],
+      "materials": [
+        "NW5_skin_misha",
+        "NW5_eye",
+        "NW5_lip",
+        "NW5_helmet",
+        "NW5_navy"
+      ]
+    },
+    {
+      "name": "SM_Misha_UpperArmL",
+      "triangles": 120,
+      "vertices": 64,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -27,
+        44
+      ],
+      "materials": [
+        "NW5_rust",
+        "NW5_navy"
+      ]
+    },
+    {
+      "name": "SM_Misha_ForearmL",
+      "triangles": 352,
+      "vertices": 192,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -29,
+        17
+      ],
+      "materials": [
+        "NW5_rust",
+        "NW5_navy",
+        "NW5_rubber"
+      ]
+    },
+    {
+      "name": "SM_Misha_ThighL",
+      "triangles": 104,
+      "vertices": 56,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -12,
+        -6
+      ],
+      "materials": [
+        "NW5_cloth",
+        "NW5_navy"
+      ]
+    },
+    {
+      "name": "SM_Misha_ShinL",
+      "triangles": 192,
+      "vertices": 104,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -12,
+        -44
+      ],
+      "materials": [
+        "NW5_navy",
+        "NW5_rubber",
+        "NW5_cream"
+      ]
+    },
+    {
+      "name": "SM_Misha_UpperArmR",
+      "triangles": 120,
+      "vertices": 64,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        27,
+        44
+      ],
+      "materials": [
+        "NW5_rust",
+        "NW5_navy"
+      ]
+    },
+    {
+      "name": "SM_Misha_ForearmR",
+      "triangles": 352,
+      "vertices": 192,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        29,
+        17
+      ],
+      "materials": [
+        "NW5_rust",
+        "NW5_navy",
+        "NW5_rubber"
+      ]
+    },
+    {
+      "name": "SM_Misha_ThighR",
+      "triangles": 148,
+      "vertices": 80,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        12,
+        -6
+      ],
+      "materials": [
+        "NW5_cloth",
+        "NW5_navy"
+      ]
+    },
+    {
+      "name": "SM_Misha_ShinR",
+      "triangles": 192,
+      "vertices": 104,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        12,
+        -44
+      ],
+      "materials": [
+        "NW5_navy",
+        "NW5_rubber",
+        "NW5_cream"
+      ]
+    }
+  ],
+  "triangles": {
+    "Deckhand": 3190,
+    "Misha": 3352
+  }
+}

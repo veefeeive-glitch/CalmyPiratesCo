@@ -1,0 +1,13 @@
+{
+  "base_sha256": "79a58b10a16bb28e17c14d1440e7ae1d25584ff3067d1a52cd730d0d18f91eda",
+  "candidate_sha256": "0262764c031f83591a9ba23238231fe0eccad4d3fccc298b981ebaa34dd0a77b",
+  "moved": [
+    "R3_Boat_Partition1_0",
+    "R3_Boat_StairEnd-49.15",
+    "R3_Crew_Partition1_0",
+    "R3_Crew_StairEnd-49.15",
+    "R3_Officers_Partition1_0",
+    "R3_Officers_StairEnd-49.15"
+  ],
+  "scope": "Candidate, not promoted; requires geometry, cargo, full walking and visual review"
+}

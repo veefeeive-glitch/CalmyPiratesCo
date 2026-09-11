@@ -1,0 +1,16 @@
+{
+  "Wind": {
+    "seconds": 32,
+    "sample_rate": 22050,
+    "peak": 0.22,
+    "rms": 0.037548016910124,
+    "original_synthesis": true
+  },
+  "Hull": {
+    "seconds": 32,
+    "sample_rate": 22050,
+    "peak": 0.22,
+    "rms": 0.055703055244645264,
+    "original_synthesis": true
+  }
+}

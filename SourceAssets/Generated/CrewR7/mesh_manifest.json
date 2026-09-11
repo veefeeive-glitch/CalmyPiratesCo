@@ -1,0 +1,324 @@
+{
+  "units": "metres; bind pivots in cm",
+  "style": "concept-matched faceted low-poly maritime workwear",
+  "reference": "SourceAssets/References/CrewR6/CONCEPT-not-gameplay.png (+DECKHAND)",
+  "triangles": {
+    "Deckhand": 5462,
+    "Misha": 5442
+  },
+  "parts": [
+    {
+      "name": "SM_Deckhand_Torso",
+      "triangles": 860,
+      "pivot_cm": [
+        0,
+        0,
+        -6
+      ],
+      "materials": [
+        "CR7_teal",
+        "CR7_seam",
+        "CR7_base",
+        "CR7_cuff",
+        "CR7_lens",
+        "CR7_trim"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_Head",
+      "triangles": 1258,
+      "pivot_cm": [
+        0,
+        0,
+        51
+      ],
+      "materials": [
+        "CR7_skin",
+        "CR7_base",
+        "CR7_brow",
+        "CR7_socket",
+        "CR7_sclera",
+        "CR7_eye",
+        "CR7_lip",
+        "CR7_teal",
+        "CR7_seam",
+        "CR7_cuff"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_UpperArmL",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        -27,
+        44
+      ],
+      "materials": [
+        "CR7_teal",
+        "CR7_trim"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ForearmL",
+      "triangles": 632,
+      "pivot_cm": [
+        0,
+        -29,
+        17
+      ],
+      "materials": [
+        "CR7_teal",
+        "CR7_cuff",
+        "CR7_glove",
+        "CR7_trim",
+        "CR7_seam"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ThighL",
+      "triangles": 204,
+      "pivot_cm": [
+        0,
+        -12,
+        -6
+      ],
+      "materials": [
+        "CR7_navy",
+        "CR7_seam"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ShinL",
+      "triangles": 628,
+      "pivot_cm": [
+        0,
+        -12,
+        -44
+      ],
+      "materials": [
+        "CR7_navy",
+        "CR7_trim",
+        "CR7_boot",
+        "CR7_sole",
+        "CR7_seam",
+        "CR7_cuff"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_UpperArmR",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        27,
+        44
+      ],
+      "materials": [
+        "CR7_teal",
+        "CR7_trim"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ForearmR",
+      "triangles": 632,
+      "pivot_cm": [
+        0,
+        29,
+        17
+      ],
+      "materials": [
+        "CR7_teal",
+        "CR7_cuff",
+        "CR7_glove",
+        "CR7_trim",
+        "CR7_seam"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ThighR",
+      "triangles": 204,
+      "pivot_cm": [
+        0,
+        12,
+        -6
+      ],
+      "materials": [
+        "CR7_navy",
+        "CR7_seam"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ShinR",
+      "triangles": 628,
+      "pivot_cm": [
+        0,
+        12,
+        -44
+      ],
+      "materials": [
+        "CR7_navy",
+        "CR7_trim",
+        "CR7_boot",
+        "CR7_sole",
+        "CR7_seam",
+        "CR7_cuff"
+      ]
+    },
+    {
+      "name": "SM_Misha_Torso",
+      "triangles": 976,
+      "pivot_cm": [
+        0,
+        0,
+        -6
+      ],
+      "materials": [
+        "CR7_ochre",
+        "CR7_seam",
+        "CR7_base",
+        "CR7_cuff",
+        "CR7_lens",
+        "CR7_trim"
+      ]
+    },
+    {
+      "name": "SM_Misha_Head",
+      "triangles": 1122,
+      "pivot_cm": [
+        0,
+        0,
+        51
+      ],
+      "materials": [
+        "CR7_misha",
+        "CR7_base",
+        "CR7_stubble",
+        "CR7_brow",
+        "CR7_socket",
+        "CR7_sclera",
+        "CR7_eye",
+        "CR7_lip",
+        "CR7_helmet",
+        "CR7_cuff",
+        "CR7_seam"
+      ]
+    },
+    {
+      "name": "SM_Misha_UpperArmL",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        -27,
+        44
+      ],
+      "materials": [
+        "CR7_ochre",
+        "CR7_trim"
+      ]
+    },
+    {
+      "name": "SM_Misha_ForearmL",
+      "triangles": 632,
+      "pivot_cm": [
+        0,
+        -29,
+        17
+      ],
+      "materials": [
+        "CR7_ochre",
+        "CR7_cuff",
+        "CR7_glove",
+        "CR7_trim",
+        "CR7_seam"
+      ]
+    },
+    {
+      "name": "SM_Misha_ThighL",
+      "triangles": 204,
+      "pivot_cm": [
+        0,
+        -12,
+        -6
+      ],
+      "materials": [
+        "CR7_navy",
+        "CR7_seam"
+      ]
+    },
+    {
+      "name": "SM_Misha_ShinL",
+      "triangles": 628,
+      "pivot_cm": [
+        0,
+        -12,
+        -44
+      ],
+      "materials": [
+        "CR7_navy",
+        "CR7_trim",
+        "CR7_boot",
+        "CR7_sole",
+        "CR7_seam",
+        "CR7_cuff"
+      ]
+    },
+    {
+      "name": "SM_Misha_UpperArmR",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        27,
+        44
+      ],
+      "materials": [
+        "CR7_ochre",
+        "CR7_trim"
+      ]
+    },
+    {
+      "name": "SM_Misha_ForearmR",
+      "triangles": 632,
+      "pivot_cm": [
+        0,
+        29,
+        17
+      ],
+      "materials": [
+        "CR7_ochre",
+        "CR7_cuff",
+        "CR7_glove",
+        "CR7_trim",
+        "CR7_seam"
+      ]
+    },
+    {
+      "name": "SM_Misha_ThighR",
+      "triangles": 204,
+      "pivot_cm": [
+        0,
+        12,
+        -6
+      ],
+      "materials": [
+        "CR7_navy",
+        "CR7_seam"
+      ]
+    },
+    {
+      "name": "SM_Misha_ShinR",
+      "triangles": 628,
+      "pivot_cm": [
+        0,
+        12,
+        -44
+      ],
+      "materials": [
+        "CR7_navy",
+        "CR7_trim",
+        "CR7_boot",
+        "CR7_sole",
+        "CR7_seam",
+        "CR7_cuff"
+      ]
+    }
+  ]
+}

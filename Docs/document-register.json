@@ -1,0 +1,199 @@
+{
+  "date": "2026-09-06",
+  "project": "E:/Game/CalmyPiratesCoUE",
+  "root_documents": [
+    {
+      "original": "AGENTS.md",
+      "status": "repository_rules_unchanged",
+      "current": "AGENTS.md"
+    },
+    {
+      "original": "ASSET_PROVENANCE.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/ASSETS.md",
+      "history": "Docs/History/ASSET_PROVENANCE.md"
+    },
+    {
+      "original": "CARGO_BEHAVIORS_VERIFICATION.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/VALIDATION.md",
+      "history": "Docs/History/CARGO_BEHAVIORS_VERIFICATION.md"
+    },
+    {
+      "original": "CREW_HELPER_R2_HANDOVER.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/GAMEPLAY.md",
+      "history": "Docs/History/CREW_HELPER_R2_HANDOVER.md"
+    },
+    {
+      "original": "DECKHAND_CHARACTER_HANDOVER.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/GAMEPLAY.md",
+      "history": "Docs/History/DECKHAND_CHARACTER_HANDOVER.md"
+    },
+    {
+      "original": "EMERGENCY_DIRECTOR_VERIFICATION.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/VALIDATION.md",
+      "history": "Docs/History/EMERGENCY_DIRECTOR_VERIFICATION.md"
+    },
+    {
+      "original": "FREIGHTER_DECK_VERIFICATION.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/VALIDATION.md",
+      "history": "Docs/History/FREIGHTER_DECK_VERIFICATION.md"
+    },
+    {
+      "original": "FREIGHTER_INTERIOR_VERIFICATION.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/VALIDATION.md",
+      "history": "Docs/History/FREIGHTER_INTERIOR_VERIFICATION.md"
+    },
+    {
+      "original": "GAME_ROADMAP.md",
+      "status": "compatibility_link",
+      "current": "Docs/Roadmaps/GAME.md",
+      "history": "Docs/History/GAME_ROADMAP.md"
+    },
+    {
+      "original": "GENERAL_AUDIT_2026-09-05.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/STATUS.md",
+      "history": "Docs/History/GENERAL_AUDIT_2026-09-05.md"
+    },
+    {
+      "original": "HANDOVER_2026-09-05.md",
+      "status": "compatibility_link",
+      "current": "Docs/INDEX.md",
+      "history": "Docs/History/HANDOVER_2026-09-05.md"
+    },
+    {
+      "original": "LEAK_VERIFICATION.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/VALIDATION.md",
+      "history": "Docs/History/LEAK_VERIFICATION.md"
+    },
+    {
+      "original": "MEGA_FREIGHTER_DESIGN.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/SHIP.md",
+      "history": "Docs/History/MEGA_FREIGHTER_DESIGN.md"
+    },
+    {
+      "original": "OCEAN_FREIGHTER_R3_HANDOVER.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/SHIP.md",
+      "history": "Docs/History/OCEAN_FREIGHTER_R3_HANDOVER.md"
+    },
+    {
+      "original": "OCEAN_FREIGHTER_R4_HANDOVER.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/SHIP.md",
+      "history": "Docs/History/OCEAN_FREIGHTER_R4_HANDOVER.md"
+    },
+    {
+      "original": "OCEAN_FREIGHTER_R5_HANDOVER.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/SHIP.md",
+      "history": "Docs/History/OCEAN_FREIGHTER_R5_HANDOVER.md"
+    },
+    {
+      "original": "OCEAN_FREIGHTER_R6_CHECKLIST.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/SHIP.md",
+      "history": "Docs/History/OCEAN_FREIGHTER_R6_CHECKLIST.md"
+    },
+    {
+      "original": "OCEAN_FREIGHTER_R6_HANDOVER.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/SHIP.md",
+      "history": "Docs/History/OCEAN_FREIGHTER_R6_HANDOVER.md"
+    },
+    {
+      "original": "OCEAN_FREIGHTER_R6_REVIEW.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/SHIP.md",
+      "history": "Docs/History/OCEAN_FREIGHTER_R6_REVIEW.md"
+    },
+    {
+      "original": "OCEAN_FREIGHTER_R7_HANDOVER.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/SHIP.md",
+      "history": "Docs/History/OCEAN_FREIGHTER_R7_HANDOVER.md"
+    },
+    {
+      "original": "OCEAN_FREIGHTER_R7_VISUAL_REVIEW.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/SHIP.md",
+      "history": "Docs/History/OCEAN_FREIGHTER_R7_VISUAL_REVIEW.md"
+    },
+    {
+      "original": "OCEAN_FREIGHTER_TRAVERSAL_AUDIT.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/SHIP.md",
+      "history": "Docs/History/OCEAN_FREIGHTER_TRAVERSAL_AUDIT.md"
+    },
+    {
+      "original": "POWER_LIGHT_VERIFICATION.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/VALIDATION.md",
+      "history": "Docs/History/POWER_LIGHT_VERIFICATION.md"
+    },
+    {
+      "original": "README.md",
+      "status": "rewritten_entry_point",
+      "current": "README.md",
+      "history": "Docs/History/README.md"
+    },
+    {
+      "original": "SHIFT_ECONOMY_VERIFICATION.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/VALIDATION.md",
+      "history": "Docs/History/SHIFT_ECONOMY_VERIFICATION.md"
+    },
+    {
+      "original": "SHIP_ROADMAP.md",
+      "status": "compatibility_link",
+      "current": "Docs/Roadmaps/SHIP.md",
+      "history": "Docs/History/SHIP_ROADMAP.md"
+    },
+    {
+      "original": "VERIFICATION.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/VALIDATION.md",
+      "history": "Docs/History/VERIFICATION.md"
+    },
+    {
+      "original": "WATERLAB_HANDOVER.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/GAMEPLAY.md",
+      "history": "Docs/History/WATERLAB_HANDOVER.md"
+    },
+    {
+      "original": "WATERLAB_MECHANICS_AUDIT.md",
+      "status": "compatibility_link",
+      "current": "Docs/Current/STATUS.md",
+      "history": "Docs/History/WATERLAB_MECHANICS_AUDIT.md"
+    }
+  ],
+  "walkthrough": {
+    "path": "SourceAssets/Generated/OceanFreighter/WALKTHROUGH_RU.md",
+    "status": "updated_in_place"
+  },
+  "immutable": [
+    "Evidence/**",
+    "Builds/**/BUILD_INFO.md"
+  ],
+  "generated_historical": [
+    "Saved/Audits/**",
+    "Saved/Verification/**/*.md"
+  ],
+  "excluded_third_party": [
+    "Plugins/**",
+    "Intermediate/**",
+    "DerivedDataCache/**",
+    ".git/**",
+    ".vs/**",
+    ".codex/**"
+  ]
+}

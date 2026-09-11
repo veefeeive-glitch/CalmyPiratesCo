@@ -1,0 +1,35 @@
+{
+  "asset": "Calmy Ocean Freighter",
+  "status": "R6 reviewed circulation increment; human visual rating pending",
+  "dimensions_m": {
+    "length_overall": 122.0,
+    "beam": 20.4,
+    "hull_depth": 10.5,
+    "draft_reference": 7.2
+  },
+  "deck_levels_m": {
+    "tank_top": 2.0,
+    "lower": 4.5,
+    "tween": 7.25,
+    "weather": 10.5
+  },
+  "target_players": "2-12",
+  "master_blend": "E:\\Game\\CalmyPiratesCoUE\\SourceAssets\\Generated\\OceanFreighter\\CalmyOceanFreighter.blend",
+  "walkthrough_camera": "CAM_Walkthrough_FirstPerson",
+  "walkthrough_start_m": [
+    -24.0,
+    -6.349999904632568,
+    12.180000305175781
+  ],
+  "walkthrough_controls": "Open master, hover 3D viewport, Shift+` then WASD",
+  "previews_generated": true,
+  "build_mode": "R6 module applied to hash-pinned R5; generator primitives reused",
+  "revision": "R6",
+  "promoted_master_sha256": "9ceafe214b04051c293734a81c31ab81e7daf109cfa73f82a8525a38ab759fdd",
+  "qa_scope": "Isolated Unreal CharacterMovement/Chaos; not multiplayer or art completion",
+  "physical_qa_report": "E:\\Game\\CalmyPiratesCoUE\\Saved\\OceanPhysics\\R6-traversal3.json",
+  "qa_report": "E:\\Game\\CalmyPiratesCoUE\\Saved\\Verification\\OceanFreighter-R6-Reviewed\\geometry-routes.json",
+  "review_shots": "E:\\Game\\CalmyPiratesCoUE\\Saved\\Verification\\OceanFreighter-R6-Reviewed\\shots.json",
+  "preview": "E:\\Game\\CalmyPiratesCoUE\\Saved\\Verification\\OceanFreighter-R6-Reviewed\\01_Overview.png",
+  "acceptance": "E:\\Game\\CalmyPiratesCoUE\\Saved\\Verification\\OceanFreighter-R6-Reviewed\\acceptance.json"
+}

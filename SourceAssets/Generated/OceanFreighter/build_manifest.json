@@ -1,0 +1,35 @@
+{
+  "asset": "Calmy Ocean Freighter",
+  "status": "Scoped cargo-clearance improvement; art and human acceptance incomplete",
+  "dimensions_m": {
+    "length_overall": 122.0,
+    "beam": 20.4,
+    "hull_depth": 10.5,
+    "draft_reference": 7.2
+  },
+  "deck_levels_m": {
+    "tank_top": 2.0,
+    "lower": 4.5,
+    "tween": 7.25,
+    "weather": 10.5
+  },
+  "target_players": "2-4 (game baseline; not a network acceptance claim)",
+  "master_blend": "E:\\Game\\CalmyPiratesCoUE\\SourceAssets\\Generated\\OceanFreighter\\CalmyOceanFreighter.blend",
+  "walkthrough_camera": "CAM_Walkthrough_FirstPerson",
+  "walkthrough_start_m": [
+    -24.0,
+    -6.349999904632568,
+    12.180000305175781
+  ],
+  "walkthrough_controls": "Open master, hover 3D viewport, Shift+` then WASD",
+  "previews_generated": false,
+  "build_mode": "Hash-pinned R6 plus cargo candidates C01-C06; exact reviewed C06 bytes promoted",
+  "revision": "R7-Cargo-C06",
+  "promoted_master_sha256": "8b4fe72d31e549649c0b36947a6cb5b906ebbd19b0955d5bd1f76d5f7da44f93",
+  "qa_scope": "Scoped Blender clearance increment only; WaterLab unchanged; no FBX/GLB/Unreal import; existing piping art findings open",
+  "physical_qa_report": "E:\\Game\\CalmyPiratesCoUE\\Evidence\\ShipTraversal\\R7-Cargo-20260906\\physical-report.json",
+  "qa_report": "E:\\Game\\CalmyPiratesCoUE\\Evidence\\ShipTraversal\\R7-Cargo-20260906\\geometry-routes.json",
+  "review_shots": "E:\\Game\\CalmyPiratesCoUE\\Evidence\\ShipTraversal\\R7-Cargo-20260906\\views\\shots.json",
+  "acceptance": "E:\\Game\\CalmyPiratesCoUE\\Evidence\\ShipTraversal\\R7-Cargo-20260906\\acceptance.json",
+  "cargo_qa_report": "E:\\Game\\CalmyPiratesCoUE\\Evidence\\ShipTraversal\\R7-Cargo-20260906\\carry-report.json"
+}

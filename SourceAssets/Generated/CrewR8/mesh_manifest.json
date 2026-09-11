@@ -1,0 +1,335 @@
+{
+  "units": "metres; bind pivots in cm",
+  "style": "modelled low-poly maritime workwear, baked palette x ambient occlusion",
+  "reference": "SourceAssets/References/CrewR6/CONCEPT-not-gameplay.png (+DECKHAND)",
+  "triangles": {
+    "Deckhand": 6012,
+    "Misha": 6048
+  },
+  "parts": [
+    {
+      "name": "SM_Deckhand_Torso",
+      "triangles": 964,
+      "pivot_cm": [
+        0,
+        0,
+        -6
+      ],
+      "palette": [
+        "CR8_base",
+        "CR8_cuff",
+        "CR8_lens",
+        "CR8_seam",
+        "CR8_teal",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Deckhand_Torso.png"
+    },
+    {
+      "name": "SM_Deckhand_Head",
+      "triangles": 1704,
+      "pivot_cm": [
+        0,
+        0,
+        51
+      ],
+      "palette": [
+        "CR8_base",
+        "CR8_brow",
+        "CR8_cuff",
+        "CR8_seam",
+        "CR8_skin",
+        "CR8_teal"
+      ],
+      "texture": "T_SM_Deckhand_Head.png"
+    },
+    {
+      "name": "SM_Deckhand_UpperArmL",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        -27,
+        44
+      ],
+      "palette": [
+        "CR8_teal",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Deckhand_UpperArmL.png"
+    },
+    {
+      "name": "SM_Deckhand_ForearmL",
+      "triangles": 632,
+      "pivot_cm": [
+        0,
+        -29,
+        17
+      ],
+      "palette": [
+        "CR8_cuff",
+        "CR8_glove",
+        "CR8_seam",
+        "CR8_teal",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Deckhand_ForearmL.png"
+    },
+    {
+      "name": "SM_Deckhand_ThighL",
+      "triangles": 204,
+      "pivot_cm": [
+        0,
+        -12,
+        -6
+      ],
+      "palette": [
+        "CR8_navy",
+        "CR8_seam"
+      ],
+      "texture": "T_SM_Deckhand_ThighL.png"
+    },
+    {
+      "name": "SM_Deckhand_ShinL",
+      "triangles": 628,
+      "pivot_cm": [
+        0,
+        -12,
+        -44
+      ],
+      "palette": [
+        "CR8_boot",
+        "CR8_cuff",
+        "CR8_navy",
+        "CR8_seam",
+        "CR8_sole",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Deckhand_ShinL.png"
+    },
+    {
+      "name": "SM_Deckhand_UpperArmR",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        27,
+        44
+      ],
+      "palette": [
+        "CR8_teal",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Deckhand_UpperArmR.png"
+    },
+    {
+      "name": "SM_Deckhand_ForearmR",
+      "triangles": 632,
+      "pivot_cm": [
+        0,
+        29,
+        17
+      ],
+      "palette": [
+        "CR8_cuff",
+        "CR8_glove",
+        "CR8_seam",
+        "CR8_teal",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Deckhand_ForearmR.png"
+    },
+    {
+      "name": "SM_Deckhand_ThighR",
+      "triangles": 204,
+      "pivot_cm": [
+        0,
+        12,
+        -6
+      ],
+      "palette": [
+        "CR8_navy",
+        "CR8_seam"
+      ],
+      "texture": "T_SM_Deckhand_ThighR.png"
+    },
+    {
+      "name": "SM_Deckhand_ShinR",
+      "triangles": 628,
+      "pivot_cm": [
+        0,
+        12,
+        -44
+      ],
+      "palette": [
+        "CR8_boot",
+        "CR8_cuff",
+        "CR8_navy",
+        "CR8_seam",
+        "CR8_sole",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Deckhand_ShinR.png"
+    },
+    {
+      "name": "SM_Misha_Torso",
+      "triangles": 1120,
+      "pivot_cm": [
+        0,
+        0,
+        -6
+      ],
+      "palette": [
+        "CR8_base",
+        "CR8_cuff",
+        "CR8_lens",
+        "CR8_ochre",
+        "CR8_seam",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Misha_Torso.png"
+    },
+    {
+      "name": "SM_Misha_Head",
+      "triangles": 1584,
+      "pivot_cm": [
+        0,
+        0,
+        51
+      ],
+      "palette": [
+        "CR8_base",
+        "CR8_brow",
+        "CR8_cuff",
+        "CR8_helmet",
+        "CR8_misha",
+        "CR8_seam"
+      ],
+      "texture": "T_SM_Misha_Head.png"
+    },
+    {
+      "name": "SM_Misha_UpperArmL",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        -27,
+        44
+      ],
+      "palette": [
+        "CR8_ochre",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Misha_UpperArmL.png"
+    },
+    {
+      "name": "SM_Misha_ForearmL",
+      "triangles": 632,
+      "pivot_cm": [
+        0,
+        -29,
+        17
+      ],
+      "palette": [
+        "CR8_cuff",
+        "CR8_glove",
+        "CR8_ochre",
+        "CR8_seam",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Misha_ForearmL.png"
+    },
+    {
+      "name": "SM_Misha_ThighL",
+      "triangles": 204,
+      "pivot_cm": [
+        0,
+        -12,
+        -6
+      ],
+      "palette": [
+        "CR8_navy",
+        "CR8_seam"
+      ],
+      "texture": "T_SM_Misha_ThighL.png"
+    },
+    {
+      "name": "SM_Misha_ShinL",
+      "triangles": 628,
+      "pivot_cm": [
+        0,
+        -12,
+        -44
+      ],
+      "palette": [
+        "CR8_boot",
+        "CR8_cuff",
+        "CR8_navy",
+        "CR8_seam",
+        "CR8_sole",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Misha_ShinL.png"
+    },
+    {
+      "name": "SM_Misha_UpperArmR",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        27,
+        44
+      ],
+      "palette": [
+        "CR8_ochre",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Misha_UpperArmR.png"
+    },
+    {
+      "name": "SM_Misha_ForearmR",
+      "triangles": 632,
+      "pivot_cm": [
+        0,
+        29,
+        17
+      ],
+      "palette": [
+        "CR8_cuff",
+        "CR8_glove",
+        "CR8_ochre",
+        "CR8_seam",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Misha_ForearmR.png"
+    },
+    {
+      "name": "SM_Misha_ThighR",
+      "triangles": 204,
+      "pivot_cm": [
+        0,
+        12,
+        -6
+      ],
+      "palette": [
+        "CR8_navy",
+        "CR8_seam"
+      ],
+      "texture": "T_SM_Misha_ThighR.png"
+    },
+    {
+      "name": "SM_Misha_ShinR",
+      "triangles": 628,
+      "pivot_cm": [
+        0,
+        12,
+        -44
+      ],
+      "palette": [
+        "CR8_boot",
+        "CR8_cuff",
+        "CR8_navy",
+        "CR8_seam",
+        "CR8_sole",
+        "CR8_trim"
+      ],
+      "texture": "T_SM_Misha_ShinR.png"
+    }
+  ]
+}

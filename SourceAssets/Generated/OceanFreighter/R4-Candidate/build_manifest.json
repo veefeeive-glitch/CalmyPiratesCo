@@ -1,0 +1,47 @@
+{
+  "asset": "Calmy Ocean Freighter",
+  "status": "R4 machinery art pass over R3 circulation; Blender candidate, Unreal validation outstanding",
+  "dimensions_m": {
+    "length_overall": 122.0,
+    "beam": 20.4,
+    "hull_depth": 10.5,
+    "draft_reference": 7.2
+  },
+  "deck_levels_m": {
+    "tank_top": 2.0,
+    "lower": 4.5,
+    "tween": 7.25,
+    "weather": 10.5
+  },
+  "target_players": "2-12",
+  "collections": {
+    "00_REFERENCE": 4,
+    "10_HULL": 4,
+    "20_DECKS_BULKHEADS": 1953,
+    "30_SUPERSTRUCTURE": 1392,
+    "40_MACHINERY_SYSTEMS": 1578,
+    "50_CARGO_EQUIPMENT": 92,
+    "60_DECK_FITTINGS": 492,
+    "70_NAVIGATION": 80,
+    "80_LIGHTS_CAMERAS": 63,
+    "90_COLLISION": 0,
+    "95_EXPORT_LOD": 0
+  },
+  "mesh_objects": 5452,
+  "vertices": 114138,
+  "polygons": 80638,
+  "master_blend": "E:\\Game\\CalmyPiratesCoUE\\SourceAssets\\Generated\\OceanFreighter\\R4-Candidate\\CalmyOceanFreighter.blend",
+  "preview": null,
+  "cutaway_preview": null,
+  "stern_preview": null,
+  "access_preview": null,
+  "bow_preview": null,
+  "walkthrough_camera": "CAM_Walkthrough_FirstPerson",
+  "walkthrough_start_m": [
+    -24.0,
+    -6.349999904632568,
+    12.180000305175781
+  ],
+  "walkthrough_controls": "Open master, hover 3D viewport, Shift+` then WASD",
+  "previews_generated": false
+}

@@ -1,0 +1,306 @@
+{
+  "units": "metres; bind pivots in cm",
+  "style": "original faceted low-poly workwear",
+  "triangles": {
+    "Deckhand": 4726,
+    "Misha": 4811
+  },
+  "parts": [
+    {
+      "name": "SM_Deckhand_Torso",
+      "triangles": 864,
+      "pivot_cm": [
+        0,
+        0,
+        -6
+      ],
+      "materials": [
+        "CR6_teal",
+        "CR6_cuff",
+        "CR6_seam",
+        "CR6_trim",
+        "CR6_lens"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_Head",
+      "triangles": 846,
+      "pivot_cm": [
+        0,
+        0,
+        51
+      ],
+      "materials": [
+        "CR6_skin",
+        "CR6_lip",
+        "CR6_sclera",
+        "CR6_eye",
+        "CR6_beard",
+        "CR6_teal",
+        "CR6_navy",
+        "CR6_trim"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_UpperArmL",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        -27,
+        44
+      ],
+      "materials": [
+        "CR6_teal",
+        "CR6_trim"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ForearmL",
+      "triangles": 732,
+      "pivot_cm": [
+        0,
+        -29,
+        17
+      ],
+      "materials": [
+        "CR6_teal",
+        "CR6_cuff",
+        "CR6_glove",
+        "CR6_trim"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ThighL",
+      "triangles": 116,
+      "pivot_cm": [
+        0,
+        -12,
+        -6
+      ],
+      "materials": [
+        "CR6_navy"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ShinL",
+      "triangles": 408,
+      "pivot_cm": [
+        0,
+        -12,
+        -44
+      ],
+      "materials": [
+        "CR6_navy",
+        "CR6_trim",
+        "CR6_cuff",
+        "CR6_glove",
+        "CR6_sole"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_UpperArmR",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        27,
+        44
+      ],
+      "materials": [
+        "CR6_teal",
+        "CR6_trim"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ForearmR",
+      "triangles": 732,
+      "pivot_cm": [
+        0,
+        29,
+        17
+      ],
+      "materials": [
+        "CR6_teal",
+        "CR6_cuff",
+        "CR6_glove",
+        "CR6_trim"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ThighR",
+      "triangles": 204,
+      "pivot_cm": [
+        0,
+        12,
+        -6
+      ],
+      "materials": [
+        "CR6_navy",
+        "CR6_cuff"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ShinR",
+      "triangles": 408,
+      "pivot_cm": [
+        0,
+        12,
+        -44
+      ],
+      "materials": [
+        "CR6_navy",
+        "CR6_trim",
+        "CR6_cuff",
+        "CR6_glove",
+        "CR6_sole"
+      ]
+    },
+    {
+      "name": "SM_Misha_Torso",
+      "triangles": 864,
+      "pivot_cm": [
+        0,
+        0,
+        -6
+      ],
+      "materials": [
+        "CR6_ochre",
+        "CR6_cuff",
+        "CR6_seam",
+        "CR6_trim",
+        "CR6_lens"
+      ]
+    },
+    {
+      "name": "SM_Misha_Head",
+      "triangles": 931,
+      "pivot_cm": [
+        0,
+        0,
+        51
+      ],
+      "materials": [
+        "CR6_misha",
+        "CR6_lip",
+        "CR6_sclera",
+        "CR6_eye",
+        "CR6_beard",
+        "CR6_helmet",
+        "CR6_cuff",
+        "CR6_navy"
+      ]
+    },
+    {
+      "name": "SM_Misha_UpperArmL",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        -27,
+        44
+      ],
+      "materials": [
+        "CR6_ochre",
+        "CR6_trim"
+      ]
+    },
+    {
+      "name": "SM_Misha_ForearmL",
+      "triangles": 732,
+      "pivot_cm": [
+        0,
+        -29,
+        17
+      ],
+      "materials": [
+        "CR6_ochre",
+        "CR6_cuff",
+        "CR6_glove",
+        "CR6_trim"
+      ]
+    },
+    {
+      "name": "SM_Misha_ThighL",
+      "triangles": 116,
+      "pivot_cm": [
+        0,
+        -12,
+        -6
+      ],
+      "materials": [
+        "CR6_navy"
+      ]
+    },
+    {
+      "name": "SM_Misha_ShinL",
+      "triangles": 408,
+      "pivot_cm": [
+        0,
+        -12,
+        -44
+      ],
+      "materials": [
+        "CR6_navy",
+        "CR6_trim",
+        "CR6_cuff",
+        "CR6_glove",
+        "CR6_sole"
+      ]
+    },
+    {
+      "name": "SM_Misha_UpperArmR",
+      "triangles": 208,
+      "pivot_cm": [
+        0,
+        27,
+        44
+      ],
+      "materials": [
+        "CR6_ochre",
+        "CR6_trim"
+      ]
+    },
+    {
+      "name": "SM_Misha_ForearmR",
+      "triangles": 732,
+      "pivot_cm": [
+        0,
+        29,
+        17
+      ],
+      "materials": [
+        "CR6_ochre",
+        "CR6_cuff",
+        "CR6_glove",
+        "CR6_trim"
+      ]
+    },
+    {
+      "name": "SM_Misha_ThighR",
+      "triangles": 204,
+      "pivot_cm": [
+        0,
+        12,
+        -6
+      ],
+      "materials": [
+        "CR6_navy",
+        "CR6_cuff"
+      ]
+    },
+    {
+      "name": "SM_Misha_ShinR",
+      "triangles": 408,
+      "pivot_cm": [
+        0,
+        12,
+        -44
+      ],
+      "materials": [
+        "CR6_navy",
+        "CR6_trim",
+        "CR6_cuff",
+        "CR6_glove",
+        "CR6_sole"
+      ]
+    }
+  ]
+}

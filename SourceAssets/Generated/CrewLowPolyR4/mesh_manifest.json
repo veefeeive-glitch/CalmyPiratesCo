@@ -1,0 +1,335 @@
+{
+  "style": "authored flat-shaded low-poly",
+  "units": "metres; pivot_cm in manifest",
+  "parts": [
+    {
+      "name": "SM_Deckhand_Torso",
+      "triangles": 616,
+      "vertices": 336,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        0,
+        -6
+      ],
+      "materials": [
+        "LP4_oilskin",
+        "LP4_navy",
+        "LP4_cloth",
+        "LP4_cream",
+        "LP4_rubber",
+        "LP4_lens"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_Head",
+      "triangles": 640,
+      "vertices": 350,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        0,
+        51
+      ],
+      "materials": [
+        "LP4_skin",
+        "LP4_white",
+        "LP4_eye",
+        "LP4_navy",
+        "LP4_lip",
+        "LP4_cloth",
+        "LP4_cream"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_UpperArmL",
+      "triangles": 104,
+      "vertices": 56,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -27,
+        44
+      ],
+      "materials": [
+        "LP4_oilskin",
+        "LP4_navy"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ForearmL",
+      "triangles": 352,
+      "vertices": 192,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -29,
+        17
+      ],
+      "materials": [
+        "LP4_oilskin",
+        "LP4_navy",
+        "LP4_rubber"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ThighL",
+      "triangles": 104,
+      "vertices": 56,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -12,
+        -6
+      ],
+      "materials": [
+        "LP4_cloth",
+        "LP4_navy"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ShinL",
+      "triangles": 192,
+      "vertices": 104,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -12,
+        -44
+      ],
+      "materials": [
+        "LP4_navy",
+        "LP4_rubber",
+        "LP4_cream"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_UpperArmR",
+      "triangles": 104,
+      "vertices": 56,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        27,
+        44
+      ],
+      "materials": [
+        "LP4_oilskin",
+        "LP4_navy"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ForearmR",
+      "triangles": 352,
+      "vertices": 192,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        29,
+        17
+      ],
+      "materials": [
+        "LP4_oilskin",
+        "LP4_navy",
+        "LP4_rubber"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ThighR",
+      "triangles": 148,
+      "vertices": 80,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        12,
+        -6
+      ],
+      "materials": [
+        "LP4_cloth",
+        "LP4_navy"
+      ]
+    },
+    {
+      "name": "SM_Deckhand_ShinR",
+      "triangles": 192,
+      "vertices": 104,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        12,
+        -44
+      ],
+      "materials": [
+        "LP4_navy",
+        "LP4_rubber",
+        "LP4_cream"
+      ]
+    },
+    {
+      "name": "SM_Misha_Torso",
+      "triangles": 616,
+      "vertices": 336,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        0,
+        -6
+      ],
+      "materials": [
+        "LP4_rust",
+        "LP4_navy",
+        "LP4_cloth",
+        "LP4_cream",
+        "LP4_rubber",
+        "LP4_lens"
+      ]
+    },
+    {
+      "name": "SM_Misha_Head",
+      "triangles": 624,
+      "vertices": 342,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        0,
+        51
+      ],
+      "materials": [
+        "LP4_skin_misha",
+        "LP4_white",
+        "LP4_eye",
+        "LP4_navy",
+        "LP4_lip",
+        "LP4_cloth"
+      ]
+    },
+    {
+      "name": "SM_Misha_UpperArmL",
+      "triangles": 104,
+      "vertices": 56,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -27,
+        44
+      ],
+      "materials": [
+        "LP4_rust",
+        "LP4_navy"
+      ]
+    },
+    {
+      "name": "SM_Misha_ForearmL",
+      "triangles": 352,
+      "vertices": 192,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -29,
+        17
+      ],
+      "materials": [
+        "LP4_rust",
+        "LP4_navy",
+        "LP4_rubber"
+      ]
+    },
+    {
+      "name": "SM_Misha_ThighL",
+      "triangles": 104,
+      "vertices": 56,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -12,
+        -6
+      ],
+      "materials": [
+        "LP4_cloth",
+        "LP4_navy"
+      ]
+    },
+    {
+      "name": "SM_Misha_ShinL",
+      "triangles": 192,
+      "vertices": 104,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        -12,
+        -44
+      ],
+      "materials": [
+        "LP4_navy",
+        "LP4_rubber",
+        "LP4_cream"
+      ]
+    },
+    {
+      "name": "SM_Misha_UpperArmR",
+      "triangles": 104,
+      "vertices": 56,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        27,
+        44
+      ],
+      "materials": [
+        "LP4_rust",
+        "LP4_navy"
+      ]
+    },
+    {
+      "name": "SM_Misha_ForearmR",
+      "triangles": 352,
+      "vertices": 192,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        29,
+        17
+      ],
+      "materials": [
+        "LP4_rust",
+        "LP4_navy",
+        "LP4_rubber"
+      ]
+    },
+    {
+      "name": "SM_Misha_ThighR",
+      "triangles": 148,
+      "vertices": 80,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        12,
+        -6
+      ],
+      "materials": [
+        "LP4_cloth",
+        "LP4_navy"
+      ]
+    },
+    {
+      "name": "SM_Misha_ShinR",
+      "triangles": 192,
+      "vertices": 104,
+      "flat_shaded": true,
+      "pivot_cm": [
+        0,
+        12,
+        -44
+      ],
+      "materials": [
+        "LP4_navy",
+        "LP4_rubber",
+        "LP4_cream"
+      ]
+    }
+  ],
+  "triangles": {
+    "Deckhand": 2804,
+    "Misha": 2788
+  }
+}

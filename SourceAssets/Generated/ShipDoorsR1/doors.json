@@ -1,0 +1,829 @@
+{
+  "doors": [
+    {
+      "id": 1,
+      "name": "R3_Boat_Corridor-1_0_Door0",
+      "pivot_cm": [
+        -4853.0000150203705,
+        107.0000047683716,
+        1067.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 2,
+      "name": "R3_Boat_Corridor-1_1_Door0",
+      "pivot_cm": [
+        -3909.000152349472,
+        107.0000047683716,
+        1067.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 3,
+      "name": "R3_Boat_Corridor1_0_Door0",
+      "pivot_cm": [
+        -5145.499938726425,
+        -133.00000476837158,
+        1067.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 4,
+      "name": "R3_Boat_Corridor1_1_Door0",
+      "pivot_cm": [
+        -3834.000152349472,
+        -133.00000476837158,
+        1067.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 5,
+      "name": "R3_Boat_Outer-1_Door3",
+      "pivot_cm": [
+        -3213.9996945858,
+        756.9999809265137,
+        1067.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 6,
+      "name": "R3_Boat_Outer1_Door3",
+      "pivot_cm": [
+        -3213.9996945858,
+        -782.9999809265137,
+        1067.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 7,
+      "name": "R3_Boat_StairLobby_Door0",
+      "pivot_cm": [
+        -4788.9996945858,
+        -133.00000476837158,
+        1067.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 8,
+      "name": "R3_Bridge_Side-1_Door4",
+      "pivot_cm": [
+        -3213.9996945858,
+        646.9999904632568,
+        1891.9999313354492
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 9,
+      "name": "R3_Bridge_Side1_Door4",
+      "pivot_cm": [
+        -3213.9996945858,
+        -672.9999904632568,
+        1891.9999313354492
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 10,
+      "name": "R3_BulkheadDoor(-20, 2.08)",
+      "pivot_cm": [
+        -1987.0,
+        -843.500018119812,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 11,
+      "name": "R3_BulkheadDoor(-20, 4.58)",
+      "pivot_cm": [
+        -1987.0,
+        -843.500018119812,
+        458.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 12,
+      "name": "R3_BulkheadDoor(-20, 7.33)",
+      "pivot_cm": [
+        -1987.0,
+        -843.500018119812,
+        733.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 13,
+      "name": "R3_BulkheadDoor(-35, 2.08)",
+      "pivot_cm": [
+        -3486.9999999999995,
+        -63.499999046325684,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 14,
+      "name": "R3_BulkheadDoor(-35, 4.58)",
+      "pivot_cm": [
+        -3486.9999999999995,
+        -63.499999046325684,
+        458.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 15,
+      "name": "R3_BulkheadDoor(-35, 7.33)",
+      "pivot_cm": [
+        -3486.9999999999995,
+        -63.499999046325684,
+        733.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 16,
+      "name": "R3_BulkheadDoor(-52, 4.58)",
+      "pivot_cm": [
+        -5187.0,
+        -63.499999046325684,
+        458.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 17,
+      "name": "R3_BulkheadDoor(-52, 7.33)",
+      "pivot_cm": [
+        -5187.0,
+        -63.499999046325684,
+        733.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 18,
+      "name": "R3_BulkheadDoor(10, 2.08)",
+      "pivot_cm": [
+        1013.0000000000001,
+        -843.500018119812,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 19,
+      "name": "R3_BulkheadDoor(10, 4.58)",
+      "pivot_cm": [
+        1013.0000000000001,
+        -843.500018119812,
+        458.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 20,
+      "name": "R3_BulkheadDoor(10, 7.33)",
+      "pivot_cm": [
+        1013.0000000000001,
+        -843.500018119812,
+        733.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 21,
+      "name": "R3_BulkheadDoor(14, 2.08)",
+      "pivot_cm": [
+        1413.0,
+        -843.500018119812,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 22,
+      "name": "R3_BulkheadDoor(14, 4.58)",
+      "pivot_cm": [
+        1413.0,
+        -843.500018119812,
+        458.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 23,
+      "name": "R3_BulkheadDoor(14, 7.33)",
+      "pivot_cm": [
+        1413.0,
+        -843.500018119812,
+        733.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 24,
+      "name": "R3_BulkheadDoor(42, 2.08)",
+      "pivot_cm": [
+        4213.0,
+        -843.500018119812,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 25,
+      "name": "R3_BulkheadDoor(42, 4.58)",
+      "pivot_cm": [
+        4213.0,
+        -843.500018119812,
+        458.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 26,
+      "name": "R3_BulkheadDoor(42, 7.33)",
+      "pivot_cm": [
+        4213.0,
+        -843.500018119812,
+        733.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 27,
+      "name": "R3_BulkheadDoor(52, 2.08)",
+      "pivot_cm": [
+        5213.0,
+        -63.499999046325684,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 28,
+      "name": "R3_BulkheadDoor(52, 4.58)",
+      "pivot_cm": [
+        5213.0,
+        -63.499999046325684,
+        458.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 29,
+      "name": "R3_BulkheadDoor(52, 7.33)",
+      "pivot_cm": [
+        5213.0,
+        -63.499999046325684,
+        733.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 30,
+      "name": "R3_Crew_Corridor-1_0_Door0",
+      "pivot_cm": [
+        -5192.999786138535,
+        107.0000047683716,
+        1342.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 31,
+      "name": "R3_Crew_Corridor-1_1_Door0",
+      "pivot_cm": [
+        -4713.9996945858,
+        107.0000047683716,
+        1342.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 32,
+      "name": "R3_Crew_Corridor-1_2_Door0",
+      "pivot_cm": [
+        -4234.000152349472,
+        107.0000047683716,
+        1342.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 33,
+      "name": "R3_Crew_Corridor-1_3_Door0",
+      "pivot_cm": [
+        -3768.9999997615814,
+        107.0000047683716,
+        1342.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 34,
+      "name": "R3_Crew_Corridor1_0_Door0",
+      "pivot_cm": [
+        -5145.499938726425,
+        -133.00000476837158,
+        1342.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 35,
+      "name": "R3_Crew_Corridor1_1_Door0",
+      "pivot_cm": [
+        -3978.999847173691,
+        -133.00000476837158,
+        1342.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 36,
+      "name": "R3_Crew_Corridor1_2_Door0",
+      "pivot_cm": [
+        -3688.9996945858,
+        -133.00000476837158,
+        1342.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 37,
+      "name": "R3_Crew_Outer-1_Door3",
+      "pivot_cm": [
+        -3213.9996945858,
+        746.9999904632568,
+        1342.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 38,
+      "name": "R3_Crew_Outer1_Door3",
+      "pivot_cm": [
+        -3213.9996945858,
+        -772.9999904632568,
+        1342.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 39,
+      "name": "R3_Crew_StairLobby_Door0",
+      "pivot_cm": [
+        -4788.9996945858,
+        -133.00000476837158,
+        1342.0000267028809
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 40,
+      "name": "R3_Officers_Corridor-1_0_Door0",
+      "pivot_cm": [
+        -4903.0000150203705,
+        107.0000047683716,
+        1616.9999313354492
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 41,
+      "name": "R3_Officers_Corridor-1_1_Door0",
+      "pivot_cm": [
+        -4353.999847173691,
+        107.0000047683716,
+        1616.9999313354492
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 42,
+      "name": "R3_Officers_Corridor-1_2_Door0",
+      "pivot_cm": [
+        -3813.9996945858,
+        107.0000047683716,
+        1616.9999313354492
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 43,
+      "name": "R3_Officers_Corridor1_0_Door0",
+      "pivot_cm": [
+        -5020.499938726425,
+        -133.00000476837158,
+        1616.9999313354492
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 44,
+      "name": "R3_Officers_Corridor1_1_Door0",
+      "pivot_cm": [
+        -3834.000152349472,
+        -133.00000476837158,
+        1616.9999313354492
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 45,
+      "name": "R3_Officers_Outer-1_Door3",
+      "pivot_cm": [
+        -3213.9996945858,
+        706.9999809265137,
+        1616.9999313354492
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 46,
+      "name": "R3_Officers_Outer1_Door3",
+      "pivot_cm": [
+        -3213.9996945858,
+        -732.9999809265137,
+        1616.9999313354492
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 47,
+      "name": "R3_Officers_StairLobby_Door0",
+      "pivot_cm": [
+        -4788.9996945858,
+        -133.00000476837158,
+        1616.9999313354492
+      ],
+      "yaw": 0,
+      "width_cm": 112.00000047683716,
+      "height_cm": 210
+    },
+    {
+      "id": 48,
+      "name": "R3_PortBulkheadDoor(-20, 2.08)",
+      "pivot_cm": [
+        -1987.0,
+        716.5000200271606,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 49,
+      "name": "R3_PortBulkheadDoor(-20, 4.58)",
+      "pivot_cm": [
+        -1987.0,
+        716.5000200271606,
+        458.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 50,
+      "name": "R3_PortBulkheadDoor(-20, 7.33)",
+      "pivot_cm": [
+        -1987.0,
+        716.5000200271606,
+        733.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 51,
+      "name": "R3_PortBulkheadDoor(10, 2.08)",
+      "pivot_cm": [
+        1013.0000000000001,
+        716.5000200271606,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 52,
+      "name": "R3_PortBulkheadDoor(10, 4.58)",
+      "pivot_cm": [
+        1013.0000000000001,
+        716.5000200271606,
+        458.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 53,
+      "name": "R3_PortBulkheadDoor(10, 7.33)",
+      "pivot_cm": [
+        1013.0000000000001,
+        716.5000200271606,
+        733.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 54,
+      "name": "R3_PortBulkheadDoor(14, 2.08)",
+      "pivot_cm": [
+        1413.0,
+        716.5000200271606,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 55,
+      "name": "R3_PortBulkheadDoor(14, 4.58)",
+      "pivot_cm": [
+        1413.0,
+        716.5000200271606,
+        458.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 56,
+      "name": "R3_PortBulkheadDoor(14, 7.33)",
+      "pivot_cm": [
+        1413.0,
+        716.5000200271606,
+        733.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 57,
+      "name": "R3_PortBulkheadDoor(42, 2.08)",
+      "pivot_cm": [
+        4213.0,
+        716.5000200271606,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 58,
+      "name": "R3_PortBulkheadDoor(42, 4.58)",
+      "pivot_cm": [
+        4213.0,
+        716.5000200271606,
+        458.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 59,
+      "name": "R3_PortBulkheadDoor(42, 7.33)",
+      "pivot_cm": [
+        4213.0,
+        716.5000200271606,
+        733.0000114440918
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 60,
+      "name": "R3_SternServiceDoor-1",
+      "pivot_cm": [
+        -5187.0,
+        366.50002002716064,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    },
+    {
+      "id": 61,
+      "name": "R3_SternServiceDoor1",
+      "pivot_cm": [
+        -5187.0,
+        -493.500018119812,
+        208.00001144409183
+      ],
+      "yaw": -90,
+      "width_cm": 126.99999809265137,
+      "height_cm": 210
+    }
+  ],
+  "removed_objects": [
+    "R3_Boat_Corridor-1_0_Door0_Handle",
+    "R3_Boat_Corridor-1_0_Door0_OpenLeaf",
+    "R3_Boat_Corridor-1_1_Door0_Handle",
+    "R3_Boat_Corridor-1_1_Door0_OpenLeaf",
+    "R3_Boat_Corridor1_0_Door0_Handle",
+    "R3_Boat_Corridor1_0_Door0_OpenLeaf",
+    "R3_Boat_Corridor1_1_Door0_Handle",
+    "R3_Boat_Corridor1_1_Door0_OpenLeaf",
+    "R3_Boat_Outer-1_Door3_Handle",
+    "R3_Boat_Outer-1_Door3_OpenLeaf",
+    "R3_Boat_Outer1_Door3_Handle",
+    "R3_Boat_Outer1_Door3_OpenLeaf",
+    "R3_Boat_StairLobby_Door0_Handle",
+    "R3_Boat_StairLobby_Door0_OpenLeaf",
+    "R3_Bridge_Side-1_Door4_Handle",
+    "R3_Bridge_Side-1_Door4_OpenLeaf",
+    "R3_Bridge_Side1_Door4_Handle",
+    "R3_Bridge_Side1_Door4_OpenLeaf",
+    "R3_BulkheadDoor(-20, 2.08)_OpenLeaf",
+    "R3_BulkheadDoor(-20, 4.58)_OpenLeaf",
+    "R3_BulkheadDoor(-20, 7.33)_OpenLeaf",
+    "R3_BulkheadDoor(-35, 2.08)_OpenLeaf",
+    "R3_BulkheadDoor(-35, 4.58)_OpenLeaf",
+    "R3_BulkheadDoor(-35, 7.33)_OpenLeaf",
+    "R3_BulkheadDoor(-52, 4.58)_OpenLeaf",
+    "R3_BulkheadDoor(-52, 7.33)_OpenLeaf",
+    "R3_BulkheadDoor(10, 2.08)_OpenLeaf",
+    "R3_BulkheadDoor(10, 4.58)_OpenLeaf",
+    "R3_BulkheadDoor(10, 7.33)_OpenLeaf",
+    "R3_BulkheadDoor(14, 2.08)_OpenLeaf",
+    "R3_BulkheadDoor(14, 4.58)_OpenLeaf",
+    "R3_BulkheadDoor(14, 7.33)_OpenLeaf",
+    "R3_BulkheadDoor(42, 2.08)_OpenLeaf",
+    "R3_BulkheadDoor(42, 4.58)_OpenLeaf",
+    "R3_BulkheadDoor(42, 7.33)_OpenLeaf",
+    "R3_BulkheadDoor(52, 2.08)_OpenLeaf",
+    "R3_BulkheadDoor(52, 4.58)_OpenLeaf",
+    "R3_BulkheadDoor(52, 7.33)_OpenLeaf",
+    "R3_Crew_Corridor-1_0_Door0_Handle",
+    "R3_Crew_Corridor-1_0_Door0_OpenLeaf",
+    "R3_Crew_Corridor-1_1_Door0_Handle",
+    "R3_Crew_Corridor-1_1_Door0_OpenLeaf",
+    "R3_Crew_Corridor-1_2_Door0_Handle",
+    "R3_Crew_Corridor-1_2_Door0_OpenLeaf",
+    "R3_Crew_Corridor-1_3_Door0_Handle",
+    "R3_Crew_Corridor-1_3_Door0_OpenLeaf",
+    "R3_Crew_Corridor1_0_Door0_Handle",
+    "R3_Crew_Corridor1_0_Door0_OpenLeaf",
+    "R3_Crew_Corridor1_1_Door0_Handle",
+    "R3_Crew_Corridor1_1_Door0_OpenLeaf",
+    "R3_Crew_Corridor1_2_Door0_Handle",
+    "R3_Crew_Corridor1_2_Door0_OpenLeaf",
+    "R3_Crew_Outer-1_Door3_Handle",
+    "R3_Crew_Outer-1_Door3_OpenLeaf",
+    "R3_Crew_Outer1_Door3_Handle",
+    "R3_Crew_Outer1_Door3_OpenLeaf",
+    "R3_Crew_StairLobby_Door0_Handle",
+    "R3_Crew_StairLobby_Door0_OpenLeaf",
+    "R3_Officers_Corridor-1_0_Door0_Handle",
+    "R3_Officers_Corridor-1_0_Door0_OpenLeaf",
+    "R3_Officers_Corridor-1_1_Door0_Handle",
+    "R3_Officers_Corridor-1_1_Door0_OpenLeaf",
+    "R3_Officers_Corridor-1_2_Door0_Handle",
+    "R3_Officers_Corridor-1_2_Door0_OpenLeaf",
+    "R3_Officers_Corridor1_0_Door0_Handle",
+    "R3_Officers_Corridor1_0_Door0_OpenLeaf",
+    "R3_Officers_Corridor1_1_Door0_Handle",
+    "R3_Officers_Corridor1_1_Door0_OpenLeaf",
+    "R3_Officers_Outer-1_Door3_Handle",
+    "R3_Officers_Outer-1_Door3_OpenLeaf",
+    "R3_Officers_Outer1_Door3_Handle",
+    "R3_Officers_Outer1_Door3_OpenLeaf",
+    "R3_Officers_StairLobby_Door0_Handle",
+    "R3_Officers_StairLobby_Door0_OpenLeaf",
+    "R3_PortBulkheadDoor(-20, 2.08)_OpenLeaf",
+    "R3_PortBulkheadDoor(-20, 4.58)_OpenLeaf",
+    "R3_PortBulkheadDoor(-20, 7.33)_OpenLeaf",
+    "R3_PortBulkheadDoor(10, 2.08)_OpenLeaf",
+    "R3_PortBulkheadDoor(10, 4.58)_OpenLeaf",
+    "R3_PortBulkheadDoor(10, 7.33)_OpenLeaf",
+    "R3_PortBulkheadDoor(14, 2.08)_OpenLeaf",
+    "R3_PortBulkheadDoor(14, 4.58)_OpenLeaf",
+    "R3_PortBulkheadDoor(14, 7.33)_OpenLeaf",
+    "R3_PortBulkheadDoor(42, 2.08)_OpenLeaf",
+    "R3_PortBulkheadDoor(42, 4.58)_OpenLeaf",
+    "R3_PortBulkheadDoor(42, 7.33)_OpenLeaf",
+    "R3_SternServiceDoor-1_OpenLeaf",
+    "R3_SternServiceDoor1_OpenLeaf"
+  ],
+  "removed_triangles": 9504,
+  "static_triangles": 268121,
+  "master_sha256": "8b4fe72d31e549649c0b36947a6cb5b906ebbd19b0955d5bd1f76d5f7da44f93"
+}

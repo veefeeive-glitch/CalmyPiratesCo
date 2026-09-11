@@ -1,0 +1,12 @@
+{
+  "triangles": 1840,
+  "meters_bounds": [
+    0.0745004415512085,
+    0.08675375580787659,
+    0.036074139177799225
+  ],
+  "author": "Original procedural model authored for Calmy Pirates Co.",
+  "forward": "+X",
+  "up": "+Z",
+  "textures": "none; material slots + vertex color wing animation"
+}

@@ -1,0 +1,37 @@
+{
+  "source": "ambientCG",
+  "downloaded": "2026-09-04",
+  "license": "CC0-1.0",
+  "license_url": "https://docs.ambientcg.com/license/",
+  "resolution": "1K-JPG",
+  "assets": [
+    {
+      "id": "DiamondPlate009",
+      "url": "https://ambientcg.com/view?id=DiamondPlate009",
+      "archive": "_downloads/DiamondPlate009_1K-JPG.zip",
+      "bytes": 9774915,
+      "sha256": "86BD439BB12F00C96F1A12CD827165E85F39295F3D1AB8F915C4B5714BC618E0"
+    },
+    {
+      "id": "Metal049A",
+      "url": "https://ambientcg.com/view?id=Metal049A",
+      "archive": "_downloads/Metal049A_1K-JPG.zip",
+      "bytes": 2744738,
+      "sha256": "4F6A79E535261AB55CC6FEEFED0037124885720CE7B781FC2EFA3FA22792AF42"
+    },
+    {
+      "id": "MetalWalkway014",
+      "url": "https://ambientcg.com/view?id=MetalWalkway014",
+      "archive": "_downloads/MetalWalkway014_1K-JPG.zip",
+      "bytes": 8551448,
+      "sha256": "541003D1848D32928158F7B920FFDA04C8205F5782A508F0563200BD3FDA7DB3"
+    },
+    {
+      "id": "WoodFloor051",
+      "url": "https://ambientcg.com/view?id=WoodFloor051",
+      "archive": "_downloads/WoodFloor051_1K-JPG.zip",
+      "bytes": 5104319,
+      "sha256": "3F493484EAB1EC5E1C466B90E515003B286FC6D7F84FF8FF6485900BFC26CEF5"
+    }
+  ]
+}

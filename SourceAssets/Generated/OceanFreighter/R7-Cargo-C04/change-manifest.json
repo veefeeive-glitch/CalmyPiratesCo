@@ -1,0 +1,18 @@
+{
+  "base_sha256": "0262764c031f83591a9ba23238231fe0eccad4d3fccc298b981ebaa34dd0a77b",
+  "candidate_sha256": "1148c8ffa0eca999428080b94a696de3db34cad140e5cb667bac170ef5741e85",
+  "changes": [
+    {
+      "hold": 1,
+      "entry": -12.9,
+      "side": -1,
+      "scope": "Upright outward-facing text, board and two supports beside opening"
+    },
+    {
+      "hold": 2,
+      "entry": 41.1,
+      "side": 1,
+      "scope": "Upright outward-facing text, board and two supports beside opening"
+    }
+  ]
+}

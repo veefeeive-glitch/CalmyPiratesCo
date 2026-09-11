@@ -1,0 +1,305 @@
+{
+  "date": "2026-09-06",
+  "scope": "Documentation audit only; no gameplay tests rerun",
+  "archives": [
+    {
+      "path": "Evidence/ShipTraversal/R6-Recheck-20260905-223837",
+      "files": 17,
+      "mismatches": 0
+    },
+    {
+      "path": "Evidence/ShipTraversal/R7-Cargo-20260906",
+      "files": 70,
+      "mismatches": 0
+    },
+    {
+      "path": "Evidence/Gameplay/CrewHelper-R2-20260906",
+      "files": 189,
+      "mismatches": 0
+    }
+  ],
+  "original_document_backup": [
+    {
+      "name": "AGENTS.md",
+      "bytes": 1096,
+      "sha256": "720f0273f601b17c8b7667c80c4e6233dcf4b9ab0f87a844051d9ba21af3dcd1"
+    },
+    {
+      "name": "ASSET_PROVENANCE.md",
+      "bytes": 5596,
+      "sha256": "2dd995cf12823a2f621d66e8ed9220b49c9e1b538880bc1d6ec44d2b0092c5c0"
+    },
+    {
+      "name": "CARGO_BEHAVIORS_VERIFICATION.md",
+      "bytes": 6255,
+      "sha256": "ac68c20cd7603bc14b3b1b444fc46dcd24ee062c5d48fb05e12683cafb2824b7"
+    },
+    {
+      "name": "CREW_HELPER_R2_HANDOVER.md",
+      "bytes": 14109,
+      "sha256": "861c60a4ce426cf2a6912115eb6d3301e1c3c8c2e7fffac91e068ec9841dfdd0"
+    },
+    {
+      "name": "DECKHAND_CHARACTER_HANDOVER.md",
+      "bytes": 6231,
+      "sha256": "34150da209fd7f9597ae13e8058e2ab47874b2ba724377501c731aeda995cd3f"
+    },
+    {
+      "name": "EMERGENCY_DIRECTOR_VERIFICATION.md",
+      "bytes": 5474,
+      "sha256": "f7a5fd8e62ce7bd3acf37f706556c3dace98c6bc6d2d3911a56f1bf63567c28f"
+    },
+    {
+      "name": "FREIGHTER_DECK_VERIFICATION.md",
+      "bytes": 2301,
+      "sha256": "88ec3b3e420d179bfa26c52851a61c06c0a0c6272dda4cb0678d5ba38afc490c"
+    },
+    {
+      "name": "FREIGHTER_INTERIOR_VERIFICATION.md",
+      "bytes": 3730,
+      "sha256": "2a6cd1a3271a12aa5ac9afcff3187d80203d6030522bb63b288e5cfb76e53c91"
+    },
+    {
+      "name": "GAME_ROADMAP.md",
+      "bytes": 20247,
+      "sha256": "d327fdb9def01a7a70e9c3d9d7002e983390eeeb17b0639e591657cb0176e2d5"
+    },
+    {
+      "name": "GENERAL_AUDIT_2026-09-05.md",
+      "bytes": 18805,
+      "sha256": "6b7a75126249f9fcaae65c56895ec5176bbf3a7f95a5c4c318ed351bb07f426c"
+    },
+    {
+      "name": "HANDOVER_2026-09-05.md",
+      "bytes": 40819,
+      "sha256": "7169d4eccb2290a6bf05270e36d4ffc09691dfd8cc84ed8e605474176e13b366"
+    },
+    {
+      "name": "LEAK_VERIFICATION.md",
+      "bytes": 8915,
+      "sha256": "ebf096b63df8a0168ed577f327734cad434472a4d44867027a972dcbae4941d4"
+    },
+    {
+      "name": "MEGA_FREIGHTER_DESIGN.md",
+      "bytes": 6408,
+      "sha256": "4876d94308d1495113bd1cfb5f3b04fa6660e6e80f95fb4d6a40cc199942ce25"
+    },
+    {
+      "name": "OCEAN_FREIGHTER_R3_HANDOVER.md",
+      "bytes": 14659,
+      "sha256": "e5f70747ba4290c70a608c87c2b0405c96f5c522abf0e98a9de5c6b7bdb09d56"
+    },
+    {
+      "name": "OCEAN_FREIGHTER_R4_HANDOVER.md",
+      "bytes": 10628,
+      "sha256": "cdd942093ee7c4b6086c6ac2e7968511bb1193b90f7192ede6db8a7a96e27958"
+    },
+    {
+      "name": "OCEAN_FREIGHTER_R5_HANDOVER.md",
+      "bytes": 10261,
+      "sha256": "7ba01931cce8659a493cb90c494a9956c64bd183ca0ec3ffbe14fa1eb562a59b"
+    },
+    {
+      "name": "OCEAN_FREIGHTER_R6_CHECKLIST.md",
+      "bytes": 2072,
+      "sha256": "63d2109edfbd80d4f3dcb59a0bc97fdf197592c0fde3fae1b49915fbfefd8c18"
+    },
+    {
+      "name": "OCEAN_FREIGHTER_R6_HANDOVER.md",
+      "bytes": 6095,
+      "sha256": "ccaf76e00582f48f3ed23cb2a8c9d13ecbd99449f625a71e69ae47a7fdfc241c"
+    },
+    {
+      "name": "OCEAN_FREIGHTER_R6_REVIEW.md",
+      "bytes": 1920,
+      "sha256": "8d3f6337eb23833e427b51d7f1f8b2e72f7122aedb87cdcf49bb65cceeafe028"
+    },
+    {
+      "name": "OCEAN_FREIGHTER_R7_HANDOVER.md",
+      "bytes": 13667,
+      "sha256": "c7ae240148f746446a6de1799a563d10835f3f9337472078912e4c402a89d673"
+    },
+    {
+      "name": "OCEAN_FREIGHTER_R7_VISUAL_REVIEW.md",
+      "bytes": 2891,
+      "sha256": "fb574ff184ecea5e2170e8fc1015de9c961ca683557b3eb2e5f48015c76d7859"
+    },
+    {
+      "name": "OCEAN_FREIGHTER_TRAVERSAL_AUDIT.md",
+      "bytes": 27369,
+      "sha256": "a7c7b360d6821cf12392d35ee1c30e673cb9a4da6abf2fca2194800dea0cd674"
+    },
+    {
+      "name": "POWER_LIGHT_VERIFICATION.md",
+      "bytes": 6364,
+      "sha256": "a9e4f9e4cc4a2a99fc5a8b4eec137f2b47910058913a31d065128dc638154bb5"
+    },
+    {
+      "name": "README.md",
+      "bytes": 19816,
+      "sha256": "b6e923445a3b57b50e694a04868ab09db6a460a6368a0b9276826bb27d2fee97"
+    },
+    {
+      "name": "SHIFT_ECONOMY_VERIFICATION.md",
+      "bytes": 1048,
+      "sha256": "fb8f9d47f95a67db041285b080342eb01d4339b0abd8d2053b582f0f50778ba3"
+    },
+    {
+      "name": "SHIP_ROADMAP.md",
+      "bytes": 22583,
+      "sha256": "5dc8633c997bb8b2d3bacea3ba34ad87a095f3c2f1f5ef6321a0ecee2e03af90"
+    },
+    {
+      "name": "VERIFICATION.md",
+      "bytes": 10001,
+      "sha256": "d8a8279341bcf8acb76d234479b42260e7d26718b73bda113bcf83b894d85501"
+    },
+    {
+      "name": "WATERLAB_HANDOVER.md",
+      "bytes": 6814,
+      "sha256": "13607c93d21dc70a26ed2ceca85b3ff3b7afdb81f87394c74c8846601c1f4f11"
+    },
+    {
+      "name": "WATERLAB_MECHANICS_AUDIT.md",
+      "bytes": 3330,
+      "sha256": "9a8768df5d00f8e58fd851cef73eb61dd46e4d85e4951252f735b6818990a7ab"
+    },
+    {
+      "name": "WALKTHROUGH_RU.md",
+      "bytes": 2105,
+      "sha256": "7bdbacb48e5429f579750f6e280070102a5c246d0b729fe2da17099a1270483e"
+    }
+  ],
+  "backup_count": 30,
+  "backup_zip_sha256": "9a89a89f41aeb1f5e51b0a7baef813a4126cd576e253ad64fbd93ce79ed640c5",
+  "agents_unchanged": true,
+  "source_config_drift": 0,
+  "ship_sha256": "8b4fe72d31e549649c0b36947a6cb5b906ebbd19b0955d5bd1f76d5f7da44f93",
+  "historical_markdown": [
+    {
+      "path": "Saved\\Audits\\OceanFreighter-CloseupAudit-20260905.md",
+      "sha256": "6d1eed7332024e84a51422540eccd045afd2430a021290eb72222b3600a5f9dc",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Saved\\Audits\\OceanFreighter-ProductionAudit-20260904-PostCorrection.md",
+      "sha256": "5ec2274d56caf90cf590125148cfb4c55f12cc531327641646cc6e8364cf33ff",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Saved\\Audits\\OceanFreighter-ProductionAudit-20260904-PreCorrection.md",
+      "sha256": "f7d6dcd6093a562f308b5fa3db360232b07edf53a28dd0c386dc72baa6ecde4d",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Saved\\Audits\\OceanFreighter-ProductionAudit-20260904-Recheck20260905.md",
+      "sha256": "987f088767d7d1da8dbd883ea6d6595476507943353c53524aac4752deb87fa4",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Saved\\Audits\\OceanFreighter-ProductionAudit-20260904.md",
+      "sha256": "f7d6dcd6093a562f308b5fa3db360232b07edf53a28dd0c386dc72baa6ecde4d",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Saved\\Audits\\OceanFreighter-Recheck-20260905.md",
+      "sha256": "a3e0a25d46c064b22ad9719b932f7004e35b812bed30d5dc442fb2318df8cc07",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Saved\\Verification\\OceanFreighter-R3-Final\\visual-review.md",
+      "sha256": "e4543533faaebc50d3fc75860cc2356b5d3c3175bf0deca8b6a94f329605b068",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Saved\\Verification\\OceanFreighter-R4-Final\\visual-review.md",
+      "sha256": "758508b8d17b29fd9f9eaf6c89b704562b3b688000836e52016519a4df1cef3e",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Saved\\Verification\\OceanFreighter-R5-Accepted\\visual-review.md",
+      "sha256": "44499898e2cd96447b3d0755e7f491dad4111c5e55e9d674061977435cdef80b",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Saved\\Verification\\R5-traversal-audit2\\route-index.md",
+      "sha256": "905cdabb69a90cb07cc831b4c5b66f78bbae7972ccab13abe943d1d63d0155f7",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Saved\\Verification\\R6-Recheck-20260905-223837\\contact-register.md",
+      "sha256": "43ee03473396a113778d84960516e08de977e7ec1592247b85847bbf1f360d76",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Builds\\Windows-20260902-114027\\BUILD_INFO.md",
+      "sha256": "422c75a6e7c439e4e5545d9f3859b01a7aea23a9b8c10176b82cbbdeefb35140",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Builds\\Windows-20260902-115853\\BUILD_INFO.md",
+      "sha256": "22b649d4b216bf9940bd0d84bdcaedcf4c35387762aba9f8d4063967ceed8477",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Builds\\Windows-20260902-122458\\BUILD_INFO.md",
+      "sha256": "5147662468272cf526fb84bb71342d29b713c0d0d54bf61f8e9a8ddc9ad3343d",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Builds\\Windows-20260903-223349\\BUILD_INFO.md",
+      "sha256": "0722aaa62bf76ce6cade9f5073463f5fce76c8deaddf448a9a7f3d1fc2653845",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Builds\\Windows-20260903-232231\\BUILD_INFO.md",
+      "sha256": "9f201cc7b842f99800d8e2b41eb4d940b548c207b7336cbd5731b8ce956592e3",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Builds\\Windows-20260903-232817\\BUILD_INFO.md",
+      "sha256": "7143e721ca367fa3037f2627d8e87e0a89c567ab55f26b543de4a9ac35ec7b0a",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Evidence\\Gameplay\\CrewHelper-R2-20260906\\source-snapshot\\AGENTS.md",
+      "sha256": "720f0273f601b17c8b7667c80c4e6233dcf4b9ab0f87a844051d9ba21af3dcd1",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Evidence\\Gameplay\\CrewHelper-R2-20260906\\source-snapshot\\CREW_HELPER_R2_HANDOVER.md",
+      "sha256": "861c60a4ce426cf2a6912115eb6d3301e1c3c8c2e7fffac91e068ec9841dfdd0",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Evidence\\Gameplay\\CrewHelper-R2-20260906\\source-snapshot\\GAME_ROADMAP.md",
+      "sha256": "d327fdb9def01a7a70e9c3d9d7002e983390eeeb17b0639e591657cb0176e2d5",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Evidence\\Gameplay\\CrewHelper-R2-20260906\\source-snapshot\\OCEAN_FREIGHTER_TRAVERSAL_AUDIT.md",
+      "sha256": "a7c7b360d6821cf12392d35ee1c30e673cb9a4da6abf2fca2194800dea0cd674",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Evidence\\Gameplay\\CrewHelper-R2-20260906\\source-snapshot\\README.md",
+      "sha256": "b6e923445a3b57b50e694a04868ab09db6a460a6368a0b9276826bb27d2fee97",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Evidence\\Gameplay\\CrewHelper-R2-20260906\\source-snapshot\\SHIP_ROADMAP.md",
+      "sha256": "5dc8633c997bb8b2d3bacea3ba34ad87a095f3c2f1f5ef6321a0ecee2e03af90",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Evidence\\ShipTraversal\\R6-Recheck-20260905-223837\\contact-register.md",
+      "sha256": "43ee03473396a113778d84960516e08de977e7ec1592247b85847bbf1f360d76",
+      "status": "historical_artifact_not_rewritten"
+    },
+    {
+      "path": "Evidence\\ShipTraversal\\R7-Cargo-20260906\\visual-review.md",
+      "sha256": "fb574ff184ecea5e2170e8fc1015de9c961ca683557b3eb2e5f48015c76d7859",
+      "status": "historical_artifact_not_rewritten"
+    }
+  ]
+}
