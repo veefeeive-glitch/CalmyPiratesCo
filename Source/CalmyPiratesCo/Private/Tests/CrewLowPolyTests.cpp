@@ -11,7 +11,7 @@ bool FCalmyLowPolyAssetsTest::RunTest(const FString&)
         int32 Triangles=0;
         for(const TCHAR* Part:Parts)
         {
-            const FString Path=FString::Printf(TEXT("/Game/Characters/CrewR6B/SM_%s_%s.SM_%s_%s"),Variant,Part,Variant,Part);
+            const FString Path=FString::Printf(TEXT("/Game/Characters/CrewR8/SM_%s_%s.SM_%s_%s"),Variant,Part,Variant,Part);
             const UStaticMesh* Mesh=LoadObject<UStaticMesh>(nullptr,*Path);
             if(!TestNotNull(*Path,Mesh))continue;
             TestTrue(TEXT("Physical rig has simple collision"),Mesh->GetBodySetup() && Mesh->GetBodySetup()->AggGeom.GetElementCount()>0);

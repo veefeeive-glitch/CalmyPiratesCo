@@ -1,6 +1,8 @@
 # Calmy Pirates Co. — начать продолжение здесь
 
-**Последнее изменение: [Crew R8 import](Docs/Changes/CREW_R8_IMPORT_2026-09-11.md), 11 сентября.** Импортированы 20 мешей в `/Game/Characters/CrewR8` (SemanticSearch exit 3 на quit). Runtime временно переключали на R8: Helper/Water/Ship PASS, Character завис на recovery (bind R6B). Пути возвращены на **R6B**; Character PASS после revert. FOV-probe приведён к preferences. Grips/water proxy/package — не начинались.
+**Последнее изменение: [Crew R8 runtime](Docs/Changes/CREW_R8_RUNTIME_2026-09-11.md), 11 сентября.** Runtime на **CrewR8**. Recovery: Overlap пола на моторе, чуть сильнее pull, soft-finish запас, ResetBodies после вставания. Automation 42/42; Character + Helper network PASS; DLL `fbe951fa…`. Grips/proxy/package не начинались.
+
+**Последнее изменение: [Crew R8 import](Docs/Changes/CREW_R8_IMPORT_2026-09-11.md), 11 сентября.** Импорт Content; первая попытка runtime откатилась из‑за recovery — закрыто отчётом выше.
 
 **Последнее изменение: [Automation smoke S1](Docs/Changes/AUTOMATION_SMOKE_S1_2026-09-11.md) / [Phased ops](Docs/Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md) / [Backup B1](Docs/Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md), 11 сентября.** См. CHANGELOG.
 
@@ -42,7 +44,7 @@
 
 | Область | Реализовано / проверено | Не завершено |
 |---|---|---|
-| Герой | CharacterMovement при ходьбе; при падении десять физических частей на сервере, моторный подъём/clearance; R6B в игре | Непрерывный skin, active walking balance, bracing/get-up clips, длинный soak/сложные контакты |
+| Герой | CharacterMovement при ходьбе; при падении десять физических частей на сервере, моторный подъём/clearance; **R8 в игре** | Непрерывный skin, active walking balance, bracing/get-up clips, длинный soak/сложные контакты |
 | Камера/руки | Bodycam, инерция, проверка стены, comfort, чувствительность, видимые локальные IK-руки | Физический хват/лазанье и обхват отдельными пальцами; human comfort gate |
 | NPC Миша | Заранее стоит на карте; H рядом просит помощь; тяжёлая доставка solo/сеть, dismissal/rehire | Двери сам не открывает; весь рейс в одиночку не пройден |
 | Грузы | Четыре разных типа/модели; прицел, reach/LOS, отказы, перенос, бросок/передача по правилам | Все типы/ручки/узкие проходы, полный контракт/manifest, чистый итоговый арт |
@@ -58,9 +60,9 @@
 
 Полный [каталог моделей и референсов](Docs/Handover/MODELS.md).
 
-- **Последний авторинг:** [Crew_R8.blend](SourceAssets/Generated/CrewR8/Crew_R8.blend). Переносить всю [папку CrewR8](SourceAssets/Generated/CrewR8): 20 GLB, 20 PNG-текстур, четыре рендера и манифест. Текстуры `.blend` внешние, ссылки `//T_*.png`; GLB содержат встроенные изображения. 6012/6048 triangles. **R8 не импортирован в Unreal и не прошёл игровые проверки**.
-- **В игре сейчас:** [Crew_R6.blend](SourceAssets/Generated/CrewR6B/Crew_R6.blend), `/Game/Characters/CrewR6B`; 4802/4882 triangles. Пути подтверждены в `CalmyCrewPresentation.cpp` и `CrewLowPolyTests.cpp`.
-- **Промежуточный кандидат:** [Crew_R7.blend](SourceAssets/Generated/CrewR7/Crew_R7.blend), только Blender, 5462/5442 triangles; R6B/R7/R8 не перезаписывать друг другом.
+- **В игре сейчас:** [Crew_R8.blend](SourceAssets/Generated/CrewR8/Crew_R8.blend), `/Game/Characters/CrewR8`; 6012/6048 triangles. Пути в `CalmyCrewPresentation.cpp` / `CrewLowPolyTests.cpp`. Character+Helper network PASS ([отчёт](Docs/Changes/CREW_R8_RUNTIME_2026-09-11.md)).
+- **Предыдущий runtime (сохранён):** [Crew_R6.blend](SourceAssets/Generated/CrewR6B/Crew_R6.blend), `/Game/Characters/CrewR6B`.
+- **Промежуточный кандидат:** [Crew_R7.blend](SourceAssets/Generated/CrewR7/Crew_R7.blend), только Blender; R6B/R7/R8 не перезаписывать друг другом.
 - **AI-концепты:** [Миша](SourceAssets/References/CrewR6/CONCEPT-not-gameplay.png), [Deckhand](SourceAssets/References/CrewR6/DECKHAND-CONCEPT-not-gameplay.png). Это PNG-ориентиры imagegen, не 3D и не runtime. Промпты рядом.
 - **Master корабля:** [CalmyOceanFreighter.blend](SourceAssets/Generated/OceanFreighter/CalmyOceanFreighter.blend), R7-Cargo-C06. Runtime материалы/свет/двери доработаны отдельно в UE; простой повтор старого экспорта потеряет эти изменения.
 - Для результатов другой программы предусмотрена [Incoming/Characters](SourceAssets/Incoming/Characters/README.md). Сохранять исходный файл, текстуры и происхождение; не заменять проверенные модели до сравнения и тестов.
@@ -114,8 +116,8 @@ UE 5.8.2; Blender 5.2.1 LTS; Visual Studio Community 2026 / MSVC 14.50 / Windows
 ## 6. Следующая работа — порядок
 
 1. Off-device backup B1 на `D:\Backups\...` выполнен. Remote — после URL.
-2. **R8:** Content импортирован; для runtime switch нужны bind/recovery под R8 (сейчас `CanFinishRecovery` не сходится с R6B pivots). Не переключать пути снова до Character PASS.
-3. Затем grips/пальцы/skin; water proxy; package — отдельные этапы.
+2. **R8 в runtime** (Character/Helper PASS). Дальше: GPU/человеческий взгляд; затем grips/пальцы/skin отдельным этапом.
+3. Water proxy; package — после grips или по явному запросу.
 3. Для действительно лучших героев — непрерывный skinned surface, веса плеч/локтей, пальцы/позы, low-poly силуэт и UV/material readability. Не выдавать ещё один жёсткий loft за законченного героя.
 4. Импортировать только выбранный кандидат, пересоздать коллизии, обновить два mesh paths, build → automation → Character/Helper/Ship/Water → GPU позы/крупные планы → длительный стенд. Старые файлы оставить.
 5. Bridge R2 entry/menu проверен отдельно. W1 добавил физически связанную локальную реакцию воды, но не шторм. Далее — пальцы/skin/реальные ручки, отдельный плавающий proxy и based movement/подвижный dry hull, затем большой корабль и полный рейс.

@@ -1,6 +1,8 @@
 # Проверки и границы доказательств
 
-**11 сентября — [Crew R8 import](../Changes/CREW_R8_IMPORT_2026-09-11.md).** Import PASS (assets); Character FAIL on R8 recovery; revert R6B; Character NETWORK_SMOKE_PASS; automation 42/42. Final DLL `b746b531…`.
+**11 сентября — [Crew R8 runtime](../Changes/CREW_R8_RUNTIME_2026-09-11.md).** Automation 42/42; Character `20260911-195105-Character` PASS (joint 0.09); Helper PASS; DLL `fbe951fa…`.
+
+**11 сентября — [Crew R8 import](../Changes/CREW_R8_IMPORT_2026-09-11.md).** Import PASS (assets); первая Character FAIL на recovery — закрыта runtime-этапом.
 
 **11 сентября — [Automation smoke S1](../Changes/AUTOMATION_SMOKE_S1_2026-09-11.md).** `AUTOMATION_PASS 42/42`, log `Saved/Logs/Automation-20260911-184018.log`, DLL `dd75bb31…` (до R8). NullRHI only.
 

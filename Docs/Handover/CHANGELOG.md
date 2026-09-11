@@ -1,5 +1,9 @@
 # Журнал продолжения проекта
 
+## 2026-09-11 — Crew R8 runtime (recovery)
+
+[Отчёт](../Changes/CREW_R8_RUNTIME_2026-09-11.md): пути на CrewR8; recovery Overlap/мотор/soft-finish/ResetBodies. 42/42 automation; Character+Helper PASS; DLL `fbe951fa…`. Grips не начинались.
+
 ## 2026-09-11 — Crew R8 import (PARTIAL)
 
 [Отчёт](../Changes/CREW_R8_IMPORT_2026-09-11.md): 20 мешей в Content/CrewR8; SemanticSearch crash на quit. Runtime R8: Helper/Water/Ship PASS, Character recovery FAIL (bind R6B). Revert на R6B; Character PASS; FOV probe исправлен под preferences. Grips/water/package отложены.

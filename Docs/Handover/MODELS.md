@@ -12,14 +12,14 @@
 
 | Ревизия | Где лежит | Статус | Deckhand / Миша, triangles |
 |---|---|---|---|
-| R8 | [CrewR8](../../SourceAssets/Generated/CrewR8) / Crew_R8.blend | Последний Blender-кандидат; **не в игре** | 6012 / 6048 |
+| R8 | [CrewR8](../../SourceAssets/Generated/CrewR8) / Crew_R8.blend | **В игре** `/Game/Characters/CrewR8` ([runtime](../Changes/CREW_R8_RUNTIME_2026-09-11.md)) | 6012 / 6048 |
 | R7 | [CrewR7](../../SourceAssets/Generated/CrewR7) / Crew_R7.blend | Предыдущий Blender-кандидат; не в игре | 5462 / 5442 |
-| R6B | [CrewR6B](../../SourceAssets/Generated/CrewR6B) / Crew_R6.blend | **Активные UE-модели**, собственные runtime тесты | 4802 / 4882 |
+| R6B | [CrewR6B](../../SourceAssets/Generated/CrewR6B) / Crew_R6.blend | Предыдущий runtime; Content сохранён | 4802 / 4882 |
 | R6 | [CrewR6](../../SourceAssets/Generated/CrewR6) | Первый диагностический проход R6 | 4726 / 4811 |
 | R5 | [CrewNightwatchR5](../../SourceAssets/Generated/CrewNightwatchR5) | История Nightwatch; не текущий runtime | 3474 / 3592 |
 | R4/R3 | [Generated](../../SourceAssets/Generated) / CrewLowPolyR4, CrewCargoR3, Deckhand | Старые модели/грузы, не удалять по номеру | См. соответствующие манифесты |
 
-Отдельный runtime `/Game/Characters/CrewR6B` содержит исходно импортированные ассеты, материалы и зависимости. `/Game/Characters/CrewR7` и `CrewR8` на момент аудита отсутствуют. [R7 report](../Changes/CREW_R7_2026-09-08.md), [R8 report](../Changes/CREW_R8_2026-09-08.md) — заявления авторинга, не игровые доказательства.
+Отдельный runtime `/Game/Characters/CrewR8` импортирован 2026-09-11; `/Game/Characters/CrewR6B` сохранён. `/Game/Characters/CrewR7` отсутствует. [R8 runtime](../Changes/CREW_R8_RUNTIME_2026-09-11.md), [R8 authoring](../Changes/CREW_R8_2026-09-08.md).
 
 ### R8: что переносить в другую программу
 

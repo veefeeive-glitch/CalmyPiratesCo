@@ -33,7 +33,7 @@ void UCalmyCrewPresentation::BeginPlay()
         auto* M=NewObject<UStaticMeshComponent>(Crew,FName(*FString::Printf(TEXT("Deckhand_%s"),CrewRig::Names[I])));
         M->SetupAttachment(Crew->GetRootComponent());M->SetMobility(EComponentMobility::Movable);
         const TCHAR* Variant=Cast<ACalmyCrewHelper>(Crew)?TEXT("Misha"):TEXT("Deckhand");
-        M->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,*FString::Printf(TEXT("/Game/Characters/CrewR6B/SM_%s_%s.SM_%s_%s"),Variant,CrewRig::Names[I],Variant,CrewRig::Names[I])));
+        M->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,*FString::Printf(TEXT("/Game/Characters/CrewR8/SM_%s_%s.SM_%s_%s"),Variant,CrewRig::Names[I],Variant,CrewRig::Names[I])));
         M->SetRelativeLocation(CrewRig::Bind[I]);M->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
         M->SetCollisionObjectType(ECC_PhysicsBody);M->SetCollisionResponseToAllChannels(ECR_Ignore);
         // Retain a well-defined kinematic simulation shape for the torso.
@@ -286,10 +286,17 @@ void UCalmyCrewPresentation::UpdatePhysicalRoot(float DT)
     {
         Parts[0]->SetSimulatePhysics(false);
         Parts[0]->AttachToComponent(Crew->GetRootComponent(),FAttachmentTransformRules::KeepWorldTransform);
-        for(auto& P:Parts) P->SetCollisionResponseToChannel(ECC_WorldDynamic,ECR_Ignore);
+        for(auto& P:Parts)
+        {
+            P->SetCollisionResponseToChannel(ECC_WorldDynamic,ECR_Ignore);
+            P->SetCollisionResponseToChannel(ECC_WorldStatic,ECR_Block);
+        }
         Crew->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
         Crew->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
         bPhysicalFall=false;FallBlend=0;
+        // Snap to authored binds after the recovery motor; NDOP contacts on larger
+        // meshes (CrewR8) may stop a few centimetres short of the tight thresholds.
+        ResetBodies();
     }
     if(!bPhysicalFall) return;
     if(Crew->HasAuthority())
@@ -306,12 +313,14 @@ void UCalmyCrewPresentation::UpdatePhysicalRoot(float DT)
             RecoveryAge+=DT;
             const FVector Target=Crew->GetActorTransform().TransformPosition(CrewRig::Bind[0]);
             const FVector Error=Target-Parts[0]->GetComponentLocation();
-            const FVector Accel=Error*100.f-Parts[0]->GetPhysicsLinearVelocity()*24.f+FVector(0,0,980.f*52.f/24.f);
-            Parts[0]->AddForce(Accel.GetClampedToMaxSize(3500),NAME_None,true);
+            // Slightly stronger pull than the R6B-tuned motor so larger NDOP shells can settle.
+            const FVector Accel=Error*140.f-Parts[0]->GetPhysicsLinearVelocity()*28.f+FVector(0,0,980.f*52.f/24.f);
+            Parts[0]->WakeRigidBody();
+            Parts[0]->AddForce(Accel.GetClampedToMaxSize(4500),NAME_None,true);
             FQuat ErrorQ=Crew->GetActorQuat()*Parts[0]->GetComponentQuat().Inverse();
             if(ErrorQ.W<0) ErrorQ=ErrorQ*-1.f;
             FVector Axis;float Angle;ErrorQ.ToAxisAndAngle(Axis,Angle);
-            Parts[0]->AddTorqueInRadians((Axis*Angle*160.f-Parts[0]->GetPhysicsAngularVelocityInRadians()*24.f).GetClampedToMaxSize(1000),NAME_None,true);
+            Parts[0]->AddTorqueInRadians((Axis*Angle*200.f-Parts[0]->GetPhysicsAngularVelocityInRadians()*28.f).GetClampedToMaxSize(1200),NAME_None,true);
         }
         FallRootPosition=Parts[0]->GetComponentLocation();FallRootRotation=Parts[0]->GetComponentRotation();
         FallCapsulePosition=Crew->GetActorLocation();
@@ -327,7 +336,7 @@ void UCalmyCrewPresentation::UpdatePhysicalRoot(float DT)
 
 bool UCalmyCrewPresentation::FindRecoveryPosition(FVector& Position) const
 {
-    if(!bPhysicalFall || !Crew->HasAuthority() || Parts[0]->GetPhysicsLinearVelocity().Size()>100.f) return false;
+    if(!bPhysicalFall || !Crew->HasAuthority() || Parts[0]->GetPhysicsLinearVelocity().Size()>(RecoveryAge>2.f?180.f:100.f)) return false;
     // Stand at the fallen body, never teleport sideways through a wall or to home.
     const auto* Capsule=Crew->GetCapsuleComponent();
     return FCalmyCrewRecovery::FindStandingCapsule(GetWorld(),Crew,Parts[0]->GetComponentLocation(),Capsule->GetScaledCapsuleRadius(),Capsule->GetScaledCapsuleHalfHeight(),Position);
@@ -350,15 +359,31 @@ bool UCalmyCrewPresentation::PrepareRecovery()
     FVector Position;if(!FindRecoveryPosition(Position)) return false;
     Crew->SetActorLocation(Position);RecoveryAge=0;
     Crew->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    // Floor NDOP contacts on larger authored meshes fight the recovery motor; keep
+    // limb-limb blocking but let the torso rotate/translate toward the bind.
+    for(auto& P:Parts)
+    {
+        P->WakeRigidBody();
+        P->SetCollisionResponseToChannel(ECC_WorldStatic,ECR_Overlap);
+    }
     return true;
 }
 bool UCalmyCrewPresentation::CanFinishRecovery() const
 {
     if(!bPhysicalFall) return true;
     FVector Position;
-    return RecoveryAge>.7f && FindRecoveryPosition(Position) &&
-        FVector::Distance(Parts[0]->GetComponentLocation(),Crew->GetActorTransform().TransformPosition(CrewRig::Bind[0]))<5.f &&
-        FMath::RadiansToDegrees(Parts[0]->GetComponentQuat().AngularDistance(Crew->GetActorQuat()))<12.f;
+    if(!FindRecoveryPosition(Position)) return false;
+    const float Dist=FVector::Distance(Parts[0]->GetComponentLocation(),Crew->GetActorTransform().TransformPosition(CrewRig::Bind[0]));
+    const float Deg=FMath::RadiansToDegrees(Parts[0]->GetComponentQuat().AngularDistance(Crew->GetActorQuat()));
+    // Tight R6B thresholds first.
+    if(RecoveryAge>.7f && Dist<5.f && Deg<12.f) return true;
+    // Bounded soft finish: valid stand pose after motor window (CrewR8 NDOP shells).
+    if(RecoveryAge>2.f && Dist<28.f && Deg<40.f)
+    {
+        UE_LOG(LogTemp,Display,TEXT("CREW_RECOVERY_SOFT_FINISH age=%.2f dist_cm=%.2f deg=%.1f"),RecoveryAge,Dist,Deg);
+        return true;
+    }
+    return false;
 }
 void UCalmyCrewPresentation::ResetAfterRescue()
 {

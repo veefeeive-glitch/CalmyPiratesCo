@@ -1,6 +1,8 @@
 # Текущее состояние — 2026-09-11
 
-**11 сентября — [Crew R8 import](../Changes/CREW_R8_IMPORT_2026-09-11.md).** Content R8 импортирован; runtime остаётся **R6B** после Character recovery FAIL на R8. Automation 42/42; Character PASS на R6B после revert. DLL `b746b531…`. Grips/proxy/package не делались.
+**11 сентября — [Crew R8 runtime](../Changes/CREW_R8_RUNTIME_2026-09-11.md).** В игре **CrewR8**; recovery motor укреплён. 42/42 automation; Character+Helper network PASS; DLL `fbe951fa…`. Grips/proxy/package нет.
+
+**11 сентября — [Crew R8 import](../Changes/CREW_R8_IMPORT_2026-09-11.md).** Content импортирован; первая runtime-попытка откатилась — закрыта runtime-отчётом выше.
 
 **11 сентября — [Automation smoke S1](../Changes/AUTOMATION_SMOKE_S1_2026-09-11.md).** 42/42 automation на S1 до R8; см. также прогон после R8/revert.
 
@@ -36,7 +38,7 @@
 
 - Игра: **Crew R6B meshes + [Water Interaction W1](../Changes/WATER_INTERACTION_W1_2026-09-10.md)** поверх Physical Crew / Bridge R2. Локальные удары/след меняют геометрию воды и buoyancy forces, живые события реплицируются. Добавлен один собственный material asset; карты/модели прежние. Свободное падение/моторный подъём/bodycam/меню сохранены. Обычный запуск — OceanFreighterR7.
 - Проверено W1: **31/31 automation**, WaterInteraction/Water/Character/Ship в Host/Client/LateJoin, 11 GPU кадров. Художественное качество воды PARTIAL: кольцевая форма ещё заметна, капли/подводная оптика нуждаются в доработке. Полные хеши/ограничения — в отчёте W1.
-- Последний авторинг: **Crew R8**, 6012/6048 triangles, текстуры. **Импортирован в** `/Game/Characters/CrewR8` (2026-09-11), но **runtime остаётся R6B** — Character recovery не проходит на R8 bind. Current runtime PASS для R8 нет.
+- Последний авторинг и **runtime:** **Crew R8** в `/Game/Characters/CrewR8`. R6B Content сохранён. Character/Helper network PASS на R8; Ship/Water на этой DLL в этом прогоне не повторялись.
 - **BridgeMenu R2 entry работает:** world-space экран читается, кнопки/настройки/resume, solo freeze, Host/Client/LateJoin. Сессии/сохранения/полная локализация ещё не реализованы. WaterLab сохранён для отдельных тестов.
 - Предыдущая настройка — [Rigify/MCP](../Changes/TOOLING_SETUP_2026-09-09.md): Rigify включён, generation PASS; Blender/Unreal отвечали на loopback. Для Grip/Health сборки служебный Unreal Editor штатно закрыт; живое подключение не гарантировано после закрытия. Git: локальный baseline B1 `7bb0048…`; remote нет; Evidence не tracked.
 
