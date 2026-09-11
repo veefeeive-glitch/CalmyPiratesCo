@@ -1,5 +1,13 @@
 # Журнал продолжения проекта
 
+## 2026-09-11 — Crew R8 import (PARTIAL)
+
+[Отчёт](../Changes/CREW_R8_IMPORT_2026-09-11.md): 20 мешей в Content/CrewR8; SemanticSearch crash на quit. Runtime R8: Helper/Water/Ship PASS, Character recovery FAIL (bind R6B). Revert на R6B; Character PASS; FOV probe исправлен под preferences. Grips/water/package отложены.
+
+## 2026-09-11 — Automation smoke S1
+
+[Отчёт](../Changes/AUTOMATION_SMOKE_S1_2026-09-11.md): ENV Check вручную (pwsh7 нет); AUTOMATION_PASS 42/42 на DLL S1 `dd75bb31…`. Package/network smoke не запускались.
+
 ## 2026-09-11 — Phased ops: remote SKIP + ops hardening
 
 [Отчёт](../Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md): remote пропущен (нет URL). JPG/JPEG в LFS (30 файлов renormalize). Unity Archive `safe.directory` добавлен. Supermemory MCP auth OK.

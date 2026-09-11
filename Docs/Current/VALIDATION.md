@@ -1,5 +1,9 @@
 # Проверки и границы доказательств
 
+**11 сентября — [Crew R8 import](../Changes/CREW_R8_IMPORT_2026-09-11.md).** Import PASS (assets); Character FAIL on R8 recovery; revert R6B; Character NETWORK_SMOKE_PASS; automation 42/42. Final DLL `b746b531…`.
+
+**11 сентября — [Automation smoke S1](../Changes/AUTOMATION_SMOKE_S1_2026-09-11.md).** `AUTOMATION_PASS 42/42`, log `Saved/Logs/Automation-20260911-184018.log`, DLL `dd75bb31…` (до R8). NullRHI only.
+
 **11 сентября — [Off-device backup B1](../Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md).** Robocopy FAILED=0; ZIP SHA256; git HEAD `47efb30…`; Evidence counts; key-path hashes. Манифест в `Saved/Verification/Backup-OffDevice-B1-20260911-182808` и `D:\Backups\...\MANIFEST`.
 
 **11 сентября — [Git LFS baseline B1](../Changes/GIT_BASELINE_B1_2026-09-11.md).** `git rev-parse HEAD` = `7bb0048b431705a61b74406882677373d01a55d7`; 2880 tracked / 1826 LFS; status clean до docs-followup. Evidence намеренно вне Git. Это не проверка gameplay и не наличие remote.

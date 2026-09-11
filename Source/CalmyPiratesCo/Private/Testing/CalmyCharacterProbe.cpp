@@ -2,6 +2,7 @@
 #include "Gameplay/CalmyCharacter.h"
 #include "Gameplay/CalmyCrewPresentation.h"
 #include "Gameplay/CalmyOcean.h"
+#include "Gameplay/CalmyPreferences.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/PlayerController.h"
@@ -132,9 +133,11 @@ void UCalmyCharacterProbe::Tick(float DT)
         else
         {
             FMinimalViewInfo View;P->CalcCamera(DT,View);
-            if(View.FOV!=102 || View.Location.ContainsNaN()) { Finish(false,TEXT("bodycam_invalid"));return; }
+            const float ExpectedFov=UCalmyPreferences::Get()->FieldOfView;
+            // FOV comes from preferences (default 92); steady mode does not change FOV.
+            if(!FMath::IsNearlyEqual(View.FOV,ExpectedFov) || View.Location.ContainsNaN()) { Finish(false,TEXT("bodycam_invalid"));return; }
             P->ToggleSteadyCamera();P->CalcCamera(DT,View);
-            if(View.FOV!=92 || !P->IsSteadyCamera()) { Finish(false,TEXT("comfort_mode_invalid"));return; }
+            if(!P->IsSteadyCamera() || !FMath::IsNearlyEqual(View.FOV,ExpectedFov)) { Finish(false,TEXT("comfort_mode_invalid"));return; }
             P->ToggleSteadyCamera();
             const float OriginalMotion=P->GetCameraMotionScale();
             P->CycleCameraMotion();P->CycleCameraMotion();P->CycleCameraMotion();

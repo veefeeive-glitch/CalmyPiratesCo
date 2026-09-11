@@ -2,9 +2,9 @@
 
 Навигация по всей рабочей папке: [E:/Game/README](../../README.md). [File organization F1](Changes/FILE_ORGANIZATION_F1_2026-09-11.md): Releases для готовых ZIP, Archive для старых версий, References для внешних исходников; игровой UE-проект на прежнем месте.
 
-Последнее изменение: [Phased ops remote SKIP + ops](Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md), 11 сентября.
+Последнее изменение: [Crew R8 import](Changes/CREW_R8_IMPORT_2026-09-11.md), 11 сентября — Content R8 есть; runtime R6B; Character recovery блокер для switch.
 
-Предыдущее: [Off-device backup B1](Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md), 11 сентября — копия на `D:\Backups\CalmyPiratesCo-2026-09-11`, проверки PASS.
+Предыдущее: [Phased ops / Backup / Automation smoke](Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md) того же дня.
 
 Новый отдельный артефакт: [Windows share P1](Changes/WINDOWS_SHARE_P1_2026-09-11.md), 11 сентября — текущая самостоятельная Windows-игра в ZIP для друга, исправленный cook динамических моделей и проверка из распакованной копии.
 

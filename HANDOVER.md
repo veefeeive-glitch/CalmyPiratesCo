@@ -1,8 +1,8 @@
 # Calmy Pirates Co. — начать продолжение здесь
 
-**Последнее изменение: [Phased ops remote SKIP + ops](Docs/Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md), 11 сентября.** Remote не создан (нет URL). JPG→LFS, Unity `safe.directory`, Supermemory MCP auth. Backup B1 и Git baseline прежние.
+**Последнее изменение: [Crew R8 import](Docs/Changes/CREW_R8_IMPORT_2026-09-11.md), 11 сентября.** Импортированы 20 мешей в `/Game/Characters/CrewR8` (SemanticSearch exit 3 на quit). Runtime временно переключали на R8: Helper/Water/Ship PASS, Character завис на recovery (bind R6B). Пути возвращены на **R6B**; Character PASS после revert. FOV-probe приведён к preferences. Grips/water proxy/package — не начинались.
 
-**Последнее изменение: [Off-device backup B1](Docs/Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md), 11 сентября.** Копия на `D:\Backups\CalmyPiratesCo-2026-09-11` (проект без Intermediate/DDC/.vs + Releases + MANIFEST). ZIP SHA256 и git HEAD `47efb30…` совпали; Evidence 3793=3793. Оригинал на E: не трогали. Remote по-прежнему нет.
+**Последнее изменение: [Automation smoke S1](Docs/Changes/AUTOMATION_SMOKE_S1_2026-09-11.md) / [Phased ops](Docs/Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md) / [Backup B1](Docs/Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md), 11 сентября.** См. CHANGELOG.
 
 **Последнее изменение: [Git LFS baseline B1](Docs/Changes/GIT_BASELINE_B1_2026-09-11.md), 11 сентября.** Локальный первый коммит `7bb0048b431705a61b74406882677373d01a55d7` на `main`: 2880 tracked / 1826 LFS. Evidence/Builds/Binaries/Saved исключены из Git и остаются на диске. Remote и push нет. Gameplay/DLL/ZIP не менялись.
 
@@ -113,8 +113,9 @@ UE 5.8.2; Blender 5.2.1 LTS; Visual Studio Community 2026 / MSVC 14.50 / Windows
 
 ## 6. Следующая работа — порядок
 
-1. Off-device backup B1 на `D:\Backups\...` выполнен. Remote для Git — только после явного URL. Периодически обновлять backup после крупных итераций.
-2. Взять актуальный R8 и обе картинки, оценить будущую внешнюю модель пользователя. Не начинать заново с R6B по старому README.
+1. Off-device backup B1 на `D:\Backups\...` выполнен. Remote — после URL.
+2. **R8:** Content импортирован; для runtime switch нужны bind/recovery под R8 (сейчас `CanFinishRecovery` не сходится с R6B pivots). Не переключать пути снова до Character PASS.
+3. Затем grips/пальцы/skin; water proxy; package — отдельные этапы.
 3. Для действительно лучших героев — непрерывный skinned surface, веса плеч/локтей, пальцы/позы, low-poly силуэт и UV/material readability. Не выдавать ещё один жёсткий loft за законченного героя.
 4. Импортировать только выбранный кандидат, пересоздать коллизии, обновить два mesh paths, build → automation → Character/Helper/Ship/Water → GPU позы/крупные планы → длительный стенд. Старые файлы оставить.
 5. Bridge R2 entry/menu проверен отдельно. W1 добавил физически связанную локальную реакцию воды, но не шторм. Далее — пальцы/skin/реальные ручки, отдельный плавающий proxy и based movement/подвижный dry hull, затем большой корабль и полный рейс.

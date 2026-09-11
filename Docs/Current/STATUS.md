@@ -1,6 +1,10 @@
 # Текущее состояние — 2026-09-11
 
-**11 сентября — [Phased ops: remote SKIP + ops](../Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md).** Remote SKIP; JPG LFS; Unity safe.directory; Supermemory MCP OK. Не gameplay.
+**11 сентября — [Crew R8 import](../Changes/CREW_R8_IMPORT_2026-09-11.md).** Content R8 импортирован; runtime остаётся **R6B** после Character recovery FAIL на R8. Automation 42/42; Character PASS на R6B после revert. DLL `b746b531…`. Grips/proxy/package не делались.
+
+**11 сентября — [Automation smoke S1](../Changes/AUTOMATION_SMOKE_S1_2026-09-11.md).** 42/42 automation на S1 до R8; см. также прогон после R8/revert.
+
+**11 сентября — [Phased ops: remote SKIP + ops](../Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md).** Remote SKIP; JPG LFS; Unity safe.directory; Supermemory partial SKIP.
 
 **11 сентября — [Off-device backup B1](../Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md).** Копия на `D:\Backups\CalmyPiratesCo-2026-09-11`; ZIP/git/Evidence/key paths PASS; 6 nested Intermediate + 2 reparse probes задокументированы. Remote нет. Не gameplay PASS.
 
@@ -32,7 +36,7 @@
 
 - Игра: **Crew R6B meshes + [Water Interaction W1](../Changes/WATER_INTERACTION_W1_2026-09-10.md)** поверх Physical Crew / Bridge R2. Локальные удары/след меняют геометрию воды и buoyancy forces, живые события реплицируются. Добавлен один собственный material asset; карты/модели прежние. Свободное падение/моторный подъём/bodycam/меню сохранены. Обычный запуск — OceanFreighterR7.
 - Проверено W1: **31/31 automation**, WaterInteraction/Water/Character/Ship в Host/Client/LateJoin, 11 GPU кадров. Художественное качество воды PARTIAL: кольцевая форма ещё заметна, капли/подводная оптика нуждаются в доработке. Полные хеши/ограничения — в отчёте W1.
-- Последний авторинг: **Crew R8**, 6012/6048 triangles, текстуры и улучшенная геометрия. **В UE не импортирован**, никаких current runtime PASS для R8 нет. Предыдущий Blender-кандидат R7 тоже вне игры.
+- Последний авторинг: **Crew R8**, 6012/6048 triangles, текстуры. **Импортирован в** `/Game/Characters/CrewR8` (2026-09-11), но **runtime остаётся R6B** — Character recovery не проходит на R8 bind. Current runtime PASS для R8 нет.
 - **BridgeMenu R2 entry работает:** world-space экран читается, кнопки/настройки/resume, solo freeze, Host/Client/LateJoin. Сессии/сохранения/полная локализация ещё не реализованы. WaterLab сохранён для отдельных тестов.
 - Предыдущая настройка — [Rigify/MCP](../Changes/TOOLING_SETUP_2026-09-09.md): Rigify включён, generation PASS; Blender/Unreal отвечали на loopback. Для Grip/Health сборки служебный Unreal Editor штатно закрыт; живое подключение не гарантировано после закрытия. Git: локальный baseline B1 `7bb0048…`; remote нет; Evidence не tracked.
 
