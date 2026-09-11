@@ -88,7 +88,8 @@ void ACalmyBridgeTerminal::Activate()
     {
         if(Selected==0){PC->ResumeFromMenu();return;}
         if(Selected==1){PC->OpenSettings();return;}
-        Page=Selected==1?1:2;Selected=0;
+        if(Selected==2){PC->RequestReplayTutorial();return;}
+        Page=2;Selected=0;
     }
     else if(Page==1)
     {
@@ -110,7 +111,7 @@ void ACalmyBridgeTerminal::Paint(UCanvas* C,int32 W,int32 H)
     Text(Page==1?TEXT("BODYCAM CONFIGURATION"):Page==2?TEXT("LEAVE THIS SESSION?"):TEXT("WHEELHOUSE  /  CREW TERMINAL  01"),48,94,.95,Dim);
     TArray<FString> Labels;
     auto* P=Cast<ACalmyCharacter>(PC->GetPawn());
-    if(Page==0)Labels={TEXT("CONTINUE WATCH"),TEXT("SETTINGS / НАСТРОЙКИ"),TEXT("LEAVE SESSION")};
+    if(Page==0)Labels={TEXT("CONTINUE WATCH"),TEXT("SETTINGS / НАСТРОЙКИ"),TEXT("REPLAY TRAINING / ОБУЧЕНИЕ СНОВА"),TEXT("LEAVE SESSION")};
     else if(Page==2)Labels={TEXT("STAY ON BOARD"),TEXT("CONFIRM / EXIT TO DESKTOP")};
     else Labels={FString::Printf(TEXT("CAMERA       %s   [V]"),P&&P->IsSteadyCamera()?TEXT("STEADY"):TEXT("BODYCAM")),FString::Printf(TEXT("MOTION       %.0f%%   [M]"),P?P->GetCameraMotionScale()*100:0),FString::Printf(TEXT("LOOK -       %.2fx   [[]"),P?P->GetLookSensitivity():1),TEXT("LOOK +       []]"),TEXT("BACK")};
     for(int32 I=0;I<Labels.Num();++I)

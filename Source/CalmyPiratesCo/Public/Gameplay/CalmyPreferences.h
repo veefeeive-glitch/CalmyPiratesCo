@@ -27,6 +27,8 @@ public:
     UPROPERTY(Config) int32 AAMethod=4; // TSR; 0 off, 1 FXAA, 2 TAA, 4 TSR.
     UPROPERTY(Config) float Gamma=2.2f;
     UPROPERTY(Config) TMap<FName,FKey> Bindings;
+    // Progress, not a graphics default — stored under [Calmy.Progress], not CPF_Config draft copy.
+    bool bTutorialCompleted=false;
     static UCalmyPreferences* Get();
     static const TArray<FKey>& DefaultKeys();
     static FString ActionLabel(const FKey& Key);

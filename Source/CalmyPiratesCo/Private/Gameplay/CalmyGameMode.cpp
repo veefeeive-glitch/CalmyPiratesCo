@@ -28,6 +28,7 @@
 #include "Components/InputComponent.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
+#include "Misc/PackageName.h"
 
 static bool BridgeEntry(const UWorld* World)
 {
@@ -215,6 +216,30 @@ void ACalmyPlayerController::MenuConfirm(){if(IsSettingsOpen())return;if(bPauseM
 
 void ACalmyPlayerController::TogglePauseMenu() {if(IsSettingsOpen()){CloseSettings();return;} if (bWheelInputLease) CloseFlyWheel(); else SetPauseMenuOpen(!bPauseMenuOpen); }
 void ACalmyPlayerController::ResumeFromMenu() { SetPauseMenuOpen(false); }
+void ACalmyPlayerController::RequestReplayTutorial()
+{
+	if (!IsLocalController() || !GetWorld()) return;
+	CloseSettings();
+	SetPauseMenuOpen(false);
+	ACalmyTutorial::BeginForcedReplay();
+	if (GetNetMode() == NM_Client) ServerReplayTutorial();
+	else TravelToTrainingMap();
+}
+void ACalmyPlayerController::ServerReplayTutorial_Implementation()
+{
+	ACalmyTutorial::BeginForcedReplay();
+	TravelToTrainingMap();
+}
+void ACalmyPlayerController::TravelToTrainingMap()
+{
+	UWorld* World = GetWorld();
+	if (!World || World->GetNetMode() == NM_Client) return;
+	if (!FPackageName::DoesPackageExist(ACalmyTutorial::TrainingMap()) ||
+		!World->ServerTravel(ACalmyTutorial::TrainingMap(), false))
+	{
+		UE_LOG(LogTemp, Error, TEXT("CALMY_TUTORIAL replay_travel_failed"));
+	}
+}
 void ACalmyPlayerController::MenuCamera()
 {
     if (bPauseMenuOpen) if (auto* P = Cast<ACalmyCharacter>(GetPawn())) P->ToggleSteadyCamera();
@@ -315,9 +340,21 @@ AActor* ACalmyGameMode::ChoosePlayerStart_Implementation(AController* Player)
 
 void ACalmyGameMode::BeginPlay()
 {
-    Super::BeginPlay();
-    if(ACalmyTutorial::Enabled(GetWorld()) && !ACalmyTutorial::Find(GetWorld()))
-        GetWorld()->SpawnActor<ACalmyTutorial>();
+	Super::BeginPlay();
+	if (ACalmyTutorial::ShouldAutoBoard(GetWorld()))
+	{
+		if (GetWorld()->GetNetMode() != NM_Client)
+		{
+			if (!FPackageName::DoesPackageExist(ACalmyTutorial::Destination()) ||
+				!GetWorld()->ServerTravel(ACalmyTutorial::Destination(), false))
+			{
+				UE_LOG(LogTemp, Error, TEXT("CALMY_TUTORIAL auto_board_failed"));
+			}
+		}
+		return;
+	}
+	if (ACalmyTutorial::Enabled(GetWorld()) && !ACalmyTutorial::Find(GetWorld()))
+		GetWorld()->SpawnActor<ACalmyTutorial>();
 }
 
 void ACalmyGameMode::Logout(AController* Exiting)

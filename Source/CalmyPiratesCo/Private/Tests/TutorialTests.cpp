@@ -1,7 +1,9 @@
 #include "Gameplay/CalmyTutorial.h"
+#include "Gameplay/CalmyPreferences.h"
 #include "Gameplay/CalmyCargo.h"
 #include "Misc/AutomationTest.h"
 #include "Misc/PackageName.h"
+#include "Misc/ConfigCacheIni.h"
 #include "Engine/World.h"
 #if WITH_DEV_AUTOMATION_TESTS
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCalmyTutorialTest,"CalmyPiratesCo.Gameplay.TutorialProgress",EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
@@ -16,9 +18,31 @@ bool FCalmyTutorialTest::RunTest(const FString&)
     T->Tick(1);TestEqual(TEXT("Time alone cannot pass lesson"),T->Step,ECalmyTutorialStep::Walk);
     T->Tick(-1);TestEqual(TEXT("Invalid delta cannot progress"),T->WalkedCm,0);
     TestTrue(TEXT("Allowlisted ship package exists"),FPackageName::DoesPackageExist(ACalmyTutorial::Destination()));
+    TestTrue(TEXT("Allowlisted training package exists"),FPackageName::DoesPackageExist(ACalmyTutorial::TrainingMap()));
     TestFalse(TEXT("Not active on unrelated test worlds"),ACalmyTutorial::Enabled(W));
     T->Step=ECalmyTutorialStep::Deliver;T->Tick(1);
     TestEqual(TEXT("No physical delivery means no departure"),T->Step,ECalmyTutorialStep::Deliver);
     W->DestroyWorld(false);return true;
+}
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCalmyTutorialProgressTest,"CalmyPiratesCo.Gameplay.TutorialProgressPersist",EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
+bool FCalmyTutorialProgressTest::RunTest(const FString&)
+{
+	auto* Pref = UCalmyPreferences::Get();
+	const bool Previous = Pref->bTutorialCompleted;
+	Pref->bTutorialCompleted = false;
+	Pref->Persist();
+	ACalmyTutorial::MarkCompletedLocally();
+	TestTrue(TEXT("Completion sticks in memory"), Pref->bTutorialCompleted);
+	bool Disk = false;
+	TestTrue(TEXT("Completion written to progress ini"),
+		GConfig->GetBool(TEXT("Calmy.Progress"), TEXT("TutorialCompleted"), Disk, GGameUserSettingsIni) && Disk);
+	ACalmyTutorial::BeginForcedReplay();
+	TestTrue(TEXT("Menu replay forces another lesson"), ACalmyTutorial::IsForcedReplay());
+	ACalmyTutorial::MarkCompletedLocally();
+	TestFalse(TEXT("Finishing clears forced replay"), ACalmyTutorial::IsForcedReplay());
+	TestTrue(TEXT("Replay finish keeps completion saved"), Pref->bTutorialCompleted);
+	Pref->bTutorialCompleted = Previous;
+	Pref->Persist();
+	return true;
 }
 #endif

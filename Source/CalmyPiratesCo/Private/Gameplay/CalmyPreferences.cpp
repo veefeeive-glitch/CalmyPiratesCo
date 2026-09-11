@@ -28,6 +28,7 @@ UCalmyPreferences* UCalmyPreferences::Get()
             GConfig->GetFloat(TEXT("Calmy.Accessibility"),TEXT("LookSensitivity"),P->Sensitivity,GGameUserSettingsIni);
         }
         P->Sanitize();
+        GConfig->GetBool(TEXT("Calmy.Progress"),TEXT("TutorialCompleted"),P->bTutorialCompleted,GGameUserSettingsIni);
     }
     return P;
 }
@@ -67,6 +68,7 @@ void UCalmyPreferences::Persist()
     GConfig->SetBool(TEXT("Calmy.Accessibility"),TEXT("SteadyCamera"),SteadyCamera,GGameUserSettingsIni);
     GConfig->SetFloat(TEXT("Calmy.Accessibility"),TEXT("CameraMotion"),CameraMotion,GGameUserSettingsIni);
     GConfig->SetFloat(TEXT("Calmy.Accessibility"),TEXT("LookSensitivity"),Sensitivity,GGameUserSettingsIni);
+    GConfig->SetBool(TEXT("Calmy.Progress"),TEXT("TutorialCompleted"),bTutorialCompleted,GGameUserSettingsIni);
     GConfig->Flush(false,GGameUserSettingsIni);
 }
 void UCalmyPreferences::Apply(ACalmyPlayerController* PC) const

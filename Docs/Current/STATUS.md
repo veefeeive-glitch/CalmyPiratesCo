@@ -1,5 +1,7 @@
 # Текущее состояние — 2026-09-11
 
+**11 сентября — [Tutorial progress save](../Changes/TUTORIAL_PROGRESS_SAVE_2026-09-11.md).** Прохождение сохраняется; повтор из меню рубки. 44/44; Tutorial+BridgeMenu PASS.
+
 **11 сентября — [Grip R2a](../Changes/GRIP_R2A_HANDLES_2026-09-11.md).** Kind-specific хваты + moving yaw ≤5 см. 43/43; Helper+GripViews PASS; DLL `A935E36D…`. Пальцы/skin/package нет.
 
 **11 сентября — [Crew R8 runtime](../Changes/CREW_R8_RUNTIME_2026-09-11.md).** В игре **CrewR8**; recovery motor укреплён. 42/42 automation; Character+Helper network PASS; DLL `fbe951fa…`.
@@ -36,7 +38,7 @@
 
 ## Текущая версия и неимпортированная работа
 
-- **Tutorial → Ship T1:** обычный запуск WaterLab теперь включает три вводных задания без таймера и переход всей команды в рубку OceanFreighterR7. Проверены solo GPU, Host/Client/LateJoin и 32/32 automation; [отчёт](../Changes/TUTORIAL_SHIP_T1_2026-09-10.md). Это новый flow поверх W1, не новый арт корабля. Сохранение прохождения и свежий packaged build ещё отсутствуют. Описания запуска сразу на R7 ниже относятся к W1/R2.
+- Tutorial → Ship T1: обычный запуск WaterLab; после прохождения прогресс сохраняется и следующий старт — сразу корабль; повтор из меню рубки. [Отчёт save](../Changes/TUTORIAL_PROGRESS_SAVE_2026-09-11.md).
 
 - Игра: **Crew R6B meshes + [Water Interaction W1](../Changes/WATER_INTERACTION_W1_2026-09-10.md)** поверх Physical Crew / Bridge R2. Локальные удары/след меняют геометрию воды и buoyancy forces, живые события реплицируются. Добавлен один собственный material asset; карты/модели прежние. Свободное падение/моторный подъём/bodycam/меню сохранены. Обычный запуск — OceanFreighterR7.
 - Проверено W1: **31/31 automation**, WaterInteraction/Water/Character/Ship в Host/Client/LateJoin, 11 GPU кадров. Художественное качество воды PARTIAL: кольцевая форма ещё заметна, капли/подводная оптика нуждаются в доработке. Полные хеши/ограничения — в отчёте W1.

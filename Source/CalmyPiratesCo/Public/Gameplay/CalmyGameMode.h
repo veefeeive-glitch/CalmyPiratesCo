@@ -40,6 +40,7 @@ public:
     bool IsPauseMenuOpen() const { return bPauseMenuOpen; }
     bool IsSoloPause() const { return GetNetMode() == NM_Standalone; }
     void ResumeFromMenu();
+    void RequestReplayTutorial();
     void MenuCamera();
     void MenuMotion();
     void MenuLookDown();
@@ -63,8 +64,11 @@ public:
     // duplicate/spammed intent; a later press is a new utterance. Current speech
     // replicates to late joiners. Disconnect leaves memory, removes live attention.
     UFUNCTION(Server, Reliable) void ServerTalkToSwarm(class AFlySwarmMob* Swarm, EFlyUtterance Intent);
+    // Owning client asks host to return the session to WaterLab training.
+    UFUNCTION(Server, Reliable) void ServerReplayTutorial();
     class ACalmyBridgeTerminal* GetBridgeTerminal() const { return BridgeTerminal; }
 private:
+    void TravelToTrainingMap();
     friend class UCalmyMeleeProbe;
     TSharedPtr<class SCalmySettingsWidget> SettingsWidget;
     TMap<TWeakObjectPtr<class UAudioComponent>,float> OriginalAudioVolumes;
