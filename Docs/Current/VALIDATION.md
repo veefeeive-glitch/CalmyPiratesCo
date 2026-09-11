@@ -1,5 +1,7 @@
 # Проверки и границы доказательств
 
+**11 сентября — [Git LFS baseline B1](../Changes/GIT_BASELINE_B1_2026-09-11.md).** `git rev-parse HEAD` = `7bb0048b431705a61b74406882677373d01a55d7`; 2880 tracked / 1826 LFS; status clean до docs-followup. Evidence намеренно вне Git. Это не проверка gameplay и не наличие remote.
+
 **11 сентября — [repo check / doc fix](../Changes/REPO_CHECK_FIX_2026-09-11.md).** Повторно сверены ZIP SHA256, editor DLL S1, junction/symlink targets, desktop-fly `git status`/`fsck`, `verify_project_docs` (102/752/0). README и пустой leftover `.git` исправлены; новый gameplay/automation не запускался. Риски Git (нет baseline; Evidence не ignored) зафиксированы в отчёте.
 
 **11 сентября — [файловая организация F1](../Changes/FILE_ORGANIZATION_F1_2026-09-11.md).** Проверяются сохранность NTFS identities/файловых SHA256, ссылки совместимости, Git fsck desktop-fly, launcher DryRun и документационные ссылки. Gameplay и артефакт ZIP не изменялись; новые GPU/automation/network не запускались, результаты P1/S1 остаются привязанными к тем же бинарникам. Журнал перемещений и исключение Windows directory rename сохранены в отчёте.

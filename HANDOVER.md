@@ -1,5 +1,7 @@
 # Calmy Pirates Co. — начать продолжение здесь
 
+**Последнее изменение: [Git LFS baseline B1](Docs/Changes/GIT_BASELINE_B1_2026-09-11.md), 11 сентября.** Локальный первый коммит `7bb0048b431705a61b74406882677373d01a55d7` на `main`: 2880 tracked / 1826 LFS. Evidence/Builds/Binaries/Saved исключены из Git и остаются на диске. Remote и push нет. Gameplay/DLL/ZIP не менялись.
+
 **Последнее изменение: [Repo check / doc fix](Docs/Changes/REPO_CHECK_FIX_2026-09-11.md), 11 сентября.** Повторная проверка после F1: ZIP P1 SHA256 совпал, editor DLL = S1 `dd75bb31…`, скрытые ссылки целы, `verify_project_docs` PASS. Исправлен устаревший README проекта (T1/9 сентября → актуальные Releases/S1/R6). Удалён пустой обломок `References/desktop-fly/.git`; настоящий desktop-fly git в скрытом `desktop-fly-reference` без изменений. Git UE по-прежнему 0 commits/0 tracked/нет remote; `Windows-Current` от 4 сентября ≠ share ZIP. Gameplay не трогался.
 
 **Последнее изменение: [File organization F1](Docs/Changes/FILE_ORGANIZATION_F1_2026-09-11.md), 11 сентября.** Упорядочена вся E:/Game: текущий UE-проект на прежнем месте; готовый ZIP в Releases/Windows/2026-09-11, Unity/Studio/старые инструкции в Archive, desktop-fly доступен через References. Старые пути сохранены скрытыми ссылками; при переносе desktop-fly Windows отказала, частичный перенос восстановлен, репозиторий оставлен на месте и проверен Git fsck. Игровые файлы/версии P1/S1/R6 и ярлык прежние, удаления не выполнялись. Навигация: E:/Game/README.md; журнал/проверки в отчёте F1.
@@ -22,7 +24,7 @@
 
 Актуализировано **2026-09-10**. Это живой хендовер, не архивный отчёт. Все пути ниже относительны корню проекта. Последняя runtime-итерация — **[Water Interaction W1](Docs/Changes/WATER_INTERACTION_W1_2026-09-10.md) поверх Physical Crew / Bridge R2, с мешами Crew R6B**, последний Blender-кандидат — **Crew R8, не импортирован**. Нижние R6-хеши сохранены как история. Текущие Source/DLL уже другие.
 
-Последняя настройка среды: [Rigify и MCP-мосты](Docs/Changes/TOOLING_SETUP_2026-09-09.md). Rigify проверен; соединения только loopback. Mixamo-вход пользователь выполнил, модели не загружались. Пользователь выбрал пока хранение на ПК, без облака. Git baseline/remote, импорт R8 и исправление SemanticSearch не выполнены.
+Последняя настройка среды: [Rigify и MCP-мосты](Docs/Changes/TOOLING_SETUP_2026-09-09.md). Rigify проверен; соединения только loopback. Mixamo-вход пользователь выполнил, модели не загружались. Пользователь выбрал пока хранение на ПК, без облака. Локальный Git+LFS baseline B1 выполнен; remote/push, импорт R8 и исправление SemanticSearch — нет.
 
 ## 1. Коротко о проекте и приоритетах пользователя
 
@@ -78,11 +80,11 @@ R8 лучше проработан по методике, но не принят
 
 ### Открытые технические проблемы
 
-1. **Нет Git baseline/remote:** на 2026-09-09 ноль tracked files, ноль коммитов и нет remote. Клонирование не переносит рабочий проект. `.gitattributes` требует LFS для бинарных ассетов; initial commit/push отдельно согласовать. Локальные Evidence/backups — не копия на другом устройстве.
+1. **Git baseline локальный, remote нет:** [B1](Docs/Changes/GIT_BASELINE_B1_2026-09-11.md) — commit `7bb0048b431705a61b74406882677373d01a55d7`, LFS включён. `Evidence/` не в Git (~854 MB на диске). Клон без LFS fetch и без отдельной копии Evidence/Builds неполный. Push/remote — только по явному запросу. Off-device backup по-прежнему отдельная задача.
 2. **BridgeMenu исходные отказы исправлены в R2:** input/visibility/paused rendering и server camera verification. Рубка BR0–BR3 стала обычным входом; Ship/Door fixtures по-прежнему выбирают прежние starts. PASS входа не равен завершённому рейсу/production menu.
 3. **Выход импортера:** оба R6 import-процесса сохранили модели и упали при shutdown в SemanticSearch, exit 3. Отключение одним CLI-флагом не помогло. Чистые последующие загрузки/тесты passed; сам shutdown не исправлен. R7/R8 импортеры ещё не доказали чистое выполнение.
 4. **Null в `GetCarryLocation` исправлен в Grip/Health R1:** добавлена отдельная проверка `HeldCargo->Mesh`. Старые automation warnings `World has no context!` остаются отдельным пунктом.
-5. **Пакет устарел:** `Builds/Windows-Current` от 4 сентября, не R6B. `package_windows.ps1` автоматически продвигает пакет до smoke и удаляет previous; не запускать как безобидную проверку.
+5. **Packaged share ≠ Windows-Current:** актуальный ZIP для друга — `E:/Game/Releases/Windows/2026-09-11` (P1). `Builds/Windows-Current` от 4 сентября устарел. `package_windows.ps1` автоматически продвигает пакет до smoke и удаляет previous; не запускать как безобидную проверку.
 6. R7-ART-01/02/03: обвязка HX2, верхние крепления, мебель/отделка/стыки/свет. Полная проходимость встречного потока и рабочих мест не принята.
 
 ## 5. Продолжение на другом устройстве
@@ -92,6 +94,8 @@ R8 лучше проработан по методике, но не принят
 Перенести как минимум `.uproject`, `Source`, `Config`, `Content`, `Scripts`, `SourceAssets`, `Docs`, `Evidence`, README/HANDOVER/AGENTS, `.gitattributes`, `.gitignore`, `.vsconfig`. `Content` переносить целиком: UE зависимости между материалами/текстурами/мешами не определяются по имени папки. `SourceAssets/External` и `ThirdParty` — с лицензиями. Unity-исходник и MD стека из Downloads вне этого корня — отдельные материалы, не входят в перенос автоматически.
 
 UE 5.8.2; Blender 5.2.1 LTS; Visual Studio Community 2026 / MSVC 14.50 / Windows SDK 10.0.22621.0 по последней сборке. Engine/tool installations не содержатся в репозитории. Старые runners имеют пути `E:/Games/...` и `E:/Tools/...`; новая [переносимая точка запуска](Scripts/Project.ps1) принимает `-EngineRoot` и `-BlenderExe`. Не искать инструменты по чужому профилю Valerii на новом ПК.
+
+С 2026-09-11 есть локальный Git+LFS baseline ([B1](Docs/Changes/GIT_BASELINE_B1_2026-09-11.md)). Клон требует Git LFS. Отдельно скопировать `Evidence/` (и при необходимости `Builds/`, `Binaries/`, ZIP из `E:/Game/Releases`). Корневые junction/symlink `E:/Game` в этом репозитории не лежат.
 
 ```powershell
 # Из корня перенесённого проекта, подставить существующие локальные пути:
@@ -105,7 +109,7 @@ UE 5.8.2; Blender 5.2.1 LTS; Visual Studio Community 2026 / MSVC 14.50 / Windows
 
 ## 6. Следующая работа — порядок
 
-1. Сделать независимую резервную копию/перенос и проверить хеши. Git/LFS baseline + remote — отдельная явно разрешённая операция.
+1. Off-device backup: как минимум `Evidence/`, share ZIP в Releases, при необходимости Builds. Remote для Git — только после явного разрешения. Локальный baseline уже есть (B1).
 2. Взять актуальный R8 и обе картинки, оценить будущую внешнюю модель пользователя. Не начинать заново с R6B по старому README.
 3. Для действительно лучших героев — непрерывный skinned surface, веса плеч/локтей, пальцы/позы, low-poly силуэт и UV/material readability. Не выдавать ещё один жёсткий loft за законченного героя.
 4. Импортировать только выбранный кандидат, пересоздать коллизии, обновить два mesh paths, build → automation → Character/Helper/Ship/Water → GPU позы/крупные планы → длительный стенд. Старые файлы оставить.

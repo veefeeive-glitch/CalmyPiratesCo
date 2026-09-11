@@ -1,6 +1,8 @@
 # Текущее состояние — 2026-09-11
 
-**11 сентября — [проверка репо / doc fix](../Changes/REPO_CHECK_FIX_2026-09-11.md).** После F1 подтверждены ZIP P1 SHA256, DLL S1, рабочие ссылки и DOCS_PASS. README проекта приведён к текущему состоянию; пустой `References/desktop-fly/.git` удалён. Git UE всё ещё без коммитов/remote; Windows-Current от 4 сентября не является share ZIP. Это не новый gameplay PASS.
+**11 сентября — [Git LFS baseline B1](../Changes/GIT_BASELINE_B1_2026-09-11.md).** Локальный commit `7bb0048b431705a61b74406882677373d01a55d7` на `main` (2880 files / 1826 LFS). Evidence и Builds не в Git. Remote/push нет. Это не gameplay PASS и не off-device backup.
+
+**11 сентября — [проверка репо / doc fix](../Changes/REPO_CHECK_FIX_2026-09-11.md).** После F1 подтверждены ZIP P1 SHA256, DLL S1, рабочие ссылки и DOCS_PASS. README проекта приведён к текущему состоянию; пустой `References/desktop-fly/.git` удалён. На момент той проверки Git ещё был пуст; baseline B1 — отдельная следующая запись. Windows-Current от 4 сентября не является share ZIP. Это не новый gameplay PASS.
 
 **11 сентября — [организация файлов F1](../Changes/FILE_ORGANIZATION_F1_2026-09-11.md).** Корень E:/Game разделён на CalmyPiratesCoUE, Releases, Archive и References; ZIP для друга перенесён в Releases/Windows/2026-09-11 с тем же SHA256. Скрытые ссылки сохраняют старые адреса. Windows заблокировала перенос desktop-fly, поэтому используется ссылка из References к сохранённому исходнику; Git целостность проверена. Gameplay/C++/карты/модели и последний package P1 прежние; это не новый runtime PASS.
 
@@ -28,7 +30,7 @@
 - Проверено W1: **31/31 automation**, WaterInteraction/Water/Character/Ship в Host/Client/LateJoin, 11 GPU кадров. Художественное качество воды PARTIAL: кольцевая форма ещё заметна, капли/подводная оптика нуждаются в доработке. Полные хеши/ограничения — в отчёте W1.
 - Последний авторинг: **Crew R8**, 6012/6048 triangles, текстуры и улучшенная геометрия. **В UE не импортирован**, никаких current runtime PASS для R8 нет. Предыдущий Blender-кандидат R7 тоже вне игры.
 - **BridgeMenu R2 entry работает:** world-space экран читается, кнопки/настройки/resume, solo freeze, Host/Client/LateJoin. Сессии/сохранения/полная локализация ещё не реализованы. WaterLab сохранён для отдельных тестов.
-- Предыдущая настройка — [Rigify/MCP](../Changes/TOOLING_SETUP_2026-09-09.md): Rigify включён, generation PASS; Blender/Unreal отвечали на loopback. Для Grip/Health сборки служебный Unreal Editor штатно закрыт; живое подключение не гарантировано после закрытия. Git: ноль коммитов/tracked files и нет remote; независимая копия не подтверждена.
+- Предыдущая настройка — [Rigify/MCP](../Changes/TOOLING_SETUP_2026-09-09.md): Rigify включён, generation PASS; Blender/Unreal отвечали на loopback. Для Grip/Health сборки служебный Unreal Editor штатно закрыт; живое подключение не гарантировано после закрытия. Git: локальный baseline B1 `7bb0048…`; remote нет; Evidence не tracked.
 
 ## Реализовано и открыто
 
@@ -36,7 +38,7 @@
 
 | ID старого аудита | Статус | Что важно сейчас |
 |---|---|---|
-| A01 сохранность | Частично | Frozen evidence есть; нужен off-device backup и отдельно разрешённые Git/LFS baseline/remote |
+| A01 сохранность | Частично | Локальный Git+LFS B1 есть; Evidence вне Git; нужен off-device backup и отдельно разрешённый remote |
 | A02 упаковка | Открыт | Windows-Current старый; package_windows продвигает до smoke и удаляет previous |
 | A03 цельный рейс | Открыт | Смена/аварии/питание разнесены по лабораториям |
 | A04 сеть | Частично | Проверены отдельные Host/Client/LateJoin сценарии, не четыре человека/плохая сеть/качка |

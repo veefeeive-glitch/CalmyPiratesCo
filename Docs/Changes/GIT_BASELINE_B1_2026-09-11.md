@@ -23,11 +23,14 @@
 
 Не tracked: packaged Builds, editor Binaries/DLL, Evidence, Saved.
 
-## Verification (заполняется после commit)
+## Verification
 
-- Commit SHA: _(см. CHANGELOG / STATUS после `git rev-parse HEAD`)_
-- `git lfs ls-files` / `git status` — чисто после коммита.
-- Remote: нет.
+- Commit: `7bb0048b431705a61b74406882677373d01a55d7` (`main`)
+- Tracked files: 2880; LFS-managed paths: 1826
+- `git status`: clean after baseline commit
+- Remote: нет; push не выполнялся
+
+Working tree after this docs commit records the baseline SHA above.
 
 ## Next
 

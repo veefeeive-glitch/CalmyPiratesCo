@@ -2,7 +2,9 @@
 
 Навигация по всей рабочей папке: [E:/Game/README](../../README.md). [File organization F1](Changes/FILE_ORGANIZATION_F1_2026-09-11.md): Releases для готовых ZIP, Archive для старых версий, References для внешних исходников; игровой UE-проект на прежнем месте.
 
-Последнее изменение: [Repo check / doc fix](Changes/REPO_CHECK_FIX_2026-09-11.md), 11 сентября — повторная проверка после F1, правка README и удаление пустого leftover `.git`; Git baseline по-прежнему отсутствует.
+Последнее изменение: [Git LFS baseline B1](Changes/GIT_BASELINE_B1_2026-09-11.md), 11 сентября — локальный commit `7bb0048…`, Evidence вне Git, remote нет.
+
+Предыдущее: [Repo check / doc fix](Changes/REPO_CHECK_FIX_2026-09-11.md), 11 сентября — повторная проверка после F1, правка README и удаление пустого leftover `.git`.
 
 Новый отдельный артефакт: [Windows share P1](Changes/WINDOWS_SHARE_P1_2026-09-11.md), 11 сентября — текущая самостоятельная Windows-игра в ZIP для друга, исправленный cook динамических моделей и проверка из распакованной копии.
 

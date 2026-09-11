@@ -9,7 +9,7 @@
 **[HANDOVER — полное состояние и продолжение на другом устройстве](HANDOVER.md)**
 
 - [Модели и оба AI-концепта](Docs/Handover/MODELS.md): последний Blender-кандидат **R8**, в игре пока **R6B**.
-- [Перенос проекта и запуск](Docs/Handover/TRANSFER.md): Git ещё без коммитов/remote, нужен перенос самих файлов.
+- [Перенос проекта и запуск](Docs/Handover/TRANSFER.md): локальный Git+LFS baseline B1 есть; remote нет; Evidence копировать отдельно.
 - [Журнал сделанного и оставшегося](Docs/Handover/CHANGELOG.md).
 - [Все документы](Docs/INDEX.md), [скрипты по назначению](Scripts/README.md), [исходники ассетов](SourceAssets/README.md).
 

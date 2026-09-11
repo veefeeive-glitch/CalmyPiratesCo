@@ -1,5 +1,9 @@
 # Журнал продолжения проекта
 
+## 2026-09-11 — Git LFS baseline B1
+
+[Отчёт](../Changes/GIT_BASELINE_B1_2026-09-11.md): по запросу пользователя создан локальный первый коммит `7bb0048b431705a61b74406882677373d01a55d7` (2880 tracked, 1826 LFS). В `.gitignore` добавлены `Evidence/` и `.codex/`. Remote/push нет. Gameplay и ZIP не менялись. Следующее — off-device backup Evidence/Releases; remote только по явному разрешению.
+
 ## 2026-09-11 — Repo check / doc fix
 
 [Отчёт](../Changes/REPO_CHECK_FIX_2026-09-11.md): после сортировки F1 пользователь попросил проверить репозиторий и сохранить результат. ZIP P1 и DLL S1 совпали с ожидаемыми хешами; docs links PASS; Git UE пустой (0 commits/remote). Исправлен устаревший README; удалён пустой служебный `References/desktop-fly/.git` (реальный desktop-fly git не трогали). Gameplay/package не менялись. Следующее — только по явному запросу: Git+LFS baseline или off-device backup; перед коммитом учесть, что Evidence не в `.gitignore`.
