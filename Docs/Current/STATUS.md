@@ -1,5 +1,7 @@
 # Текущее состояние — 2026-09-12
 
+**12 сентября — Voyage G3 slice (A03).** На OceanFreighterR7 появился связанный цикл: брифинг → curated смена (1 STANDARD + 1 BULKY) → leak complication → итог → host restart. Runtime-актор `ACalmyVoyageDirector` спавнится из GameMode; leak valve ставится рядом с green zone без правки `.umap`. Labs без директора сохраняют прежнее поведение. Automation: `CalmyPiratesCo.Gameplay.VoyageCycle`. Editor-playable slice; не полный 12–20 мин рейс и не human fun gate.
+
 **12 сентября — [HOLD 1 FPS mind](../Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md).** Epic: mind 80.87 / NoBrain 75.48 FPS; SNN +~1.5 мс swarm_step, FPS упирается в render; vs S1 91.85 — game_ms↑ от стека после S1. DLL `D7D175ED…`.
 
 **12 сентября — [Fly think + roam](../Changes/FLY_THINK_TRAVEL_2026-09-12.md).** Думает вслух о пути + путешествует; FlyTravel/FlyMind PASS; DLL `D7D175ED…`.
@@ -70,7 +72,7 @@
 |---|---|---|
 | A01 сохранность | Частично | Git+LFS B1 + off-device backup на D:; Evidence вне Git; remote ещё нет |
 | A02 упаковка | Открыт | Windows-Current старый; package_windows продвигает до smoke и удаляет previous |
-| A03 цельный рейс | Открыт | Смена/аварии/питание разнесены по лабораториям |
+| A03 цельный рейс | Частично | G3 slice на R7: briefing→curated shift→leak→outcome→restart; полный 12–20 мин / 4 peers / human gate открыты |
 | A04 сеть | Частично | Проверены отдельные Host/Client/LateJoin сценарии, не четыре человека/плохая сеть/качка |
 | A05 герой | Частично | R6B physical/IK/bodycam; R8 только Blender. Ship joint 7,812/8 см; skinned одежда/пальцы и новый долгий стенд нужны |
 | A06 вода | Частично | W1: связанное поле поверхности/плавучести от удара и следа; не полный fluid solver, нет шторма и подвижного корпуса |

@@ -1,5 +1,6 @@
 #include "Gameplay/CalmyShift.h"
 #include "Gameplay/CalmyTutorial.h"
+#include "Gameplay/CalmyVoyageDirector.h"
 #include "Gameplay/CalmyCargo.h"
 #include "Gameplay/CalmyCharacter.h"
 #include "Gameplay/CalmyCrewHelper.h"
@@ -49,13 +50,37 @@ void ACalmyShift::InitializeManifest()
 	State.FinalPayout = 0;
 	State.PerformanceStars = 0;
 	State.Phase = ECalmyShiftPhase::Loading;
+	const bool bCurated = ACalmyVoyageDirector::UsesCuratedManifest(GetWorld());
+	bool bHaveStandard = false;
+	bool bHaveBulky = false;
 	for (TActorIterator<ACalmyCargo> It(GetWorld()); It; ++It)
 	{
-		if (It->CargoId <= 0 || Manifest.Contains(It->CargoId)) State.Phase = ECalmyShiftPhase::InvalidManifest;
+		if (It->CargoId <= 0 || Manifest.Contains(It->CargoId))
+		{
+			State.Phase = ECalmyShiftPhase::InvalidManifest;
+			continue;
+		}
+		if (bCurated)
+		{
+			if (It->Kind == ECalmyCargoKind::Standard && !bHaveStandard)
+			{
+				Manifest.Add(It->CargoId, *It);
+				bHaveStandard = true;
+			}
+			else if (It->Kind == ECalmyCargoKind::Bulky && !bHaveBulky)
+			{
+				Manifest.Add(It->CargoId, *It);
+				bHaveBulky = true;
+			}
+			continue;
+		}
 		Manifest.Add(It->CargoId, *It);
 	}
 	State.Required = Manifest.Num();
-	if (!State.Required) State.Phase = ECalmyShiftPhase::InvalidManifest;
+	if (!State.Required || (bCurated && (!bHaveStandard || !bHaveBulky)))
+	{
+		State.Phase = ECalmyShiftPhase::InvalidManifest;
+	}
 	ForceNetUpdate();
 }
 
@@ -103,9 +128,11 @@ void ACalmyShift::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	if (!HasAuthority() || State.Phase != ECalmyShiftPhase::Loading || !FMath::IsFinite(DeltaSeconds) || DeltaSeconds <= 0.f) return;
 	const int32 PreviousSeconds = State.SecondsRemaining;
-	if(!ACalmyTutorial::Enabled(GetWorld())) RemainingSecondsExact = FMath::Max(0.f, RemainingSecondsExact - DeltaSeconds);
+	const bool bFreezeTimer = ACalmyTutorial::Enabled(GetWorld()) || ACalmyVoyageDirector::ShouldFreezeShiftTimer(GetWorld());
+	if (!bFreezeTimer) RemainingSecondsExact = FMath::Max(0.f, RemainingSecondsExact - DeltaSeconds);
 	State.SecondsRemaining = FMath::CeilToInt(RemainingSecondsExact);
 	if (State.SecondsRemaining != PreviousSeconds) ForceNetUpdate();
+	if (bFreezeTimer) return;
 	if (RemainingSecondsExact <= 0.f)
 	{
 		State.Phase = ECalmyShiftPhase::Failed;
@@ -143,6 +170,7 @@ bool ACalmyShift::TryRestart(ACalmyCharacter* Requester, int32 ExpectedRound)
 	State.Rescues = 0;
 	InitializeManifest();
 	if (auto* Leak = ACalmyLeak::Find(GetWorld())) Leak->ResetForRound(State.Round);
+	if (auto* Voyage = ACalmyVoyageDirector::Find(GetWorld())) Voyage->NotifyShiftRestarted(State.Round);
 	return true;
 }
 
