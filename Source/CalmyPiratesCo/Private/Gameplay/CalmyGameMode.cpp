@@ -1,6 +1,10 @@
 #include "Gameplay/CalmyGameMode.h"
 #include "Gameplay/CalmyBridgeTerminal.h"
 #include "Gameplay/CalmySettingsWidget.h"
+#include "Gameplay/CalmyJoinWidget.h"
+#include "Core/CalmySession.h"
+#include "GameFramework/GameSession.h"
+#include "HAL/PlatformApplicationMisc.h"
 #include "Gameplay/CalmyPreferences.h"
 #include "Engine/GameViewportClient.h"
 #include "Components/AudioComponent.h"
@@ -87,11 +91,12 @@ void ACalmyPlayerController::PlayerTick(float DeltaTime)
 }
 
 void ACalmyPlayerController::MenuClick()
-{ if(IsSettingsOpen())return;if (bWheelInputLease) ConfirmFlyWheel(); else if(bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Click(); }
+{ if(IsSettingsOpen()||IsJoinDialogOpen())return;if (bWheelInputLease) ConfirmFlyWheel(); else if(bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Click(); }
 bool ACalmyPlayerController::InputKey(const FInputKeyEventArgs& Args)
 {
     if(Args.Event==IE_Pressed)
     {
+        if(IsJoinDialogOpen()) {if(Args.Key==EKeys::Escape)CloseJoinDialog();return true;}
         if(IsSettingsOpen()) {if(Args.Key==EKeys::Escape)CloseSettings();return true;}
         const auto* Pref=UCalmyPreferences::Get();
         if(bWheelInputLease&&Args.Key==Pref->KeyFor(EKeys::E)){CloseFlyWheel();return true;}
@@ -117,6 +122,54 @@ void ACalmyPlayerController::CloseSettings()
     SettingsWidget.Reset();FlushPressedKeys();
     FInputModeGameAndUI Mode;Mode.SetHideCursorDuringCapture(false).SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);SetInputMode(Mode);
     if(FSlateApplication::IsInitialized())FSlateApplication::Get().SetAllUserFocusToGameViewport();
+}
+void ACalmyPlayerController::OpenJoinDialog()
+{
+    if(!IsLocalController()||JoinWidget.IsValid()||!GEngine||!GEngine->GameViewport)return;
+    if(!bPauseMenuOpen)SetPauseMenuOpen(true);
+    CloseSettings();
+    JoinWidget=SNew(SCalmyJoinWidget).Controller(this);
+    GEngine->GameViewport->AddViewportWidgetContent(JoinWidget.ToSharedRef(),110);
+    FInputModeUIOnly Mode;Mode.SetWidgetToFocus(JoinWidget);Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);SetInputMode(Mode);
+    FSlateApplication::Get().SetKeyboardFocus(JoinWidget);
+}
+void ACalmyPlayerController::CloseJoinDialog()
+{
+    if(!JoinWidget.IsValid())return;
+    if(GEngine&&GEngine->GameViewport)GEngine->GameViewport->RemoveViewportWidgetContent(JoinWidget.ToSharedRef());
+    JoinWidget.Reset();FlushPressedKeys();
+    FInputModeGameAndUI Mode;Mode.SetHideCursorDuringCapture(false).SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);SetInputMode(Mode);
+    if(FSlateApplication::IsInitialized())FSlateApplication::Get().SetAllUserFocusToGameViewport();
+    if(BridgeTerminal)BridgeTerminal->Refresh();
+}
+bool ACalmyPlayerController::HostLanSession(FString* OutError)
+{
+    if(!IsLocalController()) { if(OutError)*OutError=TEXT("Local controller required"); return false; }
+    CloseJoinDialog();
+    const bool Ok=FCalmySession::HostLanListen(GetWorld(), FCalmySession::DefaultPort, OutError);
+    if(BridgeTerminal)BridgeTerminal->Refresh();
+    if(Ok && bOwnsWorldPause && GetWorld() && GetWorld()->IsPaused()) { SetPause(false); bOwnsWorldPause=false; }
+    return Ok;
+}
+bool ACalmyPlayerController::JoinLanSession(const FString& Address, FString* OutError)
+{
+    if(!IsLocalController()) { if(OutError)*OutError=TEXT("Local controller required"); return false; }
+    CloseSettings();
+    if(bOwnsWorldPause && GetWorld() && GetWorld()->IsPaused()) { SetPause(false); bOwnsWorldPause=false; }
+    SetPauseMenuOpen(false);
+    return FCalmySession::JoinLan(this, Address, OutError);
+}
+void ACalmyPlayerController::CopyLanEndpointToClipboard()
+{
+    if(!IsLocalController()||!GetWorld())return;
+    if(GetNetMode()!=NM_ListenServer)
+    {
+        UE_LOG(LogTemp, Display, TEXT("CALMY_SESSION copy_skipped role=%s"), *FCalmySession::RoleLabel(GetWorld()));
+        return;
+    }
+    const FString Endpoint=FCalmySession::DescribeListenEndpoint(GetWorld());
+    FPlatformApplicationMisc::ClipboardCopy(*Endpoint);
+    UE_LOG(LogTemp, Display, TEXT("CALMY_SESSION COPY_LAN %s"), *Endpoint);
 }
 void ACalmyPlayerController::ApplyAudioPreferences()
 {
@@ -220,11 +273,11 @@ void ACalmyPlayerController::ClientSetViewTarget_Implementation(AActor* Target,F
     }
     Super::ClientSetViewTarget_Implementation(Target,Params);
 }
-void ACalmyPlayerController::MenuUp(){if(!IsSettingsOpen()&&bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Step(-1);}
-void ACalmyPlayerController::MenuDown(){if(!IsSettingsOpen()&&bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Step(1);}
-void ACalmyPlayerController::MenuConfirm(){if(IsSettingsOpen())return;if(bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Activate();else ResumeFromMenu();}
+void ACalmyPlayerController::MenuUp(){if(!IsSettingsOpen()&&!IsJoinDialogOpen()&&bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Step(-1);}
+void ACalmyPlayerController::MenuDown(){if(!IsSettingsOpen()&&!IsJoinDialogOpen()&&bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Step(1);}
+void ACalmyPlayerController::MenuConfirm(){if(IsSettingsOpen()||IsJoinDialogOpen())return;if(bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Activate();else ResumeFromMenu();}
 
-void ACalmyPlayerController::TogglePauseMenu() {if(IsSettingsOpen()){CloseSettings();return;} if (bWheelInputLease) CloseFlyWheel(); else SetPauseMenuOpen(!bPauseMenuOpen); }
+void ACalmyPlayerController::TogglePauseMenu() {if(IsJoinDialogOpen()){CloseJoinDialog();return;} if(IsSettingsOpen()){CloseSettings();return;} if (bWheelInputLease) CloseFlyWheel(); else SetPauseMenuOpen(!bPauseMenuOpen); }
 void ACalmyPlayerController::ResumeFromMenu() { SetPauseMenuOpen(false); }
 void ACalmyPlayerController::RequestReplayTutorial()
 {
@@ -292,7 +345,7 @@ void ACalmyPlayerController::SetPauseMenuOpen(bool bOpen)
 {
     // Local UI only. Never call ServerPause: host/client menus must not freeze other players.
     if (!IsLocalController() || bOpen == bPauseMenuOpen) return;
-    if (bOpen) CloseFlyWheel();else CloseSettings();
+    if (bOpen) CloseFlyWheel();else {CloseSettings();CloseJoinDialog();}
     bPauseMenuOpen = bOpen;
     if (bOpen)
     {
@@ -342,6 +395,8 @@ void ACalmyPlayerController::SetPauseMenuOpen(bool bOpen)
 void ACalmyPlayerController::EndPlay(const EEndPlayReason::Type Reason)
 {
     CloseFlyWheel();
+    CloseJoinDialog();
+    CloseSettings();
     SetPauseMenuOpen(false);
     if(BridgeTerminal){if(BridgeTerminal->MenuCamera)BridgeTerminal->MenuCamera->Destroy();BridgeTerminal->Destroy();BridgeTerminal=nullptr;}
     Super::EndPlay(Reason);
@@ -352,6 +407,15 @@ ACalmyGameMode::ACalmyGameMode()
 	DefaultPawnClass = ACalmyCharacter::StaticClass();
 	HUDClass = ACalmyHUD::StaticClass();
     PlayerControllerClass = ACalmyPlayerController::StaticClass();
+}
+
+void ACalmyGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+	if (GameSession)
+	{
+		GameSession->MaxPlayers = FCalmySession::MaxCrew;
+	}
 }
 
 AActor* ACalmyGameMode::ChoosePlayerStart_Implementation(AController* Player)
@@ -408,7 +472,11 @@ void ACalmyGameMode::Logout(AController* Exiting)
 void ACalmyGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
 {
 	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
-	if (GetNumPlayers() >= 4) ErrorMessage = TEXT("This build supports at most four crew members.");
+	if (!ErrorMessage.IsEmpty()) return;
+	if (!FCalmySession::CanAdmit(GetNumPlayers()))
+	{
+		ErrorMessage = TEXT("This build supports at most four crew members.");
+	}
 }
 
 void ACalmyHUD::DrawScaledText(const FString& Text,FLinearColor Color,float X,float Y,UFont* Font,float Scale,bool ScalePosition)
@@ -562,7 +630,7 @@ void ACalmyHUD::DrawHUD()
                 *StaticEnum<ECalmyHelperState>()->GetNameStringByValue(static_cast<int64>(Pawn->CrewHelper->Assistance)),Pawn->CrewHelper->FollowDistance/100),
                 FLinearColor(.8f,.8f,.35f),30,Canvas->ClipY-55);
 		DrawScaledText(FString::Printf(TEXT("HP %.0f | %s | Cargo: %s | %s"), Pawn->Health, *State, Pawn->HeldCargo ? TEXT("HELD") : TEXT("none"),
-			GetNetMode() == NM_Client ? TEXT("CLIENT") : (GetNetMode() == NM_ListenServer ? TEXT("HOST") : TEXT("SOLO"))), FLinearColor::White, 30, 82);
+			*FCalmySession::StatusLine(GetWorld())), FLinearColor::White, 30, 82);
 		const ACalmyCargo* Target = Pawn->HeldCargo ? Pawn->HeldCargo.Get() : Pawn->FindGrabTarget();
         DrawScaledText(Pawn->IsInOcean() ? (bShipReview ? TEXT("SURFACE SWIM | Boarding route not implemented in this review") : TEXT("SURFACE SWIM | free hands | return along the orange-railed ramp")) : (Target ? Target->GetHandlingHint(Pawn) : (bShipReview ? TEXT("Explore the ship | E cargo | Q handoff | green delivery zone") : ACalmyOcean::Find(GetWorld()) ? TEXT("E cargo | Q handoff | test buoyancy at the water ramp") : TEXT("E cargo | Q handoff | deliver to the green zone"))),FLinearColor(.65f,.8f,.85f),30,106);
 	}

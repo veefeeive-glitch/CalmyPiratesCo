@@ -44,6 +44,13 @@ public:
     double WaveTime() const;
     bool IsOutsideSafetyArea(const FVector& Position) const;
     bool IsInsideDryHull(const FVector& Position) const;
+    UPROPERTY(EditAnywhere, ReplicatedUsing=OnRep_StormIntensity, Category="Ocean Storm", meta=(ClampMin="0", ClampMax="1")) float StormIntensity = 0.f;
+    UPROPERTY(EditAnywhere, Category="Ocean Storm", meta=(ClampMin="1", ClampMax="3")) float StormWaveGain = 1.85f;
+    UPROPERTY(EditAnywhere, Category="Ocean Storm", meta=(ClampMin="1", ClampMax="4")) float StormFlowGain = 2.4f;
+    static float StormScale(float Intensity, float WaveGain = 1.85f);
+    float GetStormScale() const { return StormScale(StormIntensity, StormWaveGain); }
+    UFUNCTION(BlueprintCallable, Category="Ocean Storm") void SetStormIntensity(float Intensity);
+    UFUNCTION() void OnRep_StormIntensity();
     // Static map-authored profile loaded identically by server/clients. No runtime/client mutation.
     UPROPERTY(EditAnywhere) FVector DryHullOrigin=FVector::ZeroVector;
     UPROPERTY(EditAnywhere) TArray<FVector2D> DryHullStations;

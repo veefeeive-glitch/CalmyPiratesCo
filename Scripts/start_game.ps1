@@ -3,6 +3,7 @@ param(
     [int]$Port = 17777,
     [switch]$StartPaused,
     [string]$PackagedExe,
+    [string]$JoinAddress,
     [ValidateSet('WaterLab','OceanFreighterR7','FreighterDeck','ShiftTest','CargoLab','LeakTest')][string]$MapName = 'WaterLab'
 )
 $ErrorActionPreference = 'Stop'
@@ -17,13 +18,14 @@ if ($PackagedExe) {
 }
 $map = switch ($Mode) {
     'Host' { "/Game/Maps/${MapName}?listen" }
-    'Client' { "127.0.0.1:$Port" }
+    'Client' { if ($JoinAddress) { $JoinAddress } else { "127.0.0.1:$Port" } }
     default { "/Game/Maps/$MapName" }
 }
 if ($Mode -eq 'Host' -and (Get-NetUDPEndpoint -LocalPort $Port -ErrorAction SilentlyContinue)) { throw "Port $Port is already occupied." }
-$argsList += @($map, '-game', '-DisablePython', "-port=$Port", '-MULTIHOME=127.0.0.1', 
+$bind = if ($Mode -eq 'Host' -and $JoinAddress) { $JoinAddress.Split(':')[0] } else { '127.0.0.1' }
+$argsList += @($map, '-game', '-DisablePython', "-port=$Port", "-MULTIHOME=$bind",
     '-ini:EditorPerProjectUserSettings:[/Script/ModelContextProtocolEngine.ModelContextProtocolSettings]:bAutoStartServer=False')
-# Visible game windows are intentional. Loopback only: no firewall changes or Internet exposure.
+# Visible game windows are intentional. Default loopback; firewall is never changed here.
 if ($StartPaused) { $argsList += '-CalmyStartPaused' }
 $process = Start-Process -FilePath $exe -ArgumentList $argsList -PassThru
-Write-Output "$Mode game started (PID $($process.Id)). Local loopback multiplayer only."
+Write-Output "$Mode game started (PID $($process.Id)). LAN/listen multiplayer; Steam invites are not wired."

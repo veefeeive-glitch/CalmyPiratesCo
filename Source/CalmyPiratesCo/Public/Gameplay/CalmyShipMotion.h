@@ -1,16 +1,13 @@
-#pragma once
+﻿#pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "CalmyShipMotion.generated.h"
-
 class UBoxComponent;
+class UStaticMeshComponent;
 class ACalmyOcean;
-
 /**
- * G2 ship ride for OceanFreighterR7: waterline samples use the same HeightAt /
- * VerticalVelocityAt / FlowAt field as cargo buoyancy (W1 disturbances included).
- * A clamped replicated root carries attached ship actors; dry-hull queries map
- * into the authored rest frame. Not Chaos on the full R7 triangle mesh.
+ * G2 ship ride: W1 field + SeaStrength/storm boost, helm intent, boarding ramp.
+ * Full Chaos R7 mesh is out of scope; see ACalmyHullProxy for physics test hull.
  */
 UCLASS()
 class CALMYPIRATESCO_API ACalmyShipMotion : public AActor
@@ -22,32 +19,43 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 	static ACalmyShipMotion* Find(const UWorld* World);
-
 	const FTransform& GetRestTransform() const { return RestTransform; }
 	FVector GetRestDryHullOrigin() const { return RestDryHullOrigin; }
 	bool HasRestPose() const { return bCapturedRest; }
-
+	float GetHelmThrottle() const { return HelmThrottle; }
+	float GetHelmRudder() const { return HelmRudder; }
+	float GetAccumulatedYawDeg() const { return AccumulatedYawDeg; }
+	UFUNCTION(BlueprintCallable, Category="Ship Helm") void SetHelmInput(float Throttle, float Rudder);
+	UFUNCTION(BlueprintCallable, Category="Ship Motion|Storm") void SetStormBoost(float Boost);
+	void GetEffectiveMotionLimits(float& OutHeaveCm, float& OutHeelDeg, float& OutDriftSpeed) const;
 	UPROPERTY(VisibleAnywhere) TObjectPtr<USceneComponent> Root;
 	UPROPERTY(VisibleAnywhere) TObjectPtr<UBoxComponent> Proxy;
 	UPROPERTY(VisibleAnywhere) TObjectPtr<UBoxComponent> DeckBase;
-
+	UPROPERTY(VisibleAnywhere) TObjectPtr<UStaticMeshComponent> BoardingRamp;
 	UPROPERTY(EditAnywhere, Category="Ship Motion", meta=(ClampMin="0.2", ClampMax="3")) float BuoyancyLiftRatio = 1.05f;
 	UPROPERTY(EditAnywhere, Category="Ship Motion", meta=(ClampMin="5", ClampMax="200", Units="cm")) float MaxHeaveCm = 70.f;
 	UPROPERTY(EditAnywhere, Category="Ship Motion", meta=(ClampMin="0.5", ClampMax="12")) float MaxHeelDeg = 3.5f;
 	UPROPERTY(EditAnywhere, Category="Ship Motion", meta=(ClampMin="10", ClampMax="400", Units="cm/s")) float MaxDriftSpeed = 55.f;
 	UPROPERTY(EditAnywhere, Category="Ship Motion", meta=(ClampMin="1", ClampMax="20")) float FollowInterp = 4.f;
-
-	/** Last applied pose; used to carry world-space riders (flies, resting cargo). */
+	UPROPERTY(EditAnywhere, Category="Ship Motion|Storm", meta=(ClampMin="1", ClampMax="3")) float StormHeaveGain = 1.7f;
+	UPROPERTY(EditAnywhere, Category="Ship Motion|Storm", meta=(ClampMin="1", ClampMax="3")) float StormHeelGain = 1.9f;
+	UPROPERTY(EditAnywhere, Category="Ship Motion|Storm", meta=(ClampMin="1", ClampMax="3")) float StormDriftGain = 1.6f;
+	/** Extra 0..1 boost on top of harbour SeaStrength packet (editor/playtest storm). */
+	UPROPERTY(EditAnywhere, Replicated, Category="Ship Motion|Storm", meta=(ClampMin="0", ClampMax="1")) float StormBoost = 0.f;
+	UPROPERTY(EditAnywhere, Category="Ship Helm", meta=(ClampMin="0", ClampMax="300", Units="cm/s")) float HelmSurgeSpeed = 95.f;
+	UPROPERTY(EditAnywhere, Category="Ship Helm", meta=(ClampMin="0.5", ClampMax="20")) float MaxYawRateDeg = 6.f;
+	UPROPERTY(EditAnywhere, Category="Ship Helm", meta=(ClampMin="1", ClampMax="45")) float MaxHelmYawDeg = 18.f;
 	FTransform GetMotionDelta() const { return GetActorTransform() * LastAppliedTransform.Inverse(); }
-
 private:
 	void CaptureRest();
 	void IntegrateWater(float DeltaSeconds);
 	void CarryWorldRiders();
-	FTransform ClampShipTransform(const FTransform& Proposed) const;
-
+	FTransform ClampShipTransform(const FTransform& Proposed, float HeaveCm, float HeelDeg, float DriftSpeed) const;
+	float ComputeStormBlend() const;
+	UPROPERTY(Replicated) float HelmThrottle = 0.f;
+	UPROPERTY(Replicated) float HelmRudder = 0.f;
+	UPROPERTY(Replicated) float AccumulatedYawDeg = 0.f;
 	FTransform RestTransform = FTransform::Identity;
 	FTransform LastAppliedTransform = FTransform::Identity;
 	FVector RestDryHullOrigin = FVector::ZeroVector;

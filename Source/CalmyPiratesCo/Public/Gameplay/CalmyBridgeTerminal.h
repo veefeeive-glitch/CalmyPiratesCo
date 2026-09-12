@@ -35,6 +35,6 @@ private:
     UPROPERTY() TObjectPtr<ACalmyPlayerController> PC;
     int32 Page=0,Selected=0;
     FVector2D LastMouse=FVector2D(-1,-1);
-    int32 Count() const { return Page==1?5:Page==2?2:4; }
+    int32 Count() const { return Page==1?5:Page==2?2:Page==3?4:5; }
     int32 MouseRow() const;
 };

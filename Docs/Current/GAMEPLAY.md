@@ -1,5 +1,7 @@
 # Механики и управление — Crew R6B / WaterLab и R7
 
+**12 сентября — [Net G4 LAN](../Changes/NET_G4_LAN_SESSION_2026-09-12.md).** Esc → CREW SESSION: Host LAN / Join IP:port / Copy Address (макс. 4). Steam invites нет.
+
 **12 сентября — [думает и бродит](../Changes/FLY_THINK_TRAVEL_2026-09-12.md).** Рой сам выбирает путь по freighter, говорит «I am thinking… / I have a path…», в HUD видно THINKING; метки слегка тянут или отталкивают курс.
 
 **12 сентября — [parity A / desktop-fly](../Changes/FLY_PARITY_A_2026-09-12.md).** На том же 668-графе: сон/возбуждение (Rest/Withdraw), ритм ходьбы в ascending, порывы шума, air puff — ближе к первоисточнику desktop-fly.

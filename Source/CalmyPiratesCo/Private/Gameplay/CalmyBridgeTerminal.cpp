@@ -1,5 +1,6 @@
 #include "Gameplay/CalmyBridgeTerminal.h"
 #include "Gameplay/CalmyGameMode.h"
+#include "Core/CalmySession.h"
 #include "Gameplay/CalmyCharacter.h"
 #include "Gameplay/CalmyVoyageDirector.h"
 #include "ProceduralMeshComponent.h"
@@ -84,7 +85,7 @@ void ACalmyBridgeTerminal::Click(){const int32 R=MouseRow();if(R!=INDEX_NONE){Se
 void ACalmyBridgeTerminal::Step(int32 Direction){Selected=(Selected+Direction+Count())%Count();Refresh();}
 void ACalmyBridgeTerminal::Activate()
 {
-    if(!PC||!PC->IsPauseMenuOpen())return;
+    if(!PC||!PC->IsPauseMenuOpen()||PC->IsJoinDialogOpen())return;
     if(Page==0)
     {
         if(Selected==0)
@@ -109,12 +110,29 @@ void ACalmyBridgeTerminal::Activate()
         }
         if(Selected==1){PC->OpenSettings();return;}
         if(Selected==2){PC->RequestReplayTutorial();return;}
+        if(Selected==3){Page=3;Selected=0;Refresh();return;}
         Page=2;Selected=0;
     }
     else if(Page==1)
     {
         if(Selected==0)PC->MenuCamera();else if(Selected==1)PC->MenuMotion();
         else if(Selected==2)PC->MenuLookDown();else if(Selected==3)PC->MenuLookUp();else {Page=0;Selected=0;}
+    }
+    else if(Page==3)
+    {
+        if(Selected==0)
+        {
+            FString Error;
+            if(!PC->HostLanSession(&Error) && !Error.IsEmpty())
+            {
+                UE_LOG(LogTemp, Warning, TEXT("CALMY_SESSION host_ui %s"), *Error);
+            }
+            Refresh();
+            return;
+        }
+        if(Selected==1){PC->OpenJoinDialog();return;}
+        if(Selected==2){PC->CopyLanEndpointToClipboard();Refresh();return;}
+        Page=0;Selected=3;
     }
     else if(Selected==0){Page=0;Selected=0;}
     else UKismetSystemLibrary::QuitGame(this,PC,EQuitPreference::Quit,false);
@@ -128,23 +146,38 @@ void ACalmyBridgeTerminal::Paint(UCanvas* C,int32 W,int32 H)
     const FLinearColor White(.72,.82,.78),Dim(.27,.48,.48),Accent(.38,.82,.7);
     Rect(0,0,W,H,FLinearColor(.009,.02,.024));Rect(46,128,932,1,Dim);
     Text(TEXT("C A L M Y  /  NIGHT WATCH"),48,38,1.65,White);
-    Text(Page==1?TEXT("BODYCAM CONFIGURATION"):Page==2?TEXT("LEAVE THIS SESSION?"):TEXT("WHEELHOUSE  /  CREW TERMINAL  01"),48,94,.95,Dim);
+    const FString Subtitle =
+        Page==1?TEXT("BODYCAM CONFIGURATION"):
+        Page==2?TEXT("LEAVE THIS SESSION?"):
+        Page==3?TEXT("CREW SESSION / LAN"):
+        TEXT("WHEELHOUSE  /  CREW TERMINAL  01");
+    Text(Subtitle,48,94,.95,Dim);
     TArray<FString> Labels;
     auto* P=Cast<ACalmyCharacter>(PC->GetPawn());
     const auto* Voyage=ACalmyVoyageDirector::Find(GetWorld());
     FString Primary=TEXT("CONTINUE WATCH");
     if(Voyage && Voyage->State.Phase==ECalmyVoyagePhase::Briefing) Primary=TEXT("BEGIN WATCH NOW");
     else if(Voyage && Voyage->State.Phase==ECalmyVoyagePhase::Outcome) Primary=TEXT("NEW WATCH (HOST)");
-    if(Page==0)Labels={Primary,TEXT("SETTINGS / НАСТРОЙКИ"),TEXT("REPLAY TRAINING / ОБУЧЕНИЕ СНОВА"),TEXT("LEAVE SESSION")};
+    if(Page==0)Labels={Primary,TEXT("SETTINGS / НАСТРОЙКИ"),TEXT("REPLAY TRAINING / ОБУЧЕНИЕ СНОВА"),TEXT("CREW SESSION / ЭКИПАЖ"),TEXT("LEAVE SESSION")};
     else if(Page==2)Labels={TEXT("STAY ON BOARD"),TEXT("CONFIRM / EXIT TO DESKTOP")};
+    else if(Page==3)
+    {
+        const bool Listening = PC->GetNetMode()==NM_ListenServer;
+        Labels={
+            Listening?TEXT("LAN LISTEN ACTIVE"):TEXT("HOST LAN WATCH"),
+            FString::Printf(TEXT("JOIN LAN  [%s]"), *FCalmySession::LoadSavedJoinAddress()),
+            Listening?FString::Printf(TEXT("COPY ADDRESS  %s"), *FCalmySession::DescribeListenEndpoint(PC->GetWorld())):TEXT("COPY ADDRESS  (host first)"),
+            TEXT("BACK")
+        };
+    }
     else Labels={FString::Printf(TEXT("CAMERA       %s   [V]"),P&&P->IsSteadyCamera()?TEXT("STEADY"):TEXT("BODYCAM")),FString::Printf(TEXT("MOTION       %.0f%%   [M]"),P?P->GetCameraMotionScale()*100:0),FString::Printf(TEXT("LOOK -       %.2fx   [[]"),P?P->GetLookSensitivity():1),TEXT("LOOK +       []]"),TEXT("BACK")};
     for(int32 I=0;I<Labels.Num();++I)
     {
         const float Y=176+I*52;
         if(I==Selected){Rect(46,Y,932,44,FLinearColor(.04,.11,.115));Rect(46,Y,3,44,Accent);}
-        Text(Labels[I],68,Y+10,1.18,I==Selected?White:Dim);
+        Text(Labels[I],68,Y+10,1.05,I==Selected?White:Dim);
     }
     Rect(46,457,932,1,Dim);
     Text(PC->IsSoloPause()?TEXT("SOLO / WORLD PAUSED"):TEXT("ONLINE / WORLD REMAINS LIVE"),48,476,.78,Accent);
-    Text(TEXT("MOUSE / ARROWS / ENTER     ESC BACK TO DECK"),475,476,.69,Dim);
+    Text(Page==3?*FCalmySession::StatusLine(PC->GetWorld()):TEXT("MOUSE / ARROWS / ENTER     ESC BACK TO DECK"),Page==3?320.f:475.f,476,.62,Dim);
 }

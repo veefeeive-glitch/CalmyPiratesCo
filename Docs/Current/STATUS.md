@@ -1,8 +1,12 @@
 # Текущее состояние — 2026-09-12
 
+**12 сентября — [Net G4 LAN session](../Changes/NET_G4_LAN_SESSION_2026-09-12.md).** Bridge CREW SESSION: Host LAN / Join IP:port / Copy Address; MaxPlayers=4; Session 4-peer + Lag100 smoke PASS; 52/52 automation. Steam/internet invites — gap (нет OSS). DLL `6DEB7261…`. Не fun gate.
+
 **12 сентября — [Voyage G3](../Changes/VOYAGE_G3_2026-09-12.md) slice (A03).** На OceanFreighterR7: брифинг → curated смена (1 STANDARD + 1 BULKY) → leak → итог → host restart. `ACalmyVoyageDirector`; leak valve у green zone без `.umap`. Labs без директора — прежнее поведение. Automation: `CalmyPiratesCo.Gameplay.VoyageCycle`. Editor-playable; не полный 12–20 мин рейс и не human fun gate.
 
 **12 сентября — [Hero G1 sockets/fingers](../Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md).** Mesh handle sockets на Cargo R3 + Wrist/Palm/Tip на CrewR8 forearms; `ResolveWorld` + tip contact + cosmetic curl. Build PASS; HandleGrips+HandSockets 2/2; DLL `FFA664E9…`. Continuous skin / articulated fingers / art acceptance **нет**.
+
+**12 сентября — [Ship G2 storm / proxy / helm](../Changes/SHIP_G2_STORM_PROXY_HELM_2026-09-12.md).** Storm scale + `StormBoost`, helm intent, boarding ramp, `ACalmyHullProxy`; 52/52; Ship/Water PASS; DLL `0128BC98…`. Не Chaos R7 / не fun gate.
 
 **12 сентября — [HOLD 1 FPS mind](../Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md).** Epic: mind 80.87 / NoBrain 75.48 FPS; SNN +~1.5 мс swarm_step, FPS упирается в render; vs S1 91.85 — game_ms↑ от стека после S1. DLL `D7D175ED…`.
 
@@ -75,14 +79,14 @@
 | A01 сохранность | Частично | Git+LFS B1 + off-device backup на D:; Evidence вне Git; remote ещё нет |
 | A02 упаковка | Открыт | Windows-Current старый; package_windows продвигает до smoke и удаляет previous |
 | A03 цельный рейс | Частично | G3 slice на R7: briefing→curated shift→leak→outcome→restart; полный 12–20 мин / 4 peers / human gate открыты |
-| A04 сеть | Частично | Проверены отдельные Host/Client/LateJoin сценарии, не четыре человека/плохая сеть/качка |
+| A04 сеть | Частично | 4-peer Session + Lag100 loopback PASS; LAN join UI; не интернет/Steam/host migration |
 | A05 герой | Частично | R8 runtime + Grip R2a + G1 sockets/tip curl; continuous skin / articulated fingers / human art acceptance открыты |
-| A06 вода | Частично | W1: связанное поле поверхности/плавучести от удара и следа; не полный fluid solver, нет шторма и подвижного корпуса |
+| A06 вода | Частично | W1 + G2 storm scale / ShipMotion ride / HullProxy; не полный fluid solver, не Chaos на всём R7 |
 | A07 NPC/грузы | Частично | Постоянный NPC, aim/reach grab, тяжёлая solo доставка; не весь solo-контракт и не точные физические хваты |
 | A08 маршруты | Частично | R6B повтор 37-точечного Ship; старые 260/260 и 56/56 не заменяют полный current sweep |
 | A09 арт | Открыт | Герои не приняты; R7-ART-01/02/03, все помещения, тёмные персонажи/пересветы |
 | A10 документация | Обновлена | HANDOVER/журнал/перенос/инвентарь, обязательное поддержание в AGENTS; не автосинхронизация |
-| A11 продукт | Открыт | BridgeMenu R2 entry/resume работает; сессии/приглашения/сохранения/full sound/UI/performance не закрыты |
+| A11 продукт | Частично | BridgeMenu + CREW SESSION LAN host/join; Steam invites/сохранения рейса/full sound ещё открыты |
 | A12 воспроизводимость | Частично | Сохранены исходники/evidence; fresh rebuild с нуля и приёмка переноса на другом ПК не доказаны |
 
 ## Ближайшая работа
