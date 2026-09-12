@@ -1,5 +1,7 @@
 # Calmy Pirates Co. — начать продолжение здесь
 
+**Последнее изменение: Stream merge → `main` @ `653160b`, 12 сентября.** Hero G1 + Voyage G3 + Sea G2 + Net G4 собраны в одном дереве `E:\Game\CalmyPiratesCoUE`. Build PASS; stream smoke PASS; DLL `700A808B…`. Не fun gate. Подробности — Project store `docs/stream-merge.md`.
+
 **Последнее изменение: [Net G4 LAN session](Docs/Changes/NET_G4_LAN_SESSION_2026-09-12.md), 12 сентября.** LAN host/join в меню рубки; 4 peers + Lag100 Session PASS; 52/52; Steam invites нет. DLL 6DEB7261….
 
 **Последнее изменение: [Ship G2 storm / proxy / helm](Docs/Changes/SHIP_G2_STORM_PROXY_HELM_2026-09-12.md), 12 сентября.** Ocean storm scale; ShipMotion `StormBoost`+helm+boarding ramp; `ACalmyHullProxy` physics test hull. 52/52 automation; Ship/Water PASS; DLL `0128BC98…`. Chaos R7 / Character boarding climb / fun gate **не** закрыты.

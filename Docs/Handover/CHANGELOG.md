@@ -1,168 +1,168 @@
-# Журнал продолжения проекта
+﻿# Р–СѓСЂРЅР°Р» РїСЂРѕРґРѕР»Р¶РµРЅРёСЏ РїСЂРѕРµРєС‚Р°
 
-## 2026-09-12 — Stream merge (Hero+Voyage+Sea+Net → main)
+## 2026-09-12 вЂ” Stream merge (Hero+Voyage+Sea+Net в†’ main)
 
-Интеграция параллельных потоков в `main` @ `6c7335d` через `cursor/stream-merge-2b40`. Build PASS; focused smoke PASS (VoyageCycle, Ship.*, StormScale, Bridge, SessionLanHelpers, HandSockets, HandleGrips). DLL `700A808B…`. PendingOtherStreams → `Saved/PendingOtherStreams/Archive-20260912-superseded`. Releases ZIP 2026-09-12 не трогали. Не fun gate.
+РРЅС‚РµРіСЂР°С†РёСЏ РїР°СЂР°Р»Р»РµР»СЊРЅС‹С… РїРѕС‚РѕРєРѕРІ РІ `main` @ `653160b` С‡РµСЂРµР· `cursor/stream-merge-2b40`. Build PASS; focused smoke PASS (VoyageCycle, Ship.*, StormScale, Bridge, SessionLanHelpers, HandSockets, HandleGrips). DLL `700A808BвЂ¦`. PendingOtherStreams в†’ `Saved/PendingOtherStreams/Archive-20260912-superseded`. Releases ZIP 2026-09-12 РЅРµ С‚СЂРѕРіР°Р»Рё. РќРµ fun gate.
 
-## 2026-09-12 — Net G4 LAN session / 4 peers
+## 2026-09-12 вЂ” Net G4 LAN session / 4 peers
 
-[Отчёт](../Changes/NET_G4_LAN_SESSION_2026-09-12.md): меню CREW SESSION (Host LAN / Join / Copy), MaxPlayers=4, Session smoke 4-peer + Lag100 PASS, 52/52 automation. Steam gap задокументирован. DLL 6DEB7261….
+[РћС‚С‡С‘С‚](../Changes/NET_G4_LAN_SESSION_2026-09-12.md): РјРµРЅСЋ CREW SESSION (Host LAN / Join / Copy), MaxPlayers=4, Session smoke 4-peer + Lag100 PASS, 52/52 automation. Steam gap Р·Р°РґРѕРєСѓРјРµРЅС‚РёСЂРѕРІР°РЅ. DLL 6DEB7261вЂ¦.
 
 
-## 2026-09-12 — Ship G2 storm / proxy / helm
+## 2026-09-12 вЂ” Ship G2 storm / proxy / helm
 
-[Отчёт](../Changes/SHIP_G2_STORM_PROXY_HELM_2026-09-12.md): ocean `StormIntensity`, ShipMotion `StormBoost`+helm+boarding ramp, `ACalmyHullProxy`. Build PASS; 52/52; Ship/Water PASS; DLL `0128BC98…`. Не Chaos R7 / fun gate.
+[РћС‚С‡С‘С‚](../Changes/SHIP_G2_STORM_PROXY_HELM_2026-09-12.md): ocean `StormIntensity`, ShipMotion `StormBoost`+helm+boarding ramp, `ACalmyHullProxy`. Build PASS; 52/52; Ship/Water PASS; DLL `0128BC98вЂ¦`. РќРµ Chaos R7 / fun gate.
 
-## 2026-09-12 — Hero G1: mesh handle sockets + finger contact scaffold
+## 2026-09-12 вЂ” Hero G1: mesh handle sockets + finger contact scaffold
 
-[Отчёт](../Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md): `Grip_*` на Cargo R3; Wrist/Palm/Tip на CrewR8; ResolveWorld + tip/curl. Build PASS; 2/2 automation; DLL `FFA664E9…`. Continuous skin нет.
+[РћС‚С‡С‘С‚](../Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md): `Grip_*` РЅР° Cargo R3; Wrist/Palm/Tip РЅР° CrewR8; ResolveWorld + tip/curl. Build PASS; 2/2 automation; DLL `FFA664E9вЂ¦`. Continuous skin РЅРµС‚.
 
-## 2026-09-12 — HOLD 1 FPS: mind vs NoBrain
+## 2026-09-12 вЂ” HOLD 1 FPS: mind vs NoBrain
 
-[Отчёт](../Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md): Epic HOLD 1 — mind 80.87 FPS / swarm 1.97 мс, NoBrain 75.48 / 0.45 мс; vs S1 91.85. SNN не главный FPS-тормоз. DLL `D7D175ED…`.
+[РћС‚С‡С‘С‚](../Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md): Epic HOLD 1 вЂ” mind 80.87 FPS / swarm 1.97 РјСЃ, NoBrain 75.48 / 0.45 РјСЃ; vs S1 91.85. SNN РЅРµ РіР»Р°РІРЅС‹Р№ FPS-С‚РѕСЂРјРѕР·. DLL `D7D175EDвЂ¦`.
 
-## 2026-09-12 — Fly think + ship roam
+## 2026-09-12 вЂ” Fly think + ship roam
 
-[Отчёт](../Changes/FLY_THINK_TRAVEL_2026-09-12.md): travel-thoughts, HUD THINKING, soft mark nudge; FlyTravel/FlyMind PASS; DLL `D7D175ED…`.
+[РћС‚С‡С‘С‚](../Changes/FLY_THINK_TRAVEL_2026-09-12.md): travel-thoughts, HUD THINKING, soft mark nudge; FlyTravel/FlyMind PASS; DLL `D7D175EDвЂ¦`.
 
-## 2026-09-12 — FlyWire parity A (desktop-fly 668)
+## 2026-09-12 вЂ” FlyWire parity A (desktop-fly 668)
 
-[Отчёт](../Changes/FLY_PARITY_A_2026-09-12.md): sensoryGate/activityScale, gait→ascending, burst noise, air puff; `DesktopFlyGatesAndGait` + SourceLIFParity PASS; FlyMind PASS; DLL `B6AA9C6D…`.
+[РћС‚С‡С‘С‚](../Changes/FLY_PARITY_A_2026-09-12.md): sensoryGate/activityScale, gaitв†’ascending, burst noise, air puff; `DesktopFlyGatesAndGait` + SourceLIFParity PASS; FlyMind PASS; DLL `B6AA9C6DвЂ¦`.
 
-## 2026-09-12 — FlyWire driven by inscriptions
+## 2026-09-12 вЂ” FlyWire driven by inscriptions
 
-[Отчёт](../Changes/FLY_WIRE_INSCRIPTIONS_2026-09-12.md): wary/welcome метки → loom gain, airPuff sensory, ascending; `InscriptionsDriveFlyWire` PASS; FlyMind PASS; DLL `5D622F47…`.
+[РћС‚С‡С‘С‚](../Changes/FLY_WIRE_INSCRIPTIONS_2026-09-12.md): wary/welcome РјРµС‚РєРё в†’ loom gain, airPuff sensory, ascending; `InscriptionsDriveFlyWire` PASS; FlyMind PASS; DLL `5D622F47вЂ¦`.
 
-## 2026-09-12 — Fly inscriptions (Dark Souls marks)
+## 2026-09-12 вЂ” Fly inscriptions (Dark Souls marks)
 
-[Отчёт](../Changes/FLY_INSCRIPTIONS_2026-09-12.md): общие метки на рое, echoes, влияние на cognition, репликация/сейв v2. FlyMind PASS; SharedInscriptions + RadialSelection; DLL `1F2F4DAB…`.
+[РћС‚С‡С‘С‚](../Changes/FLY_INSCRIPTIONS_2026-09-12.md): РѕР±С‰РёРµ РјРµС‚РєРё РЅР° СЂРѕРµ, echoes, РІР»РёСЏРЅРёРµ РЅР° cognition, СЂРµРїР»РёРєР°С†РёСЏ/СЃРµР№РІ v2. FlyMind PASS; SharedInscriptions + RadialSelection; DLL `1F2F4DABвЂ¦`.
 
-## 2026-09-12 — Fly presence (занятия заметны)
+## 2026-09-12 вЂ” Fly presence (Р·Р°РЅСЏС‚РёСЏ Р·Р°РјРµС‚РЅС‹)
 
-[Отчёт](../Changes/FLY_PRESENCE_2026-09-12.md): utility Observe/Socialize, речь при смене занятия, HUD activity, travel-pause только у диалога E. FlyTravel/FlyMind PASS; Fly* 7/7; DLL `FC7F68A2…`.
+[РћС‚С‡С‘С‚](../Changes/FLY_PRESENCE_2026-09-12.md): utility Observe/Socialize, СЂРµС‡СЊ РїСЂРё СЃРјРµРЅРµ Р·Р°РЅСЏС‚РёСЏ, HUD activity, travel-pause С‚РѕР»СЊРєРѕ Сѓ РґРёР°Р»РѕРіР° E. FlyTravel/FlyMind PASS; Fly* 7/7; DLL `FC7F68A2вЂ¦`.
 
-## 2026-09-12 — Ship drift G2 + doors closed
+## 2026-09-12 вЂ” Ship drift G2 + doors closed
 
-[Отчёт](../Changes/SHIP_DRIFT_DOORS_2026-09-12.md): 61 дверь closed; `ACalmyShipMotion` от W1; 44/44; Door/Ship/Water/WaterInteraction/FlyTravel PASS; DLL `EB86E392…`.
+[РћС‚С‡С‘С‚](../Changes/SHIP_DRIFT_DOORS_2026-09-12.md): 61 РґРІРµСЂСЊ closed; `ACalmyShipMotion` РѕС‚ W1; 44/44; Door/Ship/Water/WaterInteraction/FlyTravel PASS; DLL `EB86E392вЂ¦`.
 
-## 2026-09-12 — Fly deck height (~1 m flight / rest on deck)
+## 2026-09-12 вЂ” Fly deck height (~1 m flight / rest on deck)
 
-[Отчёт](../Changes/FLY_DECK_HEIGHT_2026-09-12.md): deck-relative Rest/FlightHeight; честный статус FlyWire SNN + cognition. FlyTravel/FlyMind PASS; Fly* automation 7/7; DLL `6AB74606…`.
+[РћС‚С‡С‘С‚](../Changes/FLY_DECK_HEIGHT_2026-09-12.md): deck-relative Rest/FlightHeight; С‡РµСЃС‚РЅС‹Р№ СЃС‚Р°С‚СѓСЃ FlyWire SNN + cognition. FlyTravel/FlyMind PASS; Fly* automation 7/7; DLL `6AB74606вЂ¦`.
 
-## 2026-09-11 — Tutorial progress save + menu replay
+## 2026-09-11 вЂ” Tutorial progress save + menu replay
 
-[Отчёт](../Changes/TUTORIAL_PROGRESS_SAVE_2026-09-11.md): сохранение прохождения; автопосадка на корабль; «Обучение снова» в меню рубки. 44/44; Tutorial+BridgeMenu PASS.
+[РћС‚С‡С‘С‚](../Changes/TUTORIAL_PROGRESS_SAVE_2026-09-11.md): СЃРѕС…СЂР°РЅРµРЅРёРµ РїСЂРѕС…РѕР¶РґРµРЅРёСЏ; Р°РІС‚РѕРїРѕСЃР°РґРєР° РЅР° РєРѕСЂР°Р±Р»СЊ; В«РћР±СѓС‡РµРЅРёРµ СЃРЅРѕРІР°В» РІ РјРµРЅСЋ СЂСѓР±РєРё. 44/44; Tutorial+BridgeMenu PASS.
 
-## 2026-09-11 — Grip R2a (handles + moving wrist)
+## 2026-09-11 вЂ” Grip R2a (handles + moving wrist)
 
-[Отчёт](../Changes/GRIP_R2A_HANDLES_2026-09-11.md): kind-specific grip locals; moving yaw probe ≤5 см. 43/43 automation; Helper + LP4 GripViews PASS; DLL `A935E36D…`. Пальцы/skin/sockets/package нет.
+[РћС‚С‡С‘С‚](../Changes/GRIP_R2A_HANDLES_2026-09-11.md): kind-specific grip locals; moving yaw probe в‰¤5 СЃРј. 43/43 automation; Helper + LP4 GripViews PASS; DLL `A935E36DвЂ¦`. РџР°Р»СЊС†С‹/skin/sockets/package РЅРµС‚.
 
-## 2026-09-11 — Crew R8 runtime (recovery)
+## 2026-09-11 вЂ” Crew R8 runtime (recovery)
 
-[Отчёт](../Changes/CREW_R8_RUNTIME_2026-09-11.md): пути на CrewR8; recovery Overlap/мотор/soft-finish/ResetBodies. 42/42 automation; Character+Helper PASS; DLL `fbe951fa…`. Grips не начинались.
+[РћС‚С‡С‘С‚](../Changes/CREW_R8_RUNTIME_2026-09-11.md): РїСѓС‚Рё РЅР° CrewR8; recovery Overlap/РјРѕС‚РѕСЂ/soft-finish/ResetBodies. 42/42 automation; Character+Helper PASS; DLL `fbe951faвЂ¦`. Grips РЅРµ РЅР°С‡РёРЅР°Р»РёСЃСЊ.
 
-## 2026-09-11 — Crew R8 import (PARTIAL)
+## 2026-09-11 вЂ” Crew R8 import (PARTIAL)
 
-[Отчёт](../Changes/CREW_R8_IMPORT_2026-09-11.md): 20 мешей в Content/CrewR8; SemanticSearch crash на quit. Runtime R8: Helper/Water/Ship PASS, Character recovery FAIL (bind R6B). Revert на R6B; Character PASS; FOV probe исправлен под preferences. Grips/water/package отложены.
+[РћС‚С‡С‘С‚](../Changes/CREW_R8_IMPORT_2026-09-11.md): 20 РјРµС€РµР№ РІ Content/CrewR8; SemanticSearch crash РЅР° quit. Runtime R8: Helper/Water/Ship PASS, Character recovery FAIL (bind R6B). Revert РЅР° R6B; Character PASS; FOV probe РёСЃРїСЂР°РІР»РµРЅ РїРѕРґ preferences. Grips/water/package РѕС‚Р»РѕР¶РµРЅС‹.
 
-## 2026-09-11 — Automation smoke S1
+## 2026-09-11 вЂ” Automation smoke S1
 
-[Отчёт](../Changes/AUTOMATION_SMOKE_S1_2026-09-11.md): ENV Check вручную (pwsh7 нет); AUTOMATION_PASS 42/42 на DLL S1 `dd75bb31…`. Package/network smoke не запускались.
+[РћС‚С‡С‘С‚](../Changes/AUTOMATION_SMOKE_S1_2026-09-11.md): ENV Check РІСЂСѓС‡РЅСѓСЋ (pwsh7 РЅРµС‚); AUTOMATION_PASS 42/42 РЅР° DLL S1 `dd75bb31вЂ¦`. Package/network smoke РЅРµ Р·Р°РїСѓСЃРєР°Р»РёСЃСЊ.
 
-## 2026-09-11 — Phased ops: remote SKIP + ops hardening
+## 2026-09-11 вЂ” Phased ops: remote SKIP + ops hardening
 
-[Отчёт](../Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md): remote пропущен (нет URL). JPG/JPEG в LFS (30 файлов renormalize). Unity Archive `safe.directory` добавлен. Supermemory MCP auth OK.
+[РћС‚С‡С‘С‚](../Changes/PHASED_OPS_REMOTE_SKIP_OPS_2026-09-11.md): remote РїСЂРѕРїСѓС‰РµРЅ (РЅРµС‚ URL). JPG/JPEG РІ LFS (30 С„Р°Р№Р»РѕРІ renormalize). Unity Archive `safe.directory` РґРѕР±Р°РІР»РµРЅ. Supermemory MCP auth OK.
 
-## 2026-09-11 — Off-device backup B1
+## 2026-09-11 вЂ” Off-device backup B1
 
-[Отчёт](../Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md): копия на `D:\Backups\CalmyPiratesCo-2026-09-11` (проект без Intermediate/DDC/.vs + Releases). ZIP SHA256 и git HEAD совпали; Evidence 3793. Robocopy FAILED=0. Remote не создавался.
+[РћС‚С‡С‘С‚](../Changes/BACKUP_OFFDEVICE_B1_2026-09-11.md): РєРѕРїРёСЏ РЅР° `D:\Backups\CalmyPiratesCo-2026-09-11` (РїСЂРѕРµРєС‚ Р±РµР· Intermediate/DDC/.vs + Releases). ZIP SHA256 Рё git HEAD СЃРѕРІРїР°Р»Рё; Evidence 3793. Robocopy FAILED=0. Remote РЅРµ СЃРѕР·РґР°РІР°Р»СЃСЏ.
 
-## 2026-09-11 — Git LFS baseline B1
+## 2026-09-11 вЂ” Git LFS baseline B1
 
-[Отчёт](../Changes/GIT_BASELINE_B1_2026-09-11.md): по запросу пользователя создан локальный первый коммит `7bb0048b431705a61b74406882677373d01a55d7` (2880 tracked, 1826 LFS). В `.gitignore` добавлены `Evidence/` и `.codex/`. Remote/push нет. Gameplay и ZIP не менялись. Следующее — off-device backup Evidence/Releases; remote только по явному разрешению.
+[РћС‚С‡С‘С‚](../Changes/GIT_BASELINE_B1_2026-09-11.md): РїРѕ Р·Р°РїСЂРѕСЃСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СЃРѕР·РґР°РЅ Р»РѕРєР°Р»СЊРЅС‹Р№ РїРµСЂРІС‹Р№ РєРѕРјРјРёС‚ `7bb0048b431705a61b74406882677373d01a55d7` (2880 tracked, 1826 LFS). Р’ `.gitignore` РґРѕР±Р°РІР»РµРЅС‹ `Evidence/` Рё `.codex/`. Remote/push РЅРµС‚. Gameplay Рё ZIP РЅРµ РјРµРЅСЏР»РёСЃСЊ. РЎР»РµРґСѓСЋС‰РµРµ вЂ” off-device backup Evidence/Releases; remote С‚РѕР»СЊРєРѕ РїРѕ СЏРІРЅРѕРјСѓ СЂР°Р·СЂРµС€РµРЅРёСЋ.
 
-## 2026-09-11 — Repo check / doc fix
+## 2026-09-11 вЂ” Repo check / doc fix
 
-[Отчёт](../Changes/REPO_CHECK_FIX_2026-09-11.md): после сортировки F1 пользователь попросил проверить репозиторий и сохранить результат. ZIP P1 и DLL S1 совпали с ожидаемыми хешами; docs links PASS; Git UE пустой (0 commits/remote). Исправлен устаревший README; удалён пустой служебный `References/desktop-fly/.git` (реальный desktop-fly git не трогали). Gameplay/package не менялись. Следующее — только по явному запросу: Git+LFS baseline или off-device backup; перед коммитом учесть, что Evidence не в `.gitignore`.
+[РћС‚С‡С‘С‚](../Changes/REPO_CHECK_FIX_2026-09-11.md): РїРѕСЃР»Рµ СЃРѕСЂС‚РёСЂРѕРІРєРё F1 РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРѕРїСЂРѕСЃРёР» РїСЂРѕРІРµСЂРёС‚СЊ СЂРµРїРѕР·РёС‚РѕСЂРёР№ Рё СЃРѕС…СЂР°РЅРёС‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚. ZIP P1 Рё DLL S1 СЃРѕРІРїР°Р»Рё СЃ РѕР¶РёРґР°РµРјС‹РјРё С…РµС€Р°РјРё; docs links PASS; Git UE РїСѓСЃС‚РѕР№ (0 commits/remote). РСЃРїСЂР°РІР»РµРЅ СѓСЃС‚Р°СЂРµРІС€РёР№ README; СѓРґР°Р»С‘РЅ РїСѓСЃС‚РѕР№ СЃР»СѓР¶РµР±РЅС‹Р№ `References/desktop-fly/.git` (СЂРµР°Р»СЊРЅС‹Р№ desktop-fly git РЅРµ С‚СЂРѕРіР°Р»Рё). Gameplay/package РЅРµ РјРµРЅСЏР»РёСЃСЊ. РЎР»РµРґСѓСЋС‰РµРµ вЂ” С‚РѕР»СЊРєРѕ РїРѕ СЏРІРЅРѕРјСѓ Р·Р°РїСЂРѕСЃСѓ: Git+LFS baseline РёР»Рё off-device backup; РїРµСЂРµРґ РєРѕРјРјРёС‚РѕРј СѓС‡РµСЃС‚СЊ, С‡С‚Рѕ Evidence РЅРµ РІ `.gitignore`.
 
-## 2026-09-11 — File organization F1
+## 2026-09-11 вЂ” File organization F1
 
-[Отчёт](../Changes/FILE_ORGANIZATION_F1_2026-09-11.md): по просьбе пользователя отсортирована вся E:/Game. Созданы Releases/Archive/References; перенесены ZIP/SHA256, старые Unity/Studio и инструкции, старые пути сохранены скрытыми ссылками. Windows отказала в переносе desktop-fly: начатый частичный перенос восстановлен, Git fsck прошёл, доступ обеспечен junction из References. Текущий UE-проект, его зависимости, frozen evidence и ярлык не перемещались. SHA256 ZIP прежний, игровые версии P1/S1/R6 не менялись. Добавлена карта папок/README, журнал действий, проверки путей/launcher/инвентаря. Ничего не удалялось; при переносе на другой диск нужно проверить абсолютные links.
+[РћС‚С‡С‘С‚](../Changes/FILE_ORGANIZATION_F1_2026-09-11.md): РїРѕ РїСЂРѕСЃСЊР±Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅР° РІСЃСЏ E:/Game. РЎРѕР·РґР°РЅС‹ Releases/Archive/References; РїРµСЂРµРЅРµСЃРµРЅС‹ ZIP/SHA256, СЃС‚Р°СЂС‹Рµ Unity/Studio Рё РёРЅСЃС‚СЂСѓРєС†РёРё, СЃС‚Р°СЂС‹Рµ РїСѓС‚Рё СЃРѕС…СЂР°РЅРµРЅС‹ СЃРєСЂС‹С‚С‹РјРё СЃСЃС‹Р»РєР°РјРё. Windows РѕС‚РєР°Р·Р°Р»Р° РІ РїРµСЂРµРЅРѕСЃРµ desktop-fly: РЅР°С‡Р°С‚С‹Р№ С‡Р°СЃС‚РёС‡РЅС‹Р№ РїРµСЂРµРЅРѕСЃ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅ, Git fsck РїСЂРѕС€С‘Р», РґРѕСЃС‚СѓРї РѕР±РµСЃРїРµС‡РµРЅ junction РёР· References. РўРµРєСѓС‰РёР№ UE-РїСЂРѕРµРєС‚, РµРіРѕ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё, frozen evidence Рё СЏСЂР»С‹Рє РЅРµ РїРµСЂРµРјРµС‰Р°Р»РёСЃСЊ. SHA256 ZIP РїСЂРµР¶РЅРёР№, РёРіСЂРѕРІС‹Рµ РІРµСЂСЃРёРё P1/S1/R6 РЅРµ РјРµРЅСЏР»РёСЃСЊ. Р”РѕР±Р°РІР»РµРЅР° РєР°СЂС‚Р° РїР°РїРѕРє/README, Р¶СѓСЂРЅР°Р» РґРµР№СЃС‚РІРёР№, РїСЂРѕРІРµСЂРєРё РїСѓС‚РµР№/launcher/РёРЅРІРµРЅС‚Р°СЂСЏ. РќРёС‡РµРіРѕ РЅРµ СѓРґР°Р»СЏР»РѕСЃСЊ; РїСЂРё РїРµСЂРµРЅРѕСЃРµ РЅР° РґСЂСѓРіРѕР№ РґРёСЃРє РЅСѓР¶РЅРѕ РїСЂРѕРІРµСЂРёС‚СЊ Р°Р±СЃРѕР»СЋС‚РЅС‹Рµ links.
 
-## 2026-09-11 — Windows share P1
+## 2026-09-11 вЂ” Windows share P1
 
-[Отчёт](../Changes/WINDOWS_SHARE_P1_2026-09-11.md): пользователь попросил отдельный ZIP игры для друга. Собрана Windows x64 Development-версия S1/R6; исправлены пропущенные при cook динамические модели CrewR6B/CargoR3 и материал BridgeMenu, добавлен корабль в MapsToCook. В архиве EXE, ресурсы, Visual C++ redistributable, русская инструкция, Play-Ship.cmd и notices. Проверки выполняются из распакованного ZIP с отдельными профилями; точные результаты/хеши/ранняя ошибка упаковки в отчёте. C++ gameplay/карты/модели прежние; Windows-Current не заменён, ярлык editor-game сохранён. Следующее — отправка пользователем и запуск на компьютере друга; интернет/Steam и human acceptance не заявлены.
+[РћС‚С‡С‘С‚](../Changes/WINDOWS_SHARE_P1_2026-09-11.md): РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРѕРїСЂРѕСЃРёР» РѕС‚РґРµР»СЊРЅС‹Р№ ZIP РёРіСЂС‹ РґР»СЏ РґСЂСѓРіР°. РЎРѕР±СЂР°РЅР° Windows x64 Development-РІРµСЂСЃРёСЏ S1/R6; РёСЃРїСЂР°РІР»РµРЅС‹ РїСЂРѕРїСѓС‰РµРЅРЅС‹Рµ РїСЂРё cook РґРёРЅР°РјРёС‡РµСЃРєРёРµ РјРѕРґРµР»Рё CrewR6B/CargoR3 Рё РјР°С‚РµСЂРёР°Р» BridgeMenu, РґРѕР±Р°РІР»РµРЅ РєРѕСЂР°Р±Р»СЊ РІ MapsToCook. Р’ Р°СЂС…РёРІРµ EXE, СЂРµСЃСѓСЂСЃС‹, Visual C++ redistributable, СЂСѓСЃСЃРєР°СЏ РёРЅСЃС‚СЂСѓРєС†РёСЏ, Play-Ship.cmd Рё notices. РџСЂРѕРІРµСЂРєРё РІС‹РїРѕР»РЅСЏСЋС‚СЃСЏ РёР· СЂР°СЃРїР°РєРѕРІР°РЅРЅРѕРіРѕ ZIP СЃ РѕС‚РґРµР»СЊРЅС‹РјРё РїСЂРѕС„РёР»СЏРјРё; С‚РѕС‡РЅС‹Рµ СЂРµР·СѓР»СЊС‚Р°С‚С‹/С…РµС€Рё/СЂР°РЅРЅСЏСЏ РѕС€РёР±РєР° СѓРїР°РєРѕРІРєРё РІ РѕС‚С‡С‘С‚Рµ. C++ gameplay/РєР°СЂС‚С‹/РјРѕРґРµР»Рё РїСЂРµР¶РЅРёРµ; Windows-Current РЅРµ Р·Р°РјРµРЅС‘РЅ, СЏСЂР»С‹Рє editor-game СЃРѕС…СЂР°РЅС‘РЅ. РЎР»РµРґСѓСЋС‰РµРµ вЂ” РѕС‚РїСЂР°РІРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј Рё Р·Р°РїСѓСЃРє РЅР° РєРѕРјРїСЊСЋС‚РµСЂРµ РґСЂСѓРіР°; РёРЅС‚РµСЂРЅРµС‚/Steam Рё human acceptance РЅРµ Р·Р°СЏРІР»РµРЅС‹.
 
-## 2026-09-11 — Settings / performance S1
+## 2026-09-11 вЂ” Settings / performance S1
 
-[Отчёт](../Changes/SETTINGS_PERFORMANCE_S1_2026-09-11.md): пользователь сообщил о лагах на корабле у мух и попросил полные настройки. Диагностика выявила CPU-пересчёт океана; кеширование фаз и ранний выход для пустых возмущений дали 20.68 → 91.85 FPS в одной и той же HOLD 1 сцене, без отключения SNN. Добавлены пять вкладок Slate (экран/графика/звук/клавиши/камера/HUD), локальное применение/сохранение, remapping, миграция старой камеры и 15-секундное подтверждение видеорежима. Launcher сохраняет выбранные экран/FPS. 42/42 automation, Settings GPU/network и WaterInteraction/Melee/BridgeMenu регрессии; точные версии и повторные проверки в отчёте. Ранние build/NullRHI/Slate-capture ошибки сохранены. Source/DLL/scripts новые; карты/меши/Blender-кандидаты/package прежние. Следующее — обычная игра и оценка FPS/комфорта пользователем, полный performance sweep отдельно.
+[РћС‚С‡С‘С‚](../Changes/SETTINGS_PERFORMANCE_S1_2026-09-11.md): РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃРѕРѕР±С‰РёР» Рѕ Р»Р°РіР°С… РЅР° РєРѕСЂР°Р±Р»Рµ Сѓ РјСѓС… Рё РїРѕРїСЂРѕСЃРёР» РїРѕР»РЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё. Р”РёР°РіРЅРѕСЃС‚РёРєР° РІС‹СЏРІРёР»Р° CPU-РїРµСЂРµСЃС‡С‘С‚ РѕРєРµР°РЅР°; РєРµС€РёСЂРѕРІР°РЅРёРµ С„Р°Р· Рё СЂР°РЅРЅРёР№ РІС‹С…РѕРґ РґР»СЏ РїСѓСЃС‚С‹С… РІРѕР·РјСѓС‰РµРЅРёР№ РґР°Р»Рё 20.68 в†’ 91.85 FPS РІ РѕРґРЅРѕР№ Рё С‚РѕР№ Р¶Рµ HOLD 1 СЃС†РµРЅРµ, Р±РµР· РѕС‚РєР»СЋС‡РµРЅРёСЏ SNN. Р”РѕР±Р°РІР»РµРЅС‹ РїСЏС‚СЊ РІРєР»Р°РґРѕРє Slate (СЌРєСЂР°РЅ/РіСЂР°С„РёРєР°/Р·РІСѓРє/РєР»Р°РІРёС€Рё/РєР°РјРµСЂР°/HUD), Р»РѕРєР°Р»СЊРЅРѕРµ РїСЂРёРјРµРЅРµРЅРёРµ/СЃРѕС…СЂР°РЅРµРЅРёРµ, remapping, РјРёРіСЂР°С†РёСЏ СЃС‚Р°СЂРѕР№ РєР°РјРµСЂС‹ Рё 15-СЃРµРєСѓРЅРґРЅРѕРµ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РІРёРґРµРѕСЂРµР¶РёРјР°. Launcher СЃРѕС…СЂР°РЅСЏРµС‚ РІС‹Р±СЂР°РЅРЅС‹Рµ СЌРєСЂР°РЅ/FPS. 42/42 automation, Settings GPU/network Рё WaterInteraction/Melee/BridgeMenu СЂРµРіСЂРµСЃСЃРёРё; С‚РѕС‡РЅС‹Рµ РІРµСЂСЃРёРё Рё РїРѕРІС‚РѕСЂРЅС‹Рµ РїСЂРѕРІРµСЂРєРё РІ РѕС‚С‡С‘С‚Рµ. Р Р°РЅРЅРёРµ build/NullRHI/Slate-capture РѕС€РёР±РєРё СЃРѕС…СЂР°РЅРµРЅС‹. Source/DLL/scripts РЅРѕРІС‹Рµ; РєР°СЂС‚С‹/РјРµС€Рё/Blender-РєР°РЅРґРёРґР°С‚С‹/package РїСЂРµР¶РЅРёРµ. РЎР»РµРґСѓСЋС‰РµРµ вЂ” РѕР±С‹С‡РЅР°СЏ РёРіСЂР° Рё РѕС†РµРЅРєР° FPS/РєРѕРјС„РѕСЂС‚Р° РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј, РїРѕР»РЅС‹Р№ performance sweep РѕС‚РґРµР»СЊРЅРѕ.
 
-## 2026-09-11 — Fly travel R6
+## 2026-09-11 вЂ” Fly travel R6
 
-[Отчёт](../Changes/FLY_TRAVEL_R6_2026-09-11.md): пользователь попросил один самостоятельный моб из мух, свободно живущий на корабле. Общая когнитивная модель теперь двигает весь рой из HOLD 1; добавлены ограниченный инкрементальный поиск, память посещений, collision центра/особей, след для возврата и сетевой actor movement. Сохранены SNN/память R4 и интерфейс/удары R5. Build2 / 41 из 41 automation / FlyTravel сеть PASS, остальные результаты в отчёте. Первый host завершился раньше позднего клиента; исправлены тестовый срок жизни и стягивание мух в одну точку. Source/DLL/scripts новые, maps/модели прежние; нового пакета нет. Дальше — обычная игра, оценка темпа/заметности роя; не заявлены все помещения и новые предметные занятия.
+[РћС‚С‡С‘С‚](../Changes/FLY_TRAVEL_R6_2026-09-11.md): РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРѕРїСЂРѕСЃРёР» РѕРґРёРЅ СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅС‹Р№ РјРѕР± РёР· РјСѓС…, СЃРІРѕР±РѕРґРЅРѕ Р¶РёРІСѓС‰РёР№ РЅР° РєРѕСЂР°Р±Р»Рµ. РћР±С‰Р°СЏ РєРѕРіРЅРёС‚РёРІРЅР°СЏ РјРѕРґРµР»СЊ С‚РµРїРµСЂСЊ РґРІРёРіР°РµС‚ РІРµСЃСЊ СЂРѕР№ РёР· HOLD 1; РґРѕР±Р°РІР»РµРЅС‹ РѕРіСЂР°РЅРёС‡РµРЅРЅС‹Р№ РёРЅРєСЂРµРјРµРЅС‚Р°Р»СЊРЅС‹Р№ РїРѕРёСЃРє, РїР°РјСЏС‚СЊ РїРѕСЃРµС‰РµРЅРёР№, collision С†РµРЅС‚СЂР°/РѕСЃРѕР±РµР№, СЃР»РµРґ РґР»СЏ РІРѕР·РІСЂР°С‚Р° Рё СЃРµС‚РµРІРѕР№ actor movement. РЎРѕС…СЂР°РЅРµРЅС‹ SNN/РїР°РјСЏС‚СЊ R4 Рё РёРЅС‚РµСЂС„РµР№СЃ/СѓРґР°СЂС‹ R5. Build2 / 41 РёР· 41 automation / FlyTravel СЃРµС‚СЊ PASS, РѕСЃС‚Р°Р»СЊРЅС‹Рµ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІ РѕС‚С‡С‘С‚Рµ. РџРµСЂРІС‹Р№ host Р·Р°РІРµСЂС€РёР»СЃСЏ СЂР°РЅСЊС€Рµ РїРѕР·РґРЅРµРіРѕ РєР»РёРµРЅС‚Р°; РёСЃРїСЂР°РІР»РµРЅС‹ С‚РµСЃС‚РѕРІС‹Р№ СЃСЂРѕРє Р¶РёР·РЅРё Рё СЃС‚СЏРіРёРІР°РЅРёРµ РјСѓС… РІ РѕРґРЅСѓ С‚РѕС‡РєСѓ. Source/DLL/scripts РЅРѕРІС‹Рµ, maps/РјРѕРґРµР»Рё РїСЂРµР¶РЅРёРµ; РЅРѕРІРѕРіРѕ РїР°РєРµС‚Р° РЅРµС‚. Р”Р°Р»СЊС€Рµ вЂ” РѕР±С‹С‡РЅР°СЏ РёРіСЂР°, РѕС†РµРЅРєР° С‚РµРјРїР°/Р·Р°РјРµС‚РЅРѕСЃС‚Рё СЂРѕСЏ; РЅРµ Р·Р°СЏРІР»РµРЅС‹ РІСЃРµ РїРѕРјРµС‰РµРЅРёСЏ Рё РЅРѕРІС‹Рµ РїСЂРµРґРјРµС‚РЅС‹Рµ Р·Р°РЅСЏС‚РёСЏ.
 
-## 2026-09-10 — Interaction R5
+## 2026-09-10 вЂ” Interaction R5
 
-[Отчёт](../Changes/INTERACTION_R5_2026-09-10.md): пользователь попросил действия вместо отдельных клавиш, удар, ответ Миши после 3 попаданий, разлёт мух и колесо E. Добавлены контекст ЛКМ, серверный aimed hit/HP/cooldown/sequence gate, per-attacker provocation и Defending, bounded swat/память угрозы, Canvas колесо с input lease и без click-through. J/K/L/O удалены. Сохранены ошибки первого RenderCore link и параллельного GPU hover; быстрый разворот NPC и ударная рука улучшены через плавный поворот/IK. Финальные build5/40 из 40 automation/Melee и FlyMind сети/Restore/отдельный GPU мыши PASS; carry/helper/bridge menu PASS на build4. Новые Source/DLL, maps/assets прежние; packaged build старый. Frozen `Evidence/Gameplay/Interaction-R5-20260910`. Следующее — обычный запуск/человеческая оценка, баланс и дальнейшая полировка; физический контакт кулака/новая модель/звук не заявлены.
+[РћС‚С‡С‘С‚](../Changes/INTERACTION_R5_2026-09-10.md): РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРѕРїСЂРѕСЃРёР» РґРµР№СЃС‚РІРёСЏ РІРјРµСЃС‚Рѕ РѕС‚РґРµР»СЊРЅС‹С… РєР»Р°РІРёС€, СѓРґР°СЂ, РѕС‚РІРµС‚ РњРёС€Рё РїРѕСЃР»Рµ 3 РїРѕРїР°РґР°РЅРёР№, СЂР°Р·Р»С‘С‚ РјСѓС… Рё РєРѕР»РµСЃРѕ E. Р”РѕР±Р°РІР»РµРЅС‹ РєРѕРЅС‚РµРєСЃС‚ Р›РљРњ, СЃРµСЂРІРµСЂРЅС‹Р№ aimed hit/HP/cooldown/sequence gate, per-attacker provocation Рё Defending, bounded swat/РїР°РјСЏС‚СЊ СѓРіСЂРѕР·С‹, Canvas РєРѕР»РµСЃРѕ СЃ input lease Рё Р±РµР· click-through. J/K/L/O СѓРґР°Р»РµРЅС‹. РЎРѕС…СЂР°РЅРµРЅС‹ РѕС€РёР±РєРё РїРµСЂРІРѕРіРѕ RenderCore link Рё РїР°СЂР°Р»Р»РµР»СЊРЅРѕРіРѕ GPU hover; Р±С‹СЃС‚СЂС‹Р№ СЂР°Р·РІРѕСЂРѕС‚ NPC Рё СѓРґР°СЂРЅР°СЏ СЂСѓРєР° СѓР»СѓС‡С€РµРЅС‹ С‡РµСЂРµР· РїР»Р°РІРЅС‹Р№ РїРѕРІРѕСЂРѕС‚/IK. Р¤РёРЅР°Р»СЊРЅС‹Рµ build5/40 РёР· 40 automation/Melee Рё FlyMind СЃРµС‚Рё/Restore/РѕС‚РґРµР»СЊРЅС‹Р№ GPU РјС‹С€Рё PASS; carry/helper/bridge menu PASS РЅР° build4. РќРѕРІС‹Рµ Source/DLL, maps/assets РїСЂРµР¶РЅРёРµ; packaged build СЃС‚Р°СЂС‹Р№. Frozen `Evidence/Gameplay/Interaction-R5-20260910`. РЎР»РµРґСѓСЋС‰РµРµ вЂ” РѕР±С‹С‡РЅС‹Р№ Р·Р°РїСѓСЃРє/С‡РµР»РѕРІРµС‡РµСЃРєР°СЏ РѕС†РµРЅРєР°, Р±Р°Р»Р°РЅСЃ Рё РґР°Р»СЊРЅРµР№С€Р°СЏ РїРѕР»РёСЂРѕРІРєР°; С„РёР·РёС‡РµСЃРєРёР№ РєРѕРЅС‚Р°РєС‚ РєСѓР»Р°РєР°/РЅРѕРІР°СЏ РјРѕРґРµР»СЊ/Р·РІСѓРє РЅРµ Р·Р°СЏРІР»РµРЅС‹.
 
-## 2026-09-10 — Fly habitat R3 / cognitive model R4
+## 2026-09-10 вЂ” Fly habitat R3 / cognitive model R4
 
-[Отчёт](../Changes/FLY_MIND_R4_2026-09-10.md): 32 мухи перенесены в HOLD 1, WaterLab дубликат удалён, backups сохранены. Пользователь уточнил, что «сознание» означает реальную вычисляемую модель с памятью, обучением, занятиями и общением. Добавлен общий когнитивный слой, person-specific learning, ограниченная память/эпизоды, автономный выбор занятий, J/K/L/O диалог и серверный SaveGame. Субъективное сознание не установлено, свободного языка/озвучки нет. Source/DLL/maps новые, арт R2 прежний, packaged build старый. Build3 / 38 из 38 automation / Host/Client/LateJoin / новый процесс Restore / GPU обычного HUD PASS. Сохранены неудачи CoreOnline linking и конфликт `;` с DebugCamera; исправлены зависимость/клавиша O и неверный visual disk marker. Frozen `Evidence/Gameplay/Fly-Mind-R4-20260910`. Следующее — оценка в обычной игре; богатое планирование/свободное общение остаются отдельными этапами.
+[РћС‚С‡С‘С‚](../Changes/FLY_MIND_R4_2026-09-10.md): 32 РјСѓС…Рё РїРµСЂРµРЅРµСЃРµРЅС‹ РІ HOLD 1, WaterLab РґСѓР±Р»РёРєР°С‚ СѓРґР°Р»С‘РЅ, backups СЃРѕС…СЂР°РЅРµРЅС‹. РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СѓС‚РѕС‡РЅРёР», С‡С‚Рѕ В«СЃРѕР·РЅР°РЅРёРµВ» РѕР·РЅР°С‡Р°РµС‚ СЂРµР°Р»СЊРЅСѓСЋ РІС‹С‡РёСЃР»СЏРµРјСѓСЋ РјРѕРґРµР»СЊ СЃ РїР°РјСЏС‚СЊСЋ, РѕР±СѓС‡РµРЅРёРµРј, Р·Р°РЅСЏС‚РёСЏРјРё Рё РѕР±С‰РµРЅРёРµРј. Р”РѕР±Р°РІР»РµРЅ РѕР±С‰РёР№ РєРѕРіРЅРёС‚РёРІРЅС‹Р№ СЃР»РѕР№, person-specific learning, РѕРіСЂР°РЅРёС‡РµРЅРЅР°СЏ РїР°РјСЏС‚СЊ/СЌРїРёР·РѕРґС‹, Р°РІС‚РѕРЅРѕРјРЅС‹Р№ РІС‹Р±РѕСЂ Р·Р°РЅСЏС‚РёР№, J/K/L/O РґРёР°Р»РѕРі Рё СЃРµСЂРІРµСЂРЅС‹Р№ SaveGame. РЎСѓР±СЉРµРєС‚РёРІРЅРѕРµ СЃРѕР·РЅР°РЅРёРµ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, СЃРІРѕР±РѕРґРЅРѕРіРѕ СЏР·С‹РєР°/РѕР·РІСѓС‡РєРё РЅРµС‚. Source/DLL/maps РЅРѕРІС‹Рµ, Р°СЂС‚ R2 РїСЂРµР¶РЅРёР№, packaged build СЃС‚Р°СЂС‹Р№. Build3 / 38 РёР· 38 automation / Host/Client/LateJoin / РЅРѕРІС‹Р№ РїСЂРѕС†РµСЃСЃ Restore / GPU РѕР±С‹С‡РЅРѕРіРѕ HUD PASS. РЎРѕС…СЂР°РЅРµРЅС‹ РЅРµСѓРґР°С‡Рё CoreOnline linking Рё РєРѕРЅС„Р»РёРєС‚ `;` СЃ DebugCamera; РёСЃРїСЂР°РІР»РµРЅС‹ Р·Р°РІРёСЃРёРјРѕСЃС‚СЊ/РєР»Р°РІРёС€Р° O Рё РЅРµРІРµСЂРЅС‹Р№ visual disk marker. Frozen `Evidence/Gameplay/Fly-Mind-R4-20260910`. РЎР»РµРґСѓСЋС‰РµРµ вЂ” РѕС†РµРЅРєР° РІ РѕР±С‹С‡РЅРѕР№ РёРіСЂРµ; Р±РѕРіР°С‚РѕРµ РїР»Р°РЅРёСЂРѕРІР°РЅРёРµ/СЃРІРѕР±РѕРґРЅРѕРµ РѕР±С‰РµРЅРёРµ РѕСЃС‚Р°СЋС‚СЃСЏ РѕС‚РґРµР»СЊРЅС‹РјРё СЌС‚Р°РїР°РјРё.
 
-## 2026-09-10 — Fly in game R2
+## 2026-09-10 вЂ” Fly in game R2
 
-[Отчёт](../Changes/FLY_IN_GAME_R2_2026-09-10.md): пользователь попросил добавить муху в игру. Создан оригинальный mesh 1840 tris, свои материалы и wing WPO; по 32 особи сохранены перед стартом WaterLab и над приборами рубки OceanFreighterR7. Сохранены backups обеих исходных карт. Финальные build/import exit 0/35 из 35 automation/GPU/Host–Client–LateJoin на обеих картах PASS. Исправлены экспорт COLOR_0, Sine input и тестовый resume из solo menu; прежние неудачи в evidence. Новые Source/DLL/maps/assets, старый package не обновлён. Collision/урон/звук не добавлены. Следующее: обычный пользовательский запуск и при необходимости игровой эффект роя.
+[РћС‚С‡С‘С‚](../Changes/FLY_IN_GAME_R2_2026-09-10.md): РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРѕРїСЂРѕСЃРёР» РґРѕР±Р°РІРёС‚СЊ РјСѓС…Сѓ РІ РёРіСЂСѓ. РЎРѕР·РґР°РЅ РѕСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ mesh 1840 tris, СЃРІРѕРё РјР°С‚РµСЂРёР°Р»С‹ Рё wing WPO; РїРѕ 32 РѕСЃРѕР±Рё СЃРѕС…СЂР°РЅРµРЅС‹ РїРµСЂРµРґ СЃС‚Р°СЂС‚РѕРј WaterLab Рё РЅР°Рґ РїСЂРёР±РѕСЂР°РјРё СЂСѓР±РєРё OceanFreighterR7. РЎРѕС…СЂР°РЅРµРЅС‹ backups РѕР±РµРёС… РёСЃС…РѕРґРЅС‹С… РєР°СЂС‚. Р¤РёРЅР°Р»СЊРЅС‹Рµ build/import exit 0/35 РёР· 35 automation/GPU/HostвЂ“ClientвЂ“LateJoin РЅР° РѕР±РµРёС… РєР°СЂС‚Р°С… PASS. РСЃРїСЂР°РІР»РµРЅС‹ СЌРєСЃРїРѕСЂС‚ COLOR_0, Sine input Рё С‚РµСЃС‚РѕРІС‹Р№ resume РёР· solo menu; РїСЂРµР¶РЅРёРµ РЅРµСѓРґР°С‡Рё РІ evidence. РќРѕРІС‹Рµ Source/DLL/maps/assets, СЃС‚Р°СЂС‹Р№ package РЅРµ РѕР±РЅРѕРІР»С‘РЅ. Collision/СѓСЂРѕРЅ/Р·РІСѓРє РЅРµ РґРѕР±Р°РІР»РµРЅС‹. РЎР»РµРґСѓСЋС‰РµРµ: РѕР±С‹С‡РЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ Р·Р°РїСѓСЃРє Рё РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РёРіСЂРѕРІРѕР№ СЌС„С„РµРєС‚ СЂРѕСЏ.
 
-## 2026-09-10 — Fly Swarm R1
+## 2026-09-10 вЂ” Fly Swarm R1
 
-[Отчёт, экспорт и настройка](../Changes/FLY_SWARM_2026-09-10.md). Новый `AFlySwarmMob`, исходный граф desktop-fly закреплён по commit/SHA256, CSR shared singleton, независимые компактные LIF-состояния с точной 4-мс inhibition history, 20–30-Гц timer и 1-мс substeps, ParallelFor, HISM и server-authoritative poses. Сборка/35 из 35 automation/Host–Client–LateJoin PASS; неудачный первый сетевой run и исходная ошибка компиляции сохранены. Карты/ассеты прежние, placeholder fly mesh; collision/урон/арт/GPU acceptance/new package не выполнены. Новый source/DLL поверх Tutorial T1. Notices MIT и CC BY-NC 4.0 сохранены. Следующий шаг — назначить mesh и выбрать место роя на уровне.
+[РћС‚С‡С‘С‚, СЌРєСЃРїРѕСЂС‚ Рё РЅР°СЃС‚СЂРѕР№РєР°](../Changes/FLY_SWARM_2026-09-10.md). РќРѕРІС‹Р№ `AFlySwarmMob`, РёСЃС…РѕРґРЅС‹Р№ РіСЂР°С„ desktop-fly Р·Р°РєСЂРµРїР»С‘РЅ РїРѕ commit/SHA256, CSR shared singleton, РЅРµР·Р°РІРёСЃРёРјС‹Рµ РєРѕРјРїР°РєС‚РЅС‹Рµ LIF-СЃРѕСЃС‚РѕСЏРЅРёСЏ СЃ С‚РѕС‡РЅРѕР№ 4-РјСЃ inhibition history, 20вЂ“30-Р“С† timer Рё 1-РјСЃ substeps, ParallelFor, HISM Рё server-authoritative poses. РЎР±РѕСЂРєР°/35 РёР· 35 automation/HostвЂ“ClientвЂ“LateJoin PASS; РЅРµСѓРґР°С‡РЅС‹Р№ РїРµСЂРІС‹Р№ СЃРµС‚РµРІРѕР№ run Рё РёСЃС…РѕРґРЅР°СЏ РѕС€РёР±РєР° РєРѕРјРїРёР»СЏС†РёРё СЃРѕС…СЂР°РЅРµРЅС‹. РљР°СЂС‚С‹/Р°СЃСЃРµС‚С‹ РїСЂРµР¶РЅРёРµ, placeholder fly mesh; collision/СѓСЂРѕРЅ/Р°СЂС‚/GPU acceptance/new package РЅРµ РІС‹РїРѕР»РЅРµРЅС‹. РќРѕРІС‹Р№ source/DLL РїРѕРІРµСЂС… Tutorial T1. Notices MIT Рё CC BY-NC 4.0 СЃРѕС…СЂР°РЅРµРЅС‹. РЎР»РµРґСѓСЋС‰РёР№ С€Р°Рі вЂ” РЅР°Р·РЅР°С‡РёС‚СЊ mesh Рё РІС‹Р±СЂР°С‚СЊ РјРµСЃС‚Рѕ СЂРѕСЏ РЅР° СѓСЂРѕРІРЅРµ.
 
-Живой журнал. Новые записи добавлять сверху, не удалять прежние неудачи. Детальные исторические отчёты остаются в Docs/Changes. [Шаблон](Templates/CHANGE_ENTRY.md).
+Р–РёРІРѕР№ Р¶СѓСЂРЅР°Р». РќРѕРІС‹Рµ Р·Р°РїРёСЃРё РґРѕР±Р°РІР»СЏС‚СЊ СЃРІРµСЂС…Сѓ, РЅРµ СѓРґР°Р»СЏС‚СЊ РїСЂРµР¶РЅРёРµ РЅРµСѓРґР°С‡Рё. Р”РµС‚Р°Р»СЊРЅС‹Рµ РёСЃС‚РѕСЂРёС‡РµСЃРєРёРµ РѕС‚С‡С‘С‚С‹ РѕСЃС‚Р°СЋС‚СЃСЏ РІ Docs/Changes. [РЁР°Р±Р»РѕРЅ](Templates/CHANGE_ENTRY.md).
 
-## 2026-09-10 — Tutorial → Ship T1
+## 2026-09-10 вЂ” Tutorial в†’ Ship T1
 
-[Отчёт](../Changes/TUTORIAL_SHIP_T1_2026-09-10.md). WaterLab стала обычным началом игры: три общих серверных задания без таймера, физическая доставка одного Standard-ящика, отсчёт и переход всей команды на OceanFreighterR7. Новые HUD инструкции/направление цели, default map и launchers; direct ship entry сохранён. Проверены solo GPU, Host/Client/LateJoin, 32/32 automation. Первый сетевой travel потерял listen; исправлен и повторно проверен. Модели/карты/вода не перестраивались, пакет не обновлялся, постоянного сохранения урока нет.
+[РћС‚С‡С‘С‚](../Changes/TUTORIAL_SHIP_T1_2026-09-10.md). WaterLab СЃС‚Р°Р»Р° РѕР±С‹С‡РЅС‹Рј РЅР°С‡Р°Р»РѕРј РёРіСЂС‹: С‚СЂРё РѕР±С‰РёС… СЃРµСЂРІРµСЂРЅС‹С… Р·Р°РґР°РЅРёСЏ Р±РµР· С‚Р°Р№РјРµСЂР°, С„РёР·РёС‡РµСЃРєР°СЏ РґРѕСЃС‚Р°РІРєР° РѕРґРЅРѕРіРѕ Standard-СЏС‰РёРєР°, РѕС‚СЃС‡С‘С‚ Рё РїРµСЂРµС…РѕРґ РІСЃРµР№ РєРѕРјР°РЅРґС‹ РЅР° OceanFreighterR7. РќРѕРІС‹Рµ HUD РёРЅСЃС‚СЂСѓРєС†РёРё/РЅР°РїСЂР°РІР»РµРЅРёРµ С†РµР»Рё, default map Рё launchers; direct ship entry СЃРѕС…СЂР°РЅС‘РЅ. РџСЂРѕРІРµСЂРµРЅС‹ solo GPU, Host/Client/LateJoin, 32/32 automation. РџРµСЂРІС‹Р№ СЃРµС‚РµРІРѕР№ travel РїРѕС‚РµСЂСЏР» listen; РёСЃРїСЂР°РІР»РµРЅ Рё РїРѕРІС‚РѕСЂРЅРѕ РїСЂРѕРІРµСЂРµРЅ. РњРѕРґРµР»Рё/РєР°СЂС‚С‹/РІРѕРґР° РЅРµ РїРµСЂРµСЃС‚СЂР°РёРІР°Р»РёСЃСЊ, РїР°РєРµС‚ РЅРµ РѕР±РЅРѕРІР»СЏР»СЃСЏ, РїРѕСЃС‚РѕСЏРЅРЅРѕРіРѕ СЃРѕС…СЂР°РЅРµРЅРёСЏ СѓСЂРѕРєР° РЅРµС‚.
 
-## 2026-09-10 — Water Interaction W1
+## 2026-09-10 вЂ” Water Interaction W1
 
-[Отчёт](../Changes/WATER_INTERACTION_W1_2026-09-10.md). Серверные удары/след у поверхности формируют общее локальное поле для mesh displacement, сил плавучести и скорости воды пловца. Реплицируется ограниченный снимок живых волн с исходным временем. Отдельный component/material брызг, исправлены отсутствующий emissive и смешивание прозрачных эффектов с SingleLayerWater; смягчены яркие полосы. Новый стенд четырёх типов груза, проверки вершин/сил и peer snapshots. Это response approximation, не полный fluid solver, шторм или подвижный R7. Пальцы/skin/active walking не сделаны. Карты/модели старые, новый только W1 material; приложения/внешние ассеты не скачивались. Финальные проверки и незавершённое — в отчёте; неудачные серии сохранены.
+[РћС‚С‡С‘С‚](../Changes/WATER_INTERACTION_W1_2026-09-10.md). РЎРµСЂРІРµСЂРЅС‹Рµ СѓРґР°СЂС‹/СЃР»РµРґ Сѓ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё С„РѕСЂРјРёСЂСѓСЋС‚ РѕР±С‰РµРµ Р»РѕРєР°Р»СЊРЅРѕРµ РїРѕР»Рµ РґР»СЏ mesh displacement, СЃРёР» РїР»Р°РІСѓС‡РµСЃС‚Рё Рё СЃРєРѕСЂРѕСЃС‚Рё РІРѕРґС‹ РїР»РѕРІС†Р°. Р РµРїР»РёС†РёСЂСѓРµС‚СЃСЏ РѕРіСЂР°РЅРёС‡РµРЅРЅС‹Р№ СЃРЅРёРјРѕРє Р¶РёРІС‹С… РІРѕР»РЅ СЃ РёСЃС…РѕРґРЅС‹Рј РІСЂРµРјРµРЅРµРј. РћС‚РґРµР»СЊРЅС‹Р№ component/material Р±СЂС‹Р·Рі, РёСЃРїСЂР°РІР»РµРЅС‹ РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‰РёР№ emissive Рё СЃРјРµС€РёРІР°РЅРёРµ РїСЂРѕР·СЂР°С‡РЅС‹С… СЌС„С„РµРєС‚РѕРІ СЃ SingleLayerWater; СЃРјСЏРіС‡РµРЅС‹ СЏСЂРєРёРµ РїРѕР»РѕСЃС‹. РќРѕРІС‹Р№ СЃС‚РµРЅРґ С‡РµС‚С‹СЂС‘С… С‚РёРїРѕРІ РіСЂСѓР·Р°, РїСЂРѕРІРµСЂРєРё РІРµСЂС€РёРЅ/СЃРёР» Рё peer snapshots. Р­С‚Рѕ response approximation, РЅРµ РїРѕР»РЅС‹Р№ fluid solver, С€С‚РѕСЂРј РёР»Рё РїРѕРґРІРёР¶РЅС‹Р№ R7. РџР°Р»СЊС†С‹/skin/active walking РЅРµ СЃРґРµР»Р°РЅС‹. РљР°СЂС‚С‹/РјРѕРґРµР»Рё СЃС‚Р°СЂС‹Рµ, РЅРѕРІС‹Р№ С‚РѕР»СЊРєРѕ W1 material; РїСЂРёР»РѕР¶РµРЅРёСЏ/РІРЅРµС€РЅРёРµ Р°СЃСЃРµС‚С‹ РЅРµ СЃРєР°С‡РёРІР°Р»РёСЃСЊ. Р¤РёРЅР°Р»СЊРЅС‹Рµ РїСЂРѕРІРµСЂРєРё Рё РЅРµР·Р°РІРµСЂС€С‘РЅРЅРѕРµ вЂ” РІ РѕС‚С‡С‘С‚Рµ; РЅРµСѓРґР°С‡РЅС‹Рµ СЃРµСЂРёРё СЃРѕС…СЂР°РЅРµРЅС‹.
 
-## 2026-09-10 — Physical Crew / Bridge R2, часть запроса из четырёх пунктов
+## 2026-09-10 вЂ” Physical Crew / Bridge R2, С‡Р°СЃС‚СЊ Р·Р°РїСЂРѕСЃР° РёР· С‡РµС‚С‹СЂС‘С… РїСѓРЅРєС‚РѕРІ
 
-[Отчёт](../Changes/PHYSICAL_CREW_BRIDGE_R2_2026-09-10.md). Серверный физический торс при падении, силы/моменты подъёма с floor/capsule clearance, камера и руки от тела, переход к плаванию; исправлен kinematic reset/rescue. Терминал рубки: видимость, paused rendering, hover/input и сетевой ViewTarget, настройки/resume/exit. Обычный запуск теперь OceanFreighterR7, WaterLab сохранён. 30/30 automation и отдельные сетевые/GPU проверки — в отчёте. Runtime meshes R6B, Blender R8 не импортирован; Content не изменён. **Пальцы, полноценный active locomotion, physical storm и динамический корпус не сделаны**. Старый пакет не обновлён. Mixamo login ранее выполнен пользователем; хранение выбрано локальное, облако не подключалось. Все неудачные прогоны сохранены.
+[РћС‚С‡С‘С‚](../Changes/PHYSICAL_CREW_BRIDGE_R2_2026-09-10.md). РЎРµСЂРІРµСЂРЅС‹Р№ С„РёР·РёС‡РµСЃРєРёР№ С‚РѕСЂСЃ РїСЂРё РїР°РґРµРЅРёРё, СЃРёР»С‹/РјРѕРјРµРЅС‚С‹ РїРѕРґСЉС‘РјР° СЃ floor/capsule clearance, РєР°РјРµСЂР° Рё СЂСѓРєРё РѕС‚ С‚РµР»Р°, РїРµСЂРµС…РѕРґ Рє РїР»Р°РІР°РЅРёСЋ; РёСЃРїСЂР°РІР»РµРЅ kinematic reset/rescue. РўРµСЂРјРёРЅР°Р» СЂСѓР±РєРё: РІРёРґРёРјРѕСЃС‚СЊ, paused rendering, hover/input Рё СЃРµС‚РµРІРѕР№ ViewTarget, РЅР°СЃС‚СЂРѕР№РєРё/resume/exit. РћР±С‹С‡РЅС‹Р№ Р·Р°РїСѓСЃРє С‚РµРїРµСЂСЊ OceanFreighterR7, WaterLab СЃРѕС…СЂР°РЅС‘РЅ. 30/30 automation Рё РѕС‚РґРµР»СЊРЅС‹Рµ СЃРµС‚РµРІС‹Рµ/GPU РїСЂРѕРІРµСЂРєРё вЂ” РІ РѕС‚С‡С‘С‚Рµ. Runtime meshes R6B, Blender R8 РЅРµ РёРјРїРѕСЂС‚РёСЂРѕРІР°РЅ; Content РЅРµ РёР·РјРµРЅС‘РЅ. **РџР°Р»СЊС†С‹, РїРѕР»РЅРѕС†РµРЅРЅС‹Р№ active locomotion, physical storm Рё РґРёРЅР°РјРёС‡РµСЃРєРёР№ РєРѕСЂРїСѓСЃ РЅРµ СЃРґРµР»Р°РЅС‹**. РЎС‚Р°СЂС‹Р№ РїР°РєРµС‚ РЅРµ РѕР±РЅРѕРІР»С‘РЅ. Mixamo login СЂР°РЅРµРµ РІС‹РїРѕР»РЅРµРЅ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј; С…СЂР°РЅРµРЅРёРµ РІС‹Р±СЂР°РЅРѕ Р»РѕРєР°Р»СЊРЅРѕРµ, РѕР±Р»Р°РєРѕ РЅРµ РїРѕРґРєР»СЋС‡Р°Р»РѕСЃСЊ. Р’СЃРµ РЅРµСѓРґР°С‡РЅС‹Рµ РїСЂРѕРіРѕРЅС‹ СЃРѕС…СЂР°РЅРµРЅС‹.
 
-## 2026-09-09 — Grip/Health R1, первый этап нового запроса
+## 2026-09-09 вЂ” Grip/Health R1, РїРµСЂРІС‹Р№ СЌС‚Р°Рї РЅРѕРІРѕРіРѕ Р·Р°РїСЂРѕСЃР°
 
-[Отчёт](../Changes/GRIP_HEALTH_R1_2026-09-09.md): physical cargo IK/исправление обратного drive, NPC на противоположной грани, reachable carry distance, null guard, replicated HP/landing damage/grounded recovery, motion default 100% без сброса preferences. Добавлены GPU grip views и регрессии; неудачные кандидаты сохранены. Source/DLL теперь не frozen R6, meshes R6B и карты неизменны. Осталось: dynamic grips/sockets/skin, active ragdoll, BridgeMenu/ship-first, физическое море и шторм — не объявлять их выполненными этим этапом.
+[РћС‚С‡С‘С‚](../Changes/GRIP_HEALTH_R1_2026-09-09.md): physical cargo IK/РёСЃРїСЂР°РІР»РµРЅРёРµ РѕР±СЂР°С‚РЅРѕРіРѕ drive, NPC РЅР° РїСЂРѕС‚РёРІРѕРїРѕР»РѕР¶РЅРѕР№ РіСЂР°РЅРё, reachable carry distance, null guard, replicated HP/landing damage/grounded recovery, motion default 100% Р±РµР· СЃР±СЂРѕСЃР° preferences. Р”РѕР±Р°РІР»РµРЅС‹ GPU grip views Рё СЂРµРіСЂРµСЃСЃРёРё; РЅРµСѓРґР°С‡РЅС‹Рµ РєР°РЅРґРёРґР°С‚С‹ СЃРѕС…СЂР°РЅРµРЅС‹. Source/DLL С‚РµРїРµСЂСЊ РЅРµ frozen R6, meshes R6B Рё РєР°СЂС‚С‹ РЅРµРёР·РјРµРЅРЅС‹. РћСЃС‚Р°Р»РѕСЃСЊ: dynamic grips/sockets/skin, active ragdoll, BridgeMenu/ship-first, С„РёР·РёС‡РµСЃРєРѕРµ РјРѕСЂРµ Рё С€С‚РѕСЂРј вЂ” РЅРµ РѕР±СЉСЏРІР»СЏС‚СЊ РёС… РІС‹РїРѕР»РЅРµРЅРЅС‹РјРё СЌС‚РёРј СЌС‚Р°РїРѕРј.
 
-## 2026-09-09 — Rigify и подключение редакторов
+## 2026-09-09 вЂ” Rigify Рё РїРѕРґРєР»СЋС‡РµРЅРёРµ СЂРµРґР°РєС‚РѕСЂРѕРІ
 
-[Отчёт](../Changes/TOOLING_SETUP_2026-09-09.md). Включён уже поставляемый Rigify, preferences backup, disposable rig generation PASS (706 total bones, не игровой экспорт). Blender MCP compatibility/execute PASS; Unreal MCP initialize/tools-list PASS, только 127.0.0.1. start_dev получил explicit MCP/loopback и Hidden default, добавлены setup/test scripts. Новых загрузок нет, Git LFS уже настроен, Plugin Management найден в 0.1.0. Mixamo требует входа; backup destination не выбран. R6B/R8/ship assets не редактировались; gameplay tests/importer shutdown не перепроверялись. Следующее: независимая копия и выбранный skin/animation pipeline.
+[РћС‚С‡С‘С‚](../Changes/TOOLING_SETUP_2026-09-09.md). Р’РєР»СЋС‡С‘РЅ СѓР¶Рµ РїРѕСЃС‚Р°РІР»СЏРµРјС‹Р№ Rigify, preferences backup, disposable rig generation PASS (706 total bones, РЅРµ РёРіСЂРѕРІРѕР№ СЌРєСЃРїРѕСЂС‚). Blender MCP compatibility/execute PASS; Unreal MCP initialize/tools-list PASS, С‚РѕР»СЊРєРѕ 127.0.0.1. start_dev РїРѕР»СѓС‡РёР» explicit MCP/loopback Рё Hidden default, РґРѕР±Р°РІР»РµРЅС‹ setup/test scripts. РќРѕРІС‹С… Р·Р°РіСЂСѓР·РѕРє РЅРµС‚, Git LFS СѓР¶Рµ РЅР°СЃС‚СЂРѕРµРЅ, Plugin Management РЅР°Р№РґРµРЅ РІ 0.1.0. Mixamo С‚СЂРµР±СѓРµС‚ РІС…РѕРґР°; backup destination РЅРµ РІС‹Р±СЂР°РЅ. R6B/R8/ship assets РЅРµ СЂРµРґР°РєС‚РёСЂРѕРІР°Р»РёСЃСЊ; gameplay tests/importer shutdown РЅРµ РїРµСЂРµРїСЂРѕРІРµСЂСЏР»РёСЃСЊ. РЎР»РµРґСѓСЋС‰РµРµ: РЅРµР·Р°РІРёСЃРёРјР°СЏ РєРѕРїРёСЏ Рё РІС‹Р±СЂР°РЅРЅС‹Р№ skin/animation pipeline.
 
-## 2026-09-09 — handover и организация
+## 2026-09-09 вЂ” handover Рё РѕСЂРіР°РЅРёР·Р°С†РёСЏ
 
-[Подробный аудит и выполненные проверки](../Changes/HANDOVER_AUDIT_2026-09-09.md).
+[РџРѕРґСЂРѕР±РЅС‹Р№ Р°СѓРґРёС‚ Рё РІС‹РїРѕР»РЅРµРЅРЅС‹Рµ РїСЂРѕРІРµСЂРєРё](../Changes/HANDOVER_AUDIT_2026-09-09.md).
 
-Запрос: полный документ для другого устройства, порядок в репозитории и запись будущих изменений. Добавлены HANDOVER, каталог моделей R6B/R7/R8, инструкция переноса, каталог назначения папок/скриптов, Incoming/Characters, переносимый launcher и генератор/валидатор инвентаря. AGENTS теперь требует обновлять handover/journal. README и текущие статусы исправлены: **runtime R6B ≠ Blender candidate R8**. Исторические пути/Content/SourceAssets не переставлялись; совместимость сохранена. Снимок прежних документов — Docs/Archive/Before-Handover-20260909.zip.
+Р—Р°РїСЂРѕСЃ: РїРѕР»РЅС‹Р№ РґРѕРєСѓРјРµРЅС‚ РґР»СЏ РґСЂСѓРіРѕРіРѕ СѓСЃС‚СЂРѕР№СЃС‚РІР°, РїРѕСЂСЏРґРѕРє РІ СЂРµРїРѕР·РёС‚РѕСЂРёРё Рё Р·Р°РїРёСЃСЊ Р±СѓРґСѓС‰РёС… РёР·РјРµРЅРµРЅРёР№. Р”РѕР±Р°РІР»РµРЅС‹ HANDOVER, РєР°С‚Р°Р»РѕРі РјРѕРґРµР»РµР№ R6B/R7/R8, РёРЅСЃС‚СЂСѓРєС†РёСЏ РїРµСЂРµРЅРѕСЃР°, РєР°С‚Р°Р»РѕРі РЅР°Р·РЅР°С‡РµРЅРёСЏ РїР°РїРѕРє/СЃРєСЂРёРїС‚РѕРІ, Incoming/Characters, РїРµСЂРµРЅРѕСЃРёРјС‹Р№ launcher Рё РіРµРЅРµСЂР°С‚РѕСЂ/РІР°Р»РёРґР°С‚РѕСЂ РёРЅРІРµРЅС‚Р°СЂСЏ. AGENTS С‚РµРїРµСЂСЊ С‚СЂРµР±СѓРµС‚ РѕР±РЅРѕРІР»СЏС‚СЊ handover/journal. README Рё С‚РµРєСѓС‰РёРµ СЃС‚Р°С‚СѓСЃС‹ РёСЃРїСЂР°РІР»РµРЅС‹: **runtime R6B в‰  Blender candidate R8**. РСЃС‚РѕСЂРёС‡РµСЃРєРёРµ РїСѓС‚Рё/Content/SourceAssets РЅРµ РїРµСЂРµСЃС‚Р°РІР»СЏР»РёСЃСЊ; СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚СЊ СЃРѕС…СЂР°РЅРµРЅР°. РЎРЅРёРјРѕРє РїСЂРµР¶РЅРёС… РґРѕРєСѓРјРµРЅС‚РѕРІ вЂ” Docs/Archive/Before-Handover-20260909.zip.
 
-Проверено: наличие исходников/20 GLB и 20 текстур R8; read-only Blender показал относительные внешние texture paths. DLL и обе карты совпадают с frozen R6. Git: 0 tracked, нет коммитов/remote. Полный игровой тест, импорт моделей, перенос на реальный второй ПК, commit/push **не выполнялись**. Итог в Docs/Handover/INVENTORY.json и read-only doc checks. Следующее: независимая копия, выбранный пользователем герой/skin pipeline, отдельно BridgeMenu.
+РџСЂРѕРІРµСЂРµРЅРѕ: РЅР°Р»РёС‡РёРµ РёСЃС…РѕРґРЅРёРєРѕРІ/20 GLB Рё 20 С‚РµРєСЃС‚СѓСЂ R8; read-only Blender РїРѕРєР°Р·Р°Р» РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ РІРЅРµС€РЅРёРµ texture paths. DLL Рё РѕР±Рµ РєР°СЂС‚С‹ СЃРѕРІРїР°РґР°СЋС‚ СЃ frozen R6. Git: 0 tracked, РЅРµС‚ РєРѕРјРјРёС‚РѕРІ/remote. РџРѕР»РЅС‹Р№ РёРіСЂРѕРІРѕР№ С‚РµСЃС‚, РёРјРїРѕСЂС‚ РјРѕРґРµР»РµР№, РїРµСЂРµРЅРѕСЃ РЅР° СЂРµР°Р»СЊРЅС‹Р№ РІС‚РѕСЂРѕР№ РџРљ, commit/push **РЅРµ РІС‹РїРѕР»РЅСЏР»РёСЃСЊ**. РС‚РѕРі РІ Docs/Handover/INVENTORY.json Рё read-only doc checks. РЎР»РµРґСѓСЋС‰РµРµ: РЅРµР·Р°РІРёСЃРёРјР°СЏ РєРѕРїРёСЏ, РІС‹Р±СЂР°РЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј РіРµСЂРѕР№/skin pipeline, РѕС‚РґРµР»СЊРЅРѕ BridgeMenu.
 
-## 2026-09-08 — Crew R8, кандидат вне игры
+## 2026-09-08 вЂ” Crew R8, РєР°РЅРґРёРґР°С‚ РІРЅРµ РёРіСЂС‹
 
-[Отчёт](../Changes/CREW_R8_2026-09-08.md): геометрия лица, position-based face texture, palette×AO bake, суперэллиптические сечения одежды, уменьшение стыков. 6012/6048 triangles. Blender-контракты заявлены в отчёте, UE automation/physics/GPU не проводились. AO в base color и жёсткая сегментация остаются ограничениями.
+[РћС‚С‡С‘С‚](../Changes/CREW_R8_2026-09-08.md): РіРµРѕРјРµС‚СЂРёСЏ Р»РёС†Р°, position-based face texture, paletteГ—AO bake, СЃСѓРїРµСЂСЌР»Р»РёРїС‚РёС‡РµСЃРєРёРµ СЃРµС‡РµРЅРёСЏ РѕРґРµР¶РґС‹, СѓРјРµРЅСЊС€РµРЅРёРµ СЃС‚С‹РєРѕРІ. 6012/6048 triangles. Blender-РєРѕРЅС‚СЂР°РєС‚С‹ Р·Р°СЏРІР»РµРЅС‹ РІ РѕС‚С‡С‘С‚Рµ, UE automation/physics/GPU РЅРµ РїСЂРѕРІРѕРґРёР»РёСЃСЊ. AO РІ base color Рё Р¶С‘СЃС‚РєР°СЏ СЃРµРіРјРµРЅС‚Р°С†РёСЏ РѕСЃС‚Р°СЋС‚СЃСЏ РѕРіСЂР°РЅРёС‡РµРЅРёСЏРјРё.
 
-## 2026-09-08 — Crew R7, кандидат вне игры
+## 2026-09-08 вЂ” Crew R7, РєР°РЅРґРёРґР°С‚ РІРЅРµ РёРіСЂС‹
 
-[Отчёт](../Changes/CREW_R7_2026-09-08.md): пересборка по двум AI-бордам, 5462/5442 triangles, 20 деталей, четыре Blender-рендера. Не импортирован; не подменяет принятую тестами R6B.
+[РћС‚С‡С‘С‚](../Changes/CREW_R7_2026-09-08.md): РїРµСЂРµСЃР±РѕСЂРєР° РїРѕ РґРІСѓРј AI-Р±РѕСЂРґР°Рј, 5462/5442 triangles, 20 РґРµС‚Р°Р»РµР№, С‡РµС‚С‹СЂРµ Blender-СЂРµРЅРґРµСЂР°. РќРµ РёРјРїРѕСЂС‚РёСЂРѕРІР°РЅ; РЅРµ РїРѕРґРјРµРЅСЏРµС‚ РїСЂРёРЅСЏС‚СѓСЋ С‚РµСЃС‚Р°РјРё R6B.
 
-## 2026-09-08 — R6B и парные концепты
+## 2026-09-08 вЂ” R6B Рё РїР°СЂРЅС‹Рµ РєРѕРЅС†РµРїС‚С‹
 
-[R6](../Changes/CREW_R6_2026-09-08.md): 4802/4882 triangles в Unreal, 28/28 automation, Character/Helper/Ship/Water/Pause, solo helper, GPU. Стыки/сумрак/пальцы частично; max Ship joint 7,812/8. Два import shutdown crash записаны как diagnostics. Отдельно созданы imagegen PNG Миши и Deckhand с prompts, не 3D.
+[R6](../Changes/CREW_R6_2026-09-08.md): 4802/4882 triangles РІ Unreal, 28/28 automation, Character/Helper/Ship/Water/Pause, solo helper, GPU. РЎС‚С‹РєРё/СЃСѓРјСЂР°Рє/РїР°Р»СЊС†С‹ С‡Р°СЃС‚РёС‡РЅРѕ; max Ship joint 7,812/8. Р”РІР° import shutdown crash Р·Р°РїРёСЃР°РЅС‹ РєР°Рє diagnostics. РћС‚РґРµР»СЊРЅРѕ СЃРѕР·РґР°РЅС‹ imagegen PNG РњРёС€Рё Рё Deckhand СЃ prompts, РЅРµ 3D.
 
-## 2026-09-08 — BridgeMenu draft / атмосфера / двери
+## 2026-09-08 вЂ” BridgeMenu draft / Р°С‚РјРѕСЃС„РµСЂР° / РґРІРµСЂРё
 
-Меню на экране рубки начато и осталось незавершённым; записанного clean end-to-end PASS нет. Не закрывать обычным Pause PASS. [Nightwatch](../Changes/NIGHTWATCH_R1_2026-09-08.md), [Doors](../Changes/SHIP_DOORS_R1_2026-09-08.md), [Engine Dream](../Changes/ENGINE_DREAM_LOOP_R1_2026-09-08.md) — отдельные исторические итерации.
+РњРµРЅСЋ РЅР° СЌРєСЂР°РЅРµ СЂСѓР±РєРё РЅР°С‡Р°С‚Рѕ Рё РѕСЃС‚Р°Р»РѕСЃСЊ РЅРµР·Р°РІРµСЂС€С‘РЅРЅС‹Рј; Р·Р°РїРёСЃР°РЅРЅРѕРіРѕ clean end-to-end PASS РЅРµС‚. РќРµ Р·Р°РєСЂС‹РІР°С‚СЊ РѕР±С‹С‡РЅС‹Рј Pause PASS. [Nightwatch](../Changes/NIGHTWATCH_R1_2026-09-08.md), [Doors](../Changes/SHIP_DOORS_R1_2026-09-08.md), [Engine Dream](../Changes/ENGINE_DREAM_LOOP_R1_2026-09-08.md) вЂ” РѕС‚РґРµР»СЊРЅС‹Рµ РёСЃС‚РѕСЂРёС‡РµСЃРєРёРµ РёС‚РµСЂР°С†РёРё.
 
-## До 2026-09-08
+## Р”Рѕ 2026-09-08
 
-[Каталог всей истории](../INDEX.md), [старые handovers](../History/INDEX.md). Unity→UE setup, корабль R3–R7, лаборатории/течь/питание/смена, персонаж R2–R4, вода и NPC, G1-A, металл и ship import. Их тестовые результаты не переносить автоматически на следующий бинарник.
+[РљР°С‚Р°Р»РѕРі РІСЃРµР№ РёСЃС‚РѕСЂРёРё](../INDEX.md), [СЃС‚Р°СЂС‹Рµ handovers](../History/INDEX.md). Unityв†’UE setup, РєРѕСЂР°Р±Р»СЊ R3вЂ“R7, Р»Р°Р±РѕСЂР°С‚РѕСЂРёРё/С‚РµС‡СЊ/РїРёС‚Р°РЅРёРµ/СЃРјРµРЅР°, РїРµСЂСЃРѕРЅР°Р¶ R2вЂ“R4, РІРѕРґР° Рё NPC, G1-A, РјРµС‚Р°Р»Р» Рё ship import. РС… С‚РµСЃС‚РѕРІС‹Рµ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РЅРµ РїРµСЂРµРЅРѕСЃРёС‚СЊ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РЅР° СЃР»РµРґСѓСЋС‰РёР№ Р±РёРЅР°СЂРЅРёРє.
