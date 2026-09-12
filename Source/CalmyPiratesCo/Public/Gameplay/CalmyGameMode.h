@@ -12,6 +12,7 @@ class CALMYPIRATESCO_API ACalmyGameMode : public AGameModeBase
 	GENERATED_BODY()
 public:
 	ACalmyGameMode();
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
     virtual void BeginPlay() override;
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 	virtual void Logout(AController* Exiting) override;
@@ -34,6 +35,12 @@ public:
     void CloseSettings();
     bool IsSettingsOpen() const {return SettingsWidget.IsValid();}
     TSharedPtr<class SCalmySettingsWidget> GetSettingsWidget() const {return SettingsWidget;}
+    void OpenJoinDialog();
+    void CloseJoinDialog();
+    bool IsJoinDialogOpen() const {return JoinWidget.IsValid();}
+    bool HostLanSession(FString* OutError=nullptr);
+    bool JoinLanSession(const FString& Address, FString* OutError=nullptr);
+    void CopyLanEndpointToClipboard();
     void ApplyAudioPreferences();
     void TogglePauseMenu();
     void SetPauseMenuOpen(bool bOpen);
@@ -68,11 +75,17 @@ public:
     UFUNCTION(Server, Reliable) void ServerInscribeSwarm(class AFlySwarmMob* Swarm, EFlyMessageKind Kind);
     // Owning client asks host to return the session to WaterLab training.
     UFUNCTION(Server, Reliable) void ServerReplayTutorial();
+    /** Host-local listen controller may skip ship briefing or start a new watch after outcome. */
+    void RequestBeginVoyage();
+    void RequestRestartVoyage();
+    UFUNCTION(Server, Reliable) void ServerBeginVoyage();
+    UFUNCTION(Server, Reliable) void ServerRestartVoyage(int32 ExpectedRound);
     class ACalmyBridgeTerminal* GetBridgeTerminal() const { return BridgeTerminal; }
 private:
     void TravelToTrainingMap();
     friend class UCalmyMeleeProbe;
     TSharedPtr<class SCalmySettingsWidget> SettingsWidget;
+    TSharedPtr<class SCalmyJoinWidget> JoinWidget;
     TMap<TWeakObjectPtr<class UAudioComponent>,float> OriginalAudioVolumes;
     double NextAudioUpdate=0;
     bool bAppliedLocalPreferences=false;

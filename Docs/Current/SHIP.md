@@ -1,6 +1,8 @@
 # Судно — R7-Cargo-C06
 
-**12 сентября — [Ship drift + doors closed](../Changes/SHIP_DRIFT_DOORS_2026-09-12.md).** Двери стартуют закрытыми. `ShipMotion_R7` кинематически следует водному полю W1 (heave/heel/drift с лимитами); 72 mesh/door attached; dry-hull queries в rest-frame. Корабль больше не абсолютно статичен; полный Chaos/шторм/руль не заявлены. Door/Ship/Water/FlyTravel PASS; DLL `EB86E392…`.
+**12 сентября — [G2 storm / proxy / helm](../Changes/SHIP_G2_STORM_PROXY_HELM_2026-09-12.md).** `StormIntensity` на океане; `StormBoost`+helm+boarding ramp на `ACalmyShipMotion`; отдельный `ACalmyHullProxy` (mass/COM/buoyancy). 52/52 automation; Ship/Water PASS; DLL `0128BC98…`. Не Chaos R7 / не fun gate. WaterLab proxy install отложен (занятый Editor).
+
+**12 сентября — [Ship drift + doors closed](../Changes/SHIP_DRIFT_DOORS_2026-09-12.md).** Двери стартуют закрытыми. `ShipMotion_R7` кинематически следует водному полю W1 (heave/heel/drift с лимитами); 72 mesh/door attached; dry-hull queries в rest-frame. Корабль больше не абсолютно статичен; полный Chaos на всём меше не заявлен. Door/Ship/Water/FlyTravel PASS; DLL `EB86E392…`.
 
 **11 сентября — [оптимизация S1](../Changes/SETTINGS_PERFORMANCE_S1_2026-09-11.md).** Устранён основной CPU bottleneck обновления океана, действовавший даже внутри трюма. Контрольный HOLD 1 benchmark возле роя: 20.68 → 91.85 FPS при Epic 1280×800; water mesh и физические события сохранены. Геометрия OceanFreighterR7 и автономные маршруты мух не менялись. Полный обход производительности/новый арт не заявляются.
 

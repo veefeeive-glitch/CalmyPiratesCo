@@ -18,6 +18,6 @@ public class CalmyPiratesCo : ModuleRules
 			"GameplayTags",
 			"GameplayTasks"
 		});
-		PrivateDependencyModuleNames.AddRange(new string[] { "ProceduralMeshComponent", "Json", "CoreOnline", "RenderCore", "RHI", "Slate", "SlateCore", "ApplicationCore" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "ProceduralMeshComponent", "Json", "CoreOnline", "RenderCore", "RHI", "Slate", "SlateCore", "ApplicationCore", "Sockets" });
 	}
 }

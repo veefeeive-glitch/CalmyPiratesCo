@@ -1,5 +1,11 @@
 # Calmy Pirates Co. — начать продолжение здесь
 
+**Последнее изменение: [Net G4 LAN session](Docs/Changes/NET_G4_LAN_SESSION_2026-09-12.md), 12 сентября.** LAN host/join в меню рубки; 4 peers + Lag100 Session PASS; 52/52; Steam invites нет. DLL 6DEB7261….
+
+**Последнее изменение: [Ship G2 storm / proxy / helm](Docs/Changes/SHIP_G2_STORM_PROXY_HELM_2026-09-12.md), 12 сентября.** Ocean storm scale; ShipMotion `StormBoost`+helm+boarding ramp; `ACalmyHullProxy` physics test hull. 52/52 automation; Ship/Water PASS; DLL `0128BC98…`. Chaos R7 / Character boarding climb / fun gate **не** закрыты.
+
+**Последнее изменение: [Hero G1 sockets/fingers](Docs/Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md), 12 сентября.** `Grip_*` sockets на Cargo R3; `Wrist`/`Palm`/`Tip` на CrewR8 forearms; `ResolveWorld` + tip contact + curl. Build PASS; HandleGrips+HandSockets 2/2; DLL `FFA664E9…`. Continuous skin / articulated fingers / fun gate **не** закрыты.
+
 **Последнее изменение: [HOLD 1 FPS mind](Docs/Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md), 12 сентября.** Epic HOLD 1: с мозгом 80.87 FPS (`swarm_step` 1.97 мс), NoBrain 75.48 (`swarm_step` 0.45); vs S1 91.85 — сдвиг game thread от стека после S1, не от одного SNN. DLL `D7D175ED…`.
 
 **Последнее изменение: [Fly think + roam](Docs/Changes/FLY_THINK_TRAVEL_2026-09-12.md), 12 сентября.** Рой говорит о маршруте, HUD THINKING, soft nudge от меток; FlyTravel/FlyMind PASS; DLL `D7D175ED…`.
@@ -71,7 +77,7 @@
 | Вода | W1: события удара/следа меняют поверхность и силы плавучести; общая скорость воды для пловца, репликация; новые пена/капли | Полный fluid solver/шторм/финальный арт пены/прибой/звук, подвижное судно, гидродинамическое затопление |
 | Корабль | Отдельная статическая OceanFreighterR7, сухие внутренние зоны, 61 интерактивная проходная дверь, 37-точечный сетевой маршрут | Движение/управление кораблём/качка, возврат с воды на судно, все отсеки и рабочие позиции |
 | Атмосфера | Metal R1, Engine Dream, Nightwatch: матовая сталь, локальный свет, сумрак/туман, свои wind/hull loops | Локальные пересветы, тёмные персонажи, свет и материалы всех помещений |
-| Меню | Bridge R2: старт в рубке, читаемый экран, настройки/resume/подтверждение выхода; solo freeze / локальная co-op | Сессии/приглашения, save/load, remapping/gamepad, локализация |
+| Меню | Bridge R2 + CREW SESSION LAN host/join/copy | Steam invites, save/load рейса, remapping/gamepad, локализация |
 | Игра целиком | Смена/доставка/аварии/питание проверялись отдельными лабораториями | Единый рейс, прогресс/сохранения, сессии/приглашения, production audio/UI, свежий packaged build |
 
 Подробности: [механики и управление](Docs/Current/GAMEPLAY.md), [судно](Docs/Current/SHIP.md), [roadmap игры](Docs/Roadmaps/GAME.md), [roadmap корабля](Docs/Roadmaps/SHIP.md).

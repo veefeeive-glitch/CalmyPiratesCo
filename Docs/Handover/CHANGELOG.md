@@ -1,5 +1,18 @@
 # Журнал продолжения проекта
 
+## 2026-09-12 — Net G4 LAN session / 4 peers
+
+[Отчёт](../Changes/NET_G4_LAN_SESSION_2026-09-12.md): меню CREW SESSION (Host LAN / Join / Copy), MaxPlayers=4, Session smoke 4-peer + Lag100 PASS, 52/52 automation. Steam gap задокументирован. DLL 6DEB7261….
+
+
+## 2026-09-12 — Ship G2 storm / proxy / helm
+
+[Отчёт](../Changes/SHIP_G2_STORM_PROXY_HELM_2026-09-12.md): ocean `StormIntensity`, ShipMotion `StormBoost`+helm+boarding ramp, `ACalmyHullProxy`. Build PASS; 52/52; Ship/Water PASS; DLL `0128BC98…`. Не Chaos R7 / fun gate.
+
+## 2026-09-12 — Hero G1: mesh handle sockets + finger contact scaffold
+
+[Отчёт](../Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md): `Grip_*` на Cargo R3; Wrist/Palm/Tip на CrewR8; ResolveWorld + tip/curl. Build PASS; 2/2 automation; DLL `FFA664E9…`. Continuous skin нет.
+
 ## 2026-09-12 — HOLD 1 FPS: mind vs NoBrain
 
 [Отчёт](../Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md): Epic HOLD 1 — mind 80.87 FPS / swarm 1.97 мс, NoBrain 75.48 / 0.45 мс; vs S1 91.85. SNN не главный FPS-тормоз. DLL `D7D175ED…`.

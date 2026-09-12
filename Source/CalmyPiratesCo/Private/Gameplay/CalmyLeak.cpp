@@ -1,6 +1,7 @@
 #include "Gameplay/CalmyLeak.h"
 #include "Gameplay/CalmyCharacter.h"
 #include "Gameplay/CalmyShift.h"
+#include "Gameplay/CalmyVoyageDirector.h"
 #include "Core/GameplayPolicies.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/PointLightComponent.h"
@@ -139,7 +140,7 @@ void ACalmyLeak::Tick(float DeltaSeconds)
 	if (!HasAuthority() || !FMath::IsFinite(DeltaSeconds) || DeltaSeconds <= 0) return;
 	const auto* Shift = ACalmyShift::Find(GetWorld());
 	if (Shift && Shift->State.Round != State.Round) ResetForRound(Shift->State.Round);
-	if (!Shift || Shift->State.Phase != ECalmyShiftPhase::Loading)
+	if (!Shift || Shift->State.Phase != ECalmyShiftPhase::Loading || ACalmyVoyageDirector::ShouldFreezeShiftTimer(GetWorld()))
 	{
 		if (State.Phase != ECalmyLeakPhase::Suspended)
 		{

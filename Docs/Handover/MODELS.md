@@ -1,5 +1,7 @@
 # Каталог моделей и референсов
 
+**Hero G1 (12 сентября):** [sockets/fingers scaffold](../Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md). На существующих `SM_Cargo_*` — `Grip_Near/Far_L/R`; на CrewR8 `SM_*_Forearm*` — `Wrist`/`Palm`/`Tip`. Новых мешей нет; continuous skinned body / articulated fingers в Content отсутствуют (список нужд в отчёте).
+
 **Interaction R5:** [правая рука при ударе и плавный разворот Миши](../Changes/INTERACTION_R5_2026-09-10.md) реализованы runtime моторной IK. Новых Blender/Static Mesh/материалов нет: Crew R6B и Fly R2 прежние. Это не исправление всех стыков старых моделей и не новая skinned боевая анимация.
 
 **Размещение обновлено R3/R4:** тот же R2 mesh/materials используется одним роем 32 мух в HOLD 1. Мухи удалены из WaterLab и перенесены с рубки. [Память/поведение и проверки](../Changes/FLY_MIND_R4_2026-09-10.md); новая Blender-модель не создавалась. Нижняя запись об обоих saved роях — состояние R2.

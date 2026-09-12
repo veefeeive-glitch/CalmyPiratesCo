@@ -1,8 +1,10 @@
 param(
     [string]$Editor = 'E:\Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor.exe',
     [int]$Port = 17777,
-    [ValidateSet('Carry','Shift','Cargo','Leak','Interior','Water','WaterInteraction','Character','Helper','Pause','Interaction','Ship','Door','BridgeMenu','Tutorial','FlySwarm','FlyMind','Melee','FlyTravel','Settings')][string]$Suite = 'Carry',
+    [ValidateSet('Carry','Shift','Cargo','Leak','Interior','Water','WaterInteraction','Character','Helper','Pause','Interaction','Ship','Door','BridgeMenu','Tutorial','FlySwarm','FlyMind','Melee','FlyTravel','Settings','Session')][string]$Suite = 'Carry',
     [ValidateRange(0,1200)][int]$SoakSeconds = 0,
+    [ValidateRange(3,4)][int]$Peers = 3,
+    [ValidateSet('None','Lag100','Lossy')][string]$NetProfile = 'None',
     [string]$PackagedExe,
     [switch]$FlyPlaced,
     [ValidateSet('WaterLab','OceanFreighterR7')][string]$FlyMap = 'WaterLab'
@@ -30,6 +32,7 @@ if ($Suite -eq 'FlyMind') { $marker='CALMY_FLY_MIND_TEST'; $probeOption='CalmyFl
 if ($Suite -eq 'Melee') { $marker='CALMY_MELEE_TEST'; $probeOption='CalmyMeleeProbe'; $testMap='/Game/Maps/OceanFreighterR7?listen' }
 if ($Suite -eq 'FlyTravel') { $marker='CALMY_FLY_TRAVEL_TEST'; $probeOption='CalmyFlyTravelProbe'; $testMap='/Game/Maps/OceanFreighterR7?listen' }
 if ($Suite -eq 'Settings') { $marker='CALMY_SETTINGS_TEST'; $probeOption='CalmySettingsProbe'; $testMap='/Game/Maps/OceanFreighterR7?listen' }
+if ($Suite -eq 'Session') { $marker='CALMY_SESSION_TEST'; $probeOption='CalmySessionProbe'; $testMap='/Game/Maps/WaterLab?listen'; if ($Peers -lt 4) { $Peers = 4 } }
 New-Item -ItemType Directory -Path $evidence | Out-Null
 if (Get-NetUDPEndpoint -LocalPort $Port -ErrorAction SilentlyContinue) { throw "UDP port $Port is occupied." }
 $processes = [System.Collections.Generic.List[System.Diagnostics.Process]]::new()
@@ -39,10 +42,12 @@ if ($Suite -eq 'Leak') { $common += '-CalmyEmergencySeed=203' }
 if ($Suite -eq 'FlySwarm' -and $FlyPlaced) { $common += '-FlyPlaced' }
 if ($Suite -eq 'FlyMind') { $common += ('-FlyMindTestSlot=' + (Split-Path $evidence -Leaf)) }
 if ($Suite -eq 'Interaction') { $common += "-CalmyG1Soak=$SoakSeconds" }
+if ($Suite -eq 'Session') { $common += "-CalmySessionPeers=$Peers" }
+if ($NetProfile -eq 'Lag100') { $common += @('-PktLag=100') }
+elseif ($NetProfile -eq 'Lossy') { $common += @('-PktLag=200', '-PktLoss=2', '-PktLagVariance=50') }
 function Start-Probe([string]$Role, [string]$Map) {
     $prefixArgs = if ($PackagedExe) { @($Map) } else { @('"' + $project + '"', $Map) }
     $probeArgs = @($prefixArgs) + $common + @("-$probeOption=$Role", "-port=$Port", ('-abslog="' + (Join-Path $evidence "$Role.log") + '"'))
-    # Packaged acceptance must not read/write the player's installed-game profile.
     if($PackagedExe){$probeArgs+=('-UserDir="'+(Join-Path $evidence ($Role+'-Profile'))+'/"')}
     $proc = Start-Process -FilePath $Editor -ArgumentList $probeArgs -PassThru -WindowStyle Hidden
     $processes.Add($proc)
@@ -53,25 +58,36 @@ function Wait-Log([string]$Role, [string]$Pattern, [int]$Timeout = 60) {
     $log = Join-Path $evidence "$Role.log"
     do {
         if ((Test-Path $log) -and (Select-String -LiteralPath $log -Pattern $Pattern -Quiet)) { return }
-        if ($processes | Where-Object { $_.HasExited }) { throw "A probe exited before $Role / $Pattern. Evidence: $evidence" }
+        if (-not ($processes | Where-Object { -not $_.HasExited })) { throw "All probes exited before $Role / $Pattern. Evidence: $evidence" }
         Start-Sleep -Seconds 1
     } while ((Get-Date) -lt $until)
     throw "Timed out waiting for $Role / $Pattern. Evidence: $evidence"
 }
 try {
     Write-Output "Evidence: $evidence"
-    $hostProc = Start-Probe 'Host' $testMap
+    Write-Output "Peers=$Peers NetProfile=$NetProfile Suite=$Suite"
+    $null = Start-Probe 'Host' $testMap
     Wait-Log 'Host' "$marker Host START"
     Write-Output 'Host ready; starting owning client.'
-    $clientProc = Start-Probe 'Client' "127.0.0.1:$Port"
+    $null = Start-Probe 'Client' "127.0.0.1:$Port"
     $lateTrigger = switch ($Suite) { 'Water' {'READY'} 'Shift' {'COMPLETE'} 'Cargo' {'READY'} 'Leak' {'READY'} 'Interior' {'INSIDE'} default {'HELD'} }
-    if ($Suite -in @('Character','Helper','Pause','Interaction','Ship','Door','BridgeMenu','WaterInteraction','Tutorial','FlySwarm','FlyMind','Melee','FlyTravel','Settings')) { $lateTrigger='READY' }
+    if ($Suite -in @('Character','Helper','Pause','Interaction','Ship','Door','BridgeMenu','WaterInteraction','Tutorial','FlySwarm','FlyMind','Melee','FlyTravel','Settings','Session')) { $lateTrigger='READY' }
     Wait-Log 'Client' "$marker Client $lateTrigger" 150
-    Write-Output "Client reached $lateTrigger; starting late joiner."
-    $lateProc = Start-Probe 'LateJoin' "127.0.0.1:$Port"
-    $until = (Get-Date).AddSeconds(100 + $(if($Suite -eq 'Interaction'){$SoakSeconds}elseif($Suite -eq 'Ship'){140}elseif($Suite -eq 'FlyTravel'){60}else{0}))
+    if ($Peers -ge 4) {
+        Write-Output 'Client ready; starting second client and late joiner together.'
+        $null = Start-Probe 'Client2' "127.0.0.1:$Port"
+        $null = Start-Probe 'LateJoin' "127.0.0.1:$Port"
+        Wait-Log 'Client2' "$marker Client2 READY" 120
+        Wait-Log 'LateJoin' "$marker LateJoin READY" 120
+    } else {
+        Write-Output "Client reached $lateTrigger; starting late joiner."
+        $null = Start-Probe 'LateJoin' "127.0.0.1:$Port"
+    }
+    $until = (Get-Date).AddSeconds(100 + $(if($Suite -eq 'Interaction'){$SoakSeconds}elseif($Suite -eq 'Ship'){140}elseif($Suite -eq 'FlyTravel'){60}elseif($Suite -eq 'Session'){40}else{0}))
     while (($processes | Where-Object { -not $_.HasExited }) -and (Get-Date) -lt $until) { Start-Sleep -Seconds 1 }
-    foreach ($role in @('Host', 'Client', 'LateJoin')) {
+    $roles = @('Host', 'Client', 'LateJoin')
+    if ($Peers -ge 4) { $roles = @('Host', 'Client', 'Client2', 'LateJoin') }
+    foreach ($role in $roles) {
         $log = Join-Path $evidence "$role.log"
         $pass = Select-String -LiteralPath $log -Pattern "$marker $role PASS"
         if (-not $pass -or (Select-String -LiteralPath $log -Pattern "$marker .* FAIL|Fatal error:|Assertion failed:|Ensure condition failed:|Handled ensure:|LogGameFeatures: Error:|LogAssetManager: Error:" -Quiet)) {
@@ -86,7 +102,6 @@ try {
         if (-not $proc.HasExited -or $proc.ExitCode -ne 0) { throw "Probe process $($proc.Id) did not exit successfully." }
     }
     if ($Suite -eq 'WaterInteraction') {
-        # Compare replicated identities/time/energy/positions, not independent PASS strings alone.
         $eventPattern='EVENT serial=(\d+) birth=([\d.]+) amplitude=([\d.]+) x=([-\d.]+) y=([-\d.]+) received_age=([-\d.]+)'
         $serverEvents=@{}
         foreach($line in Get-Content -LiteralPath (Join-Path $evidence 'Host.log')) {
@@ -116,7 +131,6 @@ try {
         (Select-String -LiteralPath $restoreLog -Pattern 'CALMY_FLY_MIND_TEST Restore PASS').Line
     }
 } finally {
-    # Only terminate test processes created by this run; never touch a user editor.
     foreach ($proc in $processes) {
         if (-not $proc.HasExited) { Stop-Process -Id $proc.Id -ErrorAction SilentlyContinue }
     }

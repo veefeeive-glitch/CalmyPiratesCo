@@ -52,3 +52,12 @@ Runtime герои **CrewR6B**, не R8. BridgeMenu entry/resume исправл�
 - DX12/SM6, Lumen и VSM настроены в Config; драйвер/производительность другого устройства не проверены. RTX не переключался.
 
 Предыдущее описание Operations сохранено в Docs/Archive/Before-Handover-20260909.zip; данные предыдущих установок/тестов — в Docs/Changes и History.
+
+## LAN co-op (G4, 2026-09-12)
+
+- In-game (OceanFreighterR7): Esc → **CREW SESSION / ЭКИПАЖ** → Host LAN Watch / Join LAN / Copy Address.
+- Scripts: \Scripts/start_game.ps1 -Mode Host -MapName OceanFreighterR7\ then \-Mode Client -JoinAddress <host-ip>:17777\.
+- Smoke: \Scripts/run_network_smoke.ps1 -Suite Session -Peers 4\ (\-NetProfile Lag100\ optional).
+- Steam/internet invites are **not** wired. Do not open firewall automatically.
+- Report: [NET_G4_LAN_SESSION_2026-09-12](../Changes/NET_G4_LAN_SESSION_2026-09-12.md).
+

@@ -40,7 +40,13 @@ void ACalmyOcean::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(ACalmyOcean, Disturbances);
     DOREPLIFETIME(ACalmyOcean, DisturbanceSerial);
+    DOREPLIFETIME(ACalmyOcean, StormIntensity);
 }
+float ACalmyOcean::StormScale(float Intensity, float WaveGain)
+{ return 1.f + FMath::Clamp(Intensity,0.f,1.f)*(FMath::Max(1.f,WaveGain)-1.f); }
+void ACalmyOcean::SetStormIntensity(float Intensity)
+{ if(!HasAuthority())return; StormIntensity=FMath::Clamp(Intensity,0.f,1.f); ForceNetUpdate(); }
+void ACalmyOcean::OnRep_StormIntensity(){}
 ACalmyOcean* ACalmyOcean::Find(const UWorld* World)
 {
     if (World) for (TActorIterator<ACalmyOcean> It(World); It; ++It) return *It;
@@ -74,7 +80,7 @@ float ACalmyOcean::WaveVerticalVelocity(const FVector2D& P,double T)
 }
 FVector ACalmyOcean::FlowAt(const FVector& P) const
 {
-    const double T=WaveTime();const float Effort=SeaStrength(T)-.65f;
+    const double T=WaveTime(); const float Storm=1.f+FMath::Clamp(StormIntensity,0.f,1.f)*(StormFlowGain-1.f); const float Effort=(SeaStrength(T)-.65f)*Storm;
     return FVector(18+Effort*32*FMath::Sin(T*.35+P.Y*.001),-8+Effort*20*FMath::Cos(T*.29+P.X*.001),0);
 }
 double ACalmyOcean::WaveTime() const
@@ -85,7 +91,7 @@ double ACalmyOcean::WaveTime() const
 float ACalmyOcean::HeightAt(const FVector& P) const
 {
     const double T = WaveTime();
-    return GetActorLocation().Z + WaveOffset(FVector2D(P - GetActorLocation()), T) + DisturbanceHeightAt(P, T);
+    return GetActorLocation().Z + WaveOffset(FVector2D(P - GetActorLocation()), T) * GetStormScale() + DisturbanceHeightAt(P, T);
 }
 float ACalmyOcean::DisturbanceHeightAt(const FVector& P, double T) const
 {
@@ -105,7 +111,7 @@ float ACalmyOcean::VerticalVelocityAt(const FVector& P) const
 {
     const double T = WaveTime();
     // Derivative of the SAME limited field used by vertices and displacement.
-    return WaveVerticalVelocity(FVector2D(P-GetActorLocation()), T)
+    return WaveVerticalVelocity(FVector2D(P-GetActorLocation()), T) * GetStormScale()
         + (DisturbanceHeightAt(P,T+.002)-DisturbanceHeightAt(P,T-.002))/.004f;
 }
 bool ACalmyOcean::IsOutsideSafetyArea(const FVector& P) const
@@ -208,7 +214,7 @@ void ACalmyOcean::UpdateSurface()
     // five complete wave evaluations per vertex with cached vector arithmetic.
     const FVector TimeSin(FMath::Sin(T*1.1),FMath::Sin(T*1.65),FMath::Sin(T*2.4));
     const FVector TimeCos(FMath::Cos(T*1.1),FMath::Cos(T*1.65),FMath::Cos(T*2.4));
-    const double Strength=SeaStrength(T);
+    const double Strength=SeaStrength(T)*GetStormScale();
     const FVector Amplitude=FVector(14,8,4)*Strength;
     // Preserve the original +/-5cm finite-difference normals exactly, rather
     // than silently changing the rendered wave slope to another approximation.
@@ -261,7 +267,7 @@ void ACalmyOcean::UpdateDisturbanceSources()
     {
         if (!Actor || P.ContainsNaN() || Velocity.ContainsNaN() || IsInsideDryHull(P) || IsOutsideSafetyArea(P)) return;
         Seen.Add(Actor);
-        const float SurfaceZ = GetActorLocation().Z + WaveOffset(FVector2D(P-GetActorLocation()), Now);
+        const float SurfaceZ = GetActorLocation().Z + WaveOffset(FVector2D(P-GetActorLocation()), Now) * GetStormScale();
         const float Bottom = P.Z - Radius;
         auto* Previous = WaterContacts.Find(Actor);
         if (Previous)
