@@ -1,5 +1,9 @@
 # Журнал продолжения проекта
 
+## 2026-09-12 — Hero G1: mesh handle sockets + finger contact scaffold
+
+[Отчёт](../Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md): `Grip_*` на Cargo R3; Wrist/Palm/Tip на CrewR8; ResolveWorld + tip/curl. Build PASS; 2/2 automation; DLL `FFA664E9…`. Continuous skin нет.
+
 ## 2026-09-12 — HOLD 1 FPS: mind vs NoBrain
 
 [Отчёт](../Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md): Epic HOLD 1 — mind 80.87 FPS / swarm 1.97 мс, NoBrain 75.48 / 0.45 мс; vs S1 91.85. SNN не главный FPS-тормоз. DLL `D7D175ED…`.

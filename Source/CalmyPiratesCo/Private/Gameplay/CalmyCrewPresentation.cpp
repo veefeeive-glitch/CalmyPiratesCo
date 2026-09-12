@@ -3,6 +3,7 @@
 #include "Gameplay/CalmyCrewHelper.h"
 #include "Core/CrewGait.h"
 #include "Core/CrewArmIK.h"
+#include "Core/CrewHand.h"
 #include "Core/CrewRecovery.h"
 #include "Gameplay/CalmyCargo.h"
 #include "Gameplay/CalmyOcean.h"
@@ -192,11 +193,12 @@ void UCalmyCrewPresentation::UpdateCarryArms(float DT)
         const FQuat LowerQ=UpperQ*FQuat::FindBetweenNormals(FVector(0,0,-1),UpperQ.UnrotateVector(Reach-Elbow).GetSafeNormal());
         // Constraint was bound as body1=parent, body2=child. Chaos drive wants
         // frame1 relative to frame2 (inverse of our child-in-parent IK pose).
+        const FRotator Curl=IsValid(Cargo)?FCalmyCrewHand::CarryFingerCurl(Side==1):FRotator::ZeroRotator;
         Joints[Upper-1]->SetAngularOrientationTarget((UpperQ.Inverse()*RootQ).Rotator());
-        Joints[Lower-1]->SetAngularOrientationTarget((LowerQ.Inverse()*UpperQ).Rotator());
+        Joints[Lower-1]->SetAngularOrientationTarget(((LowerQ.Inverse()*UpperQ)*Curl.Quaternion()).Rotator());
         Joints[Upper-1]->SetAngularDriveParams(12000,240,0);
         Joints[Lower-1]->SetAngularDriveParams(12000,240,0);
-        const FVector Actual=Parts[Lower]->GetComponentTransform().TransformPosition(FVector(0,0,-34));
+        const FVector Actual=FCalmyCrewHand::ContactWorld(Parts[Lower],true);
         if(IsValid(Cargo)) WorldHandContactError=FMath::Max(WorldHandContactError,static_cast<float>(FVector::Distance(Actual,Target)));
     }
 }

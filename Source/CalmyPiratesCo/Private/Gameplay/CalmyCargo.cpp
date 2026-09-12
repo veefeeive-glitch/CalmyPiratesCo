@@ -130,9 +130,13 @@ void ACalmyCargo::OnRep_Condition()
 
 FVector ACalmyCargo::GetGripPoint(bool bRightHand, bool bFarSide) const
 {
-	// Per-kind handle-biased locals in actor centimetres; actor scale applies once.
-	return GetActorTransform().TransformPosition(
-		FCalmyCargoGrip::HandleLocal(static_cast<uint8>(Kind), bRightHand, bFarSide));
+	// Prefer stamped Grip_* sockets on CargoVisual; reachable HandleLocal otherwise.
+	return FCalmyCargoGrip::ResolveWorld(
+		GetActorTransform(),
+		CargoVisual,
+		static_cast<uint8>(Kind),
+		bRightHand,
+		bFarSide);
 }
 
 bool ACalmyCargo::HasNearbyHelper(const ACalmyCharacter* Holder) const

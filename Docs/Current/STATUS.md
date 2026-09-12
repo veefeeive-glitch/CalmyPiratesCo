@@ -1,5 +1,7 @@
 # Текущее состояние — 2026-09-12
 
+**12 сентября — [Hero G1 sockets/fingers](../Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md).** Mesh handle sockets на Cargo R3 + Wrist/Palm/Tip на CrewR8 forearms; `ResolveWorld` + tip contact + cosmetic curl. Build PASS; HandleGrips+HandSockets 2/2; DLL `FFA664E9…`. Continuous skin / articulated fingers / art acceptance **нет**.
+
 **12 сентября — [HOLD 1 FPS mind](../Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md).** Epic: mind 80.87 / NoBrain 75.48 FPS; SNN +~1.5 мс swarm_step, FPS упирается в render; vs S1 91.85 — game_ms↑ от стека после S1. DLL `D7D175ED…`.
 
 **12 сентября — [Fly think + roam](../Changes/FLY_THINK_TRAVEL_2026-09-12.md).** Думает вслух о пути + путешествует; FlyTravel/FlyMind PASS; DLL `D7D175ED…`.
@@ -72,7 +74,7 @@
 | A02 упаковка | Открыт | Windows-Current старый; package_windows продвигает до smoke и удаляет previous |
 | A03 цельный рейс | Открыт | Смена/аварии/питание разнесены по лабораториям |
 | A04 сеть | Частично | Проверены отдельные Host/Client/LateJoin сценарии, не четыре человека/плохая сеть/качка |
-| A05 герой | Частично | R6B physical/IK/bodycam; R8 только Blender. Ship joint 7,812/8 см; skinned одежда/пальцы и новый долгий стенд нужны |
+| A05 герой | Частично | R8 runtime + Grip R2a + G1 sockets/tip curl; continuous skin / articulated fingers / human art acceptance открыты |
 | A06 вода | Частично | W1: связанное поле поверхности/плавучести от удара и следа; не полный fluid solver, нет шторма и подвижного корпуса |
 | A07 NPC/грузы | Частично | Постоянный NPC, aim/reach grab, тяжёлая solo доставка; не весь solo-контракт и не точные физические хваты |
 | A08 маршруты | Частично | R6B повтор 37-точечного Ship; старые 260/260 и 56/56 не заменяют полный current sweep |
@@ -83,7 +85,7 @@
 
 ## Ближайшая работа
 
-Следующее: пальцы/skin или mesh handle sockets; в физике моря — отдельный плавающий proxy, based movement и подвижный dry hull до большого R7. [Grip R2a](../Changes/GRIP_R2A_HANDLES_2026-09-11.md) закрыл только kind-specific locals + moving yaw. Не называть моторный подъём полноценной Euphoria, а локальное response-поле — полной fluid simulation.
+Следующее по герою: continuous skinned body (нет SKM в Content — список в [G1 отчёте](../Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md)); articulated fingers; GPU grip re-check после sockets. В физике моря — отдельный плавающий proxy, based movement и подвижный dry hull до большого R7. Не называть моторный подъём полноценной Euphoria, а локальное response-поле — полной fluid simulation.
 
 1. Пользователь выбрал пока локальное хранение; off-device backup/проверка переноса остаются будущей задачей.
 2. Выбор последнего героя R8/внешнего candidate пользователя; непрерывная skinned одежда/веса/пальцы вместо нового набора жёстких труб.
