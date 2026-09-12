@@ -1,16 +1,30 @@
 #pragma once
 #include "CoreMinimal.h"
+#include "Components/StaticMeshComponent.h"
+
+class UStaticMeshComponent;
 
 /**
  * Kind-specific grip locals in cargo actor centimetres (collision-root space).
  * Biased toward R3 handle fittings from create_crew_cargo_r3.py while staying
  * inside the two-bone arm reach that Grip/Health R1 already verified.
- * True mesh sockets / finger skin remain a later slice.
+ *
+ * Mesh handle sockets (Grip_Near_L/R, Grip_Far_L/R) on CargoVisual are preferred
+ * when present; otherwise these locals remain the reachable fallback.
  */
 struct FCalmyCargoGrip
 {
 	// Mirrors ECalmyCargoKind order: Standard, Bulky, Unstable, Fragile.
 	enum class EKind : uint8 { Standard = 0, Bulky = 1, Unstable = 2, Fragile = 3 };
+
+	static FName SocketName(bool bRightHand, bool bFarSide)
+	{
+		if (bFarSide)
+		{
+			return bRightHand ? FName(TEXT("Grip_Far_R")) : FName(TEXT("Grip_Far_L"));
+		}
+		return bRightHand ? FName(TEXT("Grip_Near_R")) : FName(TEXT("Grip_Near_L"));
+	}
 
 	static FVector HandleLocal(EKind Kind, bool bRightHand, bool bFarSide)
 	{
@@ -50,5 +64,38 @@ struct FCalmyCargoGrip
 		const FVector L = HandleLocal(Kind, false, false);
 		const FVector R = HandleLocal(Kind, true, false);
 		return static_cast<float>(FVector::Dist2D(L, R));
+	}
+
+	/**
+	 * Prefer a stamped mesh socket on Visual; otherwise actor-space HandleLocal.
+	 * OutUsedSocket is set when the named socket exists on Visual.
+	 */
+	static FVector ResolveWorld(
+		const FTransform& ActorTransform,
+		const UStaticMeshComponent* Visual,
+		EKind Kind,
+		bool bRightHand,
+		bool bFarSide,
+		bool* OutUsedSocket = nullptr)
+	{
+		const FName Name = SocketName(bRightHand, bFarSide);
+		if (IsValid(Visual) && Visual->DoesSocketExist(Name))
+		{
+			if (OutUsedSocket) *OutUsedSocket = true;
+			return Visual->GetSocketLocation(Name);
+		}
+		if (OutUsedSocket) *OutUsedSocket = false;
+		return ActorTransform.TransformPosition(HandleLocal(Kind, bRightHand, bFarSide));
+	}
+
+	static FVector ResolveWorld(
+		const FTransform& ActorTransform,
+		const UStaticMeshComponent* Visual,
+		uint8 Kind,
+		bool bRightHand,
+		bool bFarSide,
+		bool* OutUsedSocket = nullptr)
+	{
+		return ResolveWorld(ActorTransform, Visual, static_cast<EKind>(Kind), bRightHand, bFarSide, OutUsedSocket);
 	}
 };

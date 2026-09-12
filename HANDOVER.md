@@ -1,5 +1,7 @@
 # Calmy Pirates Co. — начать продолжение здесь
 
+**Последнее изменение: [Hero G1 sockets/fingers](Docs/Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md), 12 сентября.** `Grip_*` sockets на Cargo R3; `Wrist`/`Palm`/`Tip` на CrewR8 forearms; `ResolveWorld` + tip contact + curl. Build PASS; HandleGrips+HandSockets 2/2; DLL `FFA664E9…`. Continuous skin / articulated fingers / fun gate **не** закрыты.
+
 **Последнее изменение: [HOLD 1 FPS mind](Docs/Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md), 12 сентября.** Epic HOLD 1: с мозгом 80.87 FPS (`swarm_step` 1.97 мс), NoBrain 75.48 (`swarm_step` 0.45); vs S1 91.85 — сдвиг game thread от стека после S1, не от одного SNN. DLL `D7D175ED…`.
 
 **Последнее изменение: [Fly think + roam](Docs/Changes/FLY_THINK_TRAVEL_2026-09-12.md), 12 сентября.** Рой говорит о маршруте, HUD THINKING, soft nudge от меток; FlyTravel/FlyMind PASS; DLL `D7D175ED…`.

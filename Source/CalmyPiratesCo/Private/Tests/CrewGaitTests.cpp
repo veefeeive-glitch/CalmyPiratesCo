@@ -1,6 +1,7 @@
 #include "Core/CrewGait.h"
 #include "Core/TeamCarryPace.h"
 #include "Core/CrewArmIK.h"
+#include "Core/CrewHand.h"
 #include "Core/CrewImpact.h"
 #include "Core/CargoGrip.h"
 #include "Misc/AutomationTest.h"
@@ -76,6 +77,24 @@ bool FCalmyCargoGripTest::RunTest(const FString&)
 	TestTrue(TEXT("Bulky two-person ends are farther apart on X than standard"),
 		FMath::Abs(FCalmyCargoGrip::HandleLocal(EKind::Bulky, true, true).X) >
 		FMath::Abs(FCalmyCargoGrip::HandleLocal(EKind::Standard, true, true).X));
+	TestEqual(TEXT("Near-L socket name"), FCalmyCargoGrip::SocketName(false, false), FName(TEXT("Grip_Near_L")));
+	TestEqual(TEXT("Far-R socket name"), FCalmyCargoGrip::SocketName(true, true), FName(TEXT("Grip_Far_R")));
+	bool bUsed = true;
+	const FVector Fallback = FCalmyCargoGrip::ResolveWorld(FTransform::Identity, nullptr, EKind::Standard, true, false, &bUsed);
+	TestFalse(TEXT("Null visual uses HandleLocal fallback"), bUsed);
+	TestTrue(TEXT("Fallback matches HandleLocal"), Fallback.Equals(FCalmyCargoGrip::HandleLocal(EKind::Standard, true, false), .01f));
+	return true;
+}
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCalmyCrewHandContractTest,"CalmyPiratesCo.Character.HandSockets",EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
+bool FCalmyCrewHandContractTest::RunTest(const FString&)
+{
+	TestEqual(TEXT("Palm socket"), FCalmyCrewHand::PalmSocket(), FName(TEXT("Palm")));
+	TestEqual(TEXT("Tip socket"), FCalmyCrewHand::TipSocket(), FName(TEXT("Tip")));
+	TestTrue(TEXT("Tip sits past palm along -Z"), FCalmyCrewHand::TipLocal().Z < FCalmyCrewHand::PalmLocal().Z);
+	TestTrue(TEXT("Palm inside authored forearm extent"), FCalmyCrewHand::PalmLocal().GetAbsMax() < 40.f);
+	const FRotator CurlR = FCalmyCrewHand::CarryFingerCurl(true);
+	const FRotator CurlL = FCalmyCrewHand::CarryFingerCurl(false);
+	TestTrue(TEXT("Left/right curl yaw oppose"), FMath::Sign(CurlR.Yaw) != FMath::Sign(CurlL.Yaw));
 	return true;
 }
 #endif
