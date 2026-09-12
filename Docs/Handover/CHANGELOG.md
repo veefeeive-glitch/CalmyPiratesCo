@@ -1,5 +1,9 @@
 # Журнал продолжения проекта
 
+## 2026-09-12 — Stream merge (Hero+Voyage+Sea+Net → main)
+
+Интеграция параллельных потоков в `main` @ `6c7335d` через `cursor/stream-merge-2b40`. Build PASS; focused smoke PASS (VoyageCycle, Ship.*, StormScale, Bridge, SessionLanHelpers, HandSockets, HandleGrips). DLL `700A808B…`. PendingOtherStreams → `Saved/PendingOtherStreams/Archive-20260912-superseded`. Releases ZIP 2026-09-12 не трогали. Не fun gate.
+
 ## 2026-09-12 — Net G4 LAN session / 4 peers
 
 [Отчёт](../Changes/NET_G4_LAN_SESSION_2026-09-12.md): меню CREW SESSION (Host LAN / Join / Copy), MaxPlayers=4, Session smoke 4-peer + Lag100 PASS, 52/52 automation. Steam gap задокументирован. DLL 6DEB7261….

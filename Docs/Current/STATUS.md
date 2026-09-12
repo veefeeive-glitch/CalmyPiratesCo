@@ -1,5 +1,7 @@
 # Текущее состояние — 2026-09-12
 
+**12 сентября — Stream merge on `main`.** Integration branch `cursor/stream-merge-2b40` merged into `main` @ `6c7335d`: Stabilize fly+ship (`def928b`/`f39759c`) + Hero G1 + Voyage G3 + Sea G2 + Net G4. Build PASS; stream smoke VoyageCycle + Ship/Water/Bridge/Session/HandSockets/HandleGrips PASS; DLL `700A808B…`. Bridge keeps voyage BEGIN/NEW WATCH + CREW SESSION. PendingOtherStreams archived as superseded. No remote/push. Не fun gate.
+
 **12 сентября — [Net G4 LAN session](../Changes/NET_G4_LAN_SESSION_2026-09-12.md).** Bridge CREW SESSION: Host LAN / Join IP:port / Copy Address; MaxPlayers=4; Session 4-peer + Lag100 smoke PASS; 52/52 automation. Steam/internet invites — gap (нет OSS). DLL `6DEB7261…`. Не fun gate.
 
 **12 сентября — [Voyage G3](../Changes/VOYAGE_G3_2026-09-12.md) slice (A03).** На OceanFreighterR7: брифинг → curated смена (1 STANDARD + 1 BULKY) → leak → итог → host restart. `ACalmyVoyageDirector`; leak valve у green zone без `.umap`. Labs без директора — прежнее поведение. Automation: `CalmyPiratesCo.Gameplay.VoyageCycle`. Editor-playable; не полный 12–20 мин рейс и не human fun gate.
