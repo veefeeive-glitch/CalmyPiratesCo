@@ -18,6 +18,7 @@
 #include "Gameplay/CalmyShift.h"
 #include "Gameplay/CalmyTutorial.h"
 #include "Gameplay/CalmyLeak.h"
+#include "Gameplay/CalmyVoyageDirector.h"
 #include "Gameplay/CalmyOcean.h"
 #include "Gameplay/CalmyCrewHelper.h"
 #include "Engine/Canvas.h"
@@ -239,6 +240,29 @@ void ACalmyPlayerController::ServerReplayTutorial_Implementation()
 	ACalmyTutorial::BeginForcedReplay();
 	TravelToTrainingMap();
 }
+void ACalmyPlayerController::RequestBeginVoyage()
+{
+	if (!IsLocalController()) return;
+	ServerBeginVoyage();
+}
+void ACalmyPlayerController::RequestRestartVoyage()
+{
+	if (!IsLocalController()) return;
+	const auto* Voyage = ACalmyVoyageDirector::Find(GetWorld());
+	ServerRestartVoyage(Voyage ? Voyage->State.Round : 1);
+}
+void ACalmyPlayerController::ServerBeginVoyage_Implementation()
+{
+	auto* Voyage = ACalmyVoyageDirector::Find(GetWorld());
+	auto* Crew = Cast<ACalmyCharacter>(GetPawn());
+	if (Voyage && Crew) Voyage->TryBeginWatch(Crew);
+}
+void ACalmyPlayerController::ServerRestartVoyage_Implementation(int32 ExpectedRound)
+{
+	auto* Voyage = ACalmyVoyageDirector::Find(GetWorld());
+	auto* Crew = Cast<ACalmyCharacter>(GetPawn());
+	if (Voyage && Crew) Voyage->TryRestartWatch(Crew, ExpectedRound);
+}
 void ACalmyPlayerController::TravelToTrainingMap()
 {
 	UWorld* World = GetWorld();
@@ -364,6 +388,11 @@ void ACalmyGameMode::BeginPlay()
 	}
 	if (ACalmyTutorial::Enabled(GetWorld()) && !ACalmyTutorial::Find(GetWorld()))
 		GetWorld()->SpawnActor<ACalmyTutorial>();
+	if (GetWorld()->GetNetMode() != NM_Client && ACalmyVoyageDirector::IsShipMap(GetWorld()) && !ACalmyVoyageDirector::Find(GetWorld()))
+	{
+		GetWorld()->SpawnActor<ACalmyVoyageDirector>();
+		UE_LOG(LogTemp, Display, TEXT("CALMY_VOYAGE director_spawned map=%s"), *GetWorld()->GetMapName());
+	}
 }
 
 void ACalmyGameMode::Logout(AController* Exiting)
@@ -560,21 +589,40 @@ void ACalmyHUD::DrawHUD()
 	}
 	else if (Shift)
 	{
+		const auto* Voyage = ACalmyVoyageDirector::Find(GetWorld());
 		const auto& S = Shift->State;
-		DrawScaledText(FString::Printf(TEXT("SHIFT %d | Delivered %d / %d | Rescues: %d | Damaged: %d"), S.Round, S.Delivered, S.Required, S.Rescues, S.DamagedDelivered),
-			FLinearColor(1, .75f, .15f), 30, 132);
-		const int32 Minutes = S.SecondsRemaining / 60;
-		const int32 Seconds = S.SecondsRemaining % 60;
-		const FString Economy = S.Phase == ECalmyShiftPhase::Complete ?
-			FString::Printf(TEXT("CONTRACT PAID: $%d | RATING: %d/3"), S.FinalPayout, S.PerformanceStars) :
-			FString::Printf(TEXT("CONTRACT TIME %02d:%02d | Base $%d + speed bonus - losses"), Minutes, Seconds, 1200);
-		DrawScaledText(Economy, S.Phase == ECalmyShiftPhase::Failed ? FLinearColor::Red : FLinearColor(.4f, .85f, .9f), 30, 158);
-		const TCHAR* Hint = S.Phase == ECalmyShiftPhase::Complete ? TEXT("SHIFT COMPLETE! Host: press R for a new contract.") :
-			(S.Phase == ECalmyShiftPhase::Failed ? TEXT("CONTRACT FAILED: time expired. Host: press R to retry.") :
-			(S.Phase == ECalmyShiftPhase::InvalidManifest ? TEXT("Contract unavailable: invalid cargo manifest.") :
-			TEXT("Bring all crates to the GREEN zone. G drop, let them settle.")));
-		DrawScaledText(Hint, S.Phase == ECalmyShiftPhase::Complete ? FLinearColor::Green :
-			(S.Phase == ECalmyShiftPhase::Failed ? FLinearColor::Red : FLinearColor::White), 30, 184);
+		if (Voyage && Voyage->State.Phase == ECalmyVoyagePhase::Briefing)
+		{
+			DrawScaledText(Voyage->BriefingText(), FLinearColor(1.f, .8f, .3f), 30, 132);
+			DrawScaledText(TEXT("Host: Esc bridge BEGIN WATCH NOW, or wait for auto-start | Leak valve near green zone"), FLinearColor(.5f, .85f, .9f), 30, 158);
+			DrawScaledText(TEXT("Contract: 1 STANDARD + 1 BULKY | Unstable/Fragile stay off-manifest this watch"), FLinearColor::White, 30, 184);
+		}
+		else if (Voyage && Voyage->State.Phase == ECalmyVoyagePhase::Outcome)
+		{
+			DrawScaledText(Voyage->OutcomeText(), Voyage->State.bShiftFailed ? FLinearColor::Red : FLinearColor::Green, 30, 132);
+			DrawScaledText(FString::Printf(TEXT("WATCH %d settled | Delivered %d / %d | Rescues %d | Damaged %d"),
+				Voyage->State.Round, S.Delivered, S.Required, S.Rescues, S.DamagedDelivered), FLinearColor(1, .75f, .15f), 30, 158);
+			DrawScaledText(TEXT("Host: press R or Esc bridge NEW WATCH for another cycle"), FLinearColor::White, 30, 184);
+		}
+		else
+		{
+			DrawScaledText(FString::Printf(TEXT("%s %d | Delivered %d / %d | Rescues: %d | Damaged: %d"),
+				Voyage ? TEXT("WATCH") : TEXT("SHIFT"), S.Round, S.Delivered, S.Required, S.Rescues, S.DamagedDelivered),
+				FLinearColor(1, .75f, .15f), 30, 132);
+			const int32 Minutes = S.SecondsRemaining / 60;
+			const int32 Seconds = S.SecondsRemaining % 60;
+			const FString Economy = S.Phase == ECalmyShiftPhase::Complete ?
+				FString::Printf(TEXT("CONTRACT PAID: $%d | RATING: %d/3"), S.FinalPayout, S.PerformanceStars) :
+				FString::Printf(TEXT("CONTRACT TIME %02d:%02d | Base $%d + speed bonus - losses"), Minutes, Seconds, 1200);
+			DrawScaledText(Economy, S.Phase == ECalmyShiftPhase::Failed ? FLinearColor::Red : FLinearColor(.4f, .85f, .9f), 30, 158);
+			const TCHAR* Hint = S.Phase == ECalmyShiftPhase::Complete ? TEXT("SHIFT COMPLETE! Host: press R for a new contract.") :
+				(S.Phase == ECalmyShiftPhase::Failed ? TEXT("CONTRACT FAILED: time expired. Host: press R to retry.") :
+				(S.Phase == ECalmyShiftPhase::InvalidManifest ? TEXT("Contract unavailable: invalid cargo manifest.") :
+				(Voyage ? TEXT("Ship watch live | Deliver STANDARD + BULKY | Repair leak with F when warned.") :
+				TEXT("Bring all crates to the GREEN zone. G drop, let them settle."))));
+			DrawScaledText(Hint, S.Phase == ECalmyShiftPhase::Complete ? FLinearColor::Green :
+				(S.Phase == ECalmyShiftPhase::Failed ? FLinearColor::Red : FLinearColor::White), 30, 184);
+		}
 	}
 	if (Leak)
 	{

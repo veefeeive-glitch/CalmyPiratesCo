@@ -68,6 +68,11 @@ public:
     UFUNCTION(Server, Reliable) void ServerInscribeSwarm(class AFlySwarmMob* Swarm, EFlyMessageKind Kind);
     // Owning client asks host to return the session to WaterLab training.
     UFUNCTION(Server, Reliable) void ServerReplayTutorial();
+    /** Host-local listen controller may skip ship briefing or start a new watch after outcome. */
+    void RequestBeginVoyage();
+    void RequestRestartVoyage();
+    UFUNCTION(Server, Reliable) void ServerBeginVoyage();
+    UFUNCTION(Server, Reliable) void ServerRestartVoyage(int32 ExpectedRound);
     class ACalmyBridgeTerminal* GetBridgeTerminal() const { return BridgeTerminal; }
 private:
     void TravelToTrainingMap();

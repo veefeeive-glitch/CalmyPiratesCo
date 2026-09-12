@@ -1,5 +1,7 @@
 # Текущее состояние — 2026-09-12
 
+**12 сентября — [Voyage G3](../Changes/VOYAGE_G3_2026-09-12.md) slice (A03).** На OceanFreighterR7: брифинг → curated смена (1 STANDARD + 1 BULKY) → leak → итог → host restart. `ACalmyVoyageDirector`; leak valve у green zone без `.umap`. Labs без директора — прежнее поведение. Automation: `CalmyPiratesCo.Gameplay.VoyageCycle`. Editor-playable; не полный 12–20 мин рейс и не human fun gate.
+
 **12 сентября — [Hero G1 sockets/fingers](../Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md).** Mesh handle sockets на Cargo R3 + Wrist/Palm/Tip на CrewR8 forearms; `ResolveWorld` + tip contact + cosmetic curl. Build PASS; HandleGrips+HandSockets 2/2; DLL `FFA664E9…`. Continuous skin / articulated fingers / art acceptance **нет**.
 
 **12 сентября — [HOLD 1 FPS mind](../Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md).** Epic: mind 80.87 / NoBrain 75.48 FPS; SNN +~1.5 мс swarm_step, FPS упирается в render; vs S1 91.85 — game_ms↑ от стека после S1. DLL `D7D175ED…`.
@@ -72,7 +74,7 @@
 |---|---|---|
 | A01 сохранность | Частично | Git+LFS B1 + off-device backup на D:; Evidence вне Git; remote ещё нет |
 | A02 упаковка | Открыт | Windows-Current старый; package_windows продвигает до smoke и удаляет previous |
-| A03 цельный рейс | Открыт | Смена/аварии/питание разнесены по лабораториям |
+| A03 цельный рейс | Частично | G3 slice на R7: briefing→curated shift→leak→outcome→restart; полный 12–20 мин / 4 peers / human gate открыты |
 | A04 сеть | Частично | Проверены отдельные Host/Client/LateJoin сценарии, не четыре человека/плохая сеть/качка |
 | A05 герой | Частично | R8 runtime + Grip R2a + G1 sockets/tip curl; continuous skin / articulated fingers / human art acceptance открыты |
 | A06 вода | Частично | W1: связанное поле поверхности/плавучести от удара и следа; не полный fluid solver, нет шторма и подвижного корпуса |
