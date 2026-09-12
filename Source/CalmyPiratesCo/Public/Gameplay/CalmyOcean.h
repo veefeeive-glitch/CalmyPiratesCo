@@ -48,13 +48,18 @@ public:
     UPROPERTY(EditAnywhere) FVector DryHullOrigin=FVector::ZeroVector;
     UPROPERTY(EditAnywhere) TArray<FVector2D> DryHullStations;
     UPROPERTY(EditAnywhere) TArray<FVector2D> DryHullVertical;
-    void ApplyBuoyancy(UPrimitiveComponent* Body, float LiftRatio = 1.8f) const;
+    // bIgnoreDryHull: ship hull proxy sits inside the sealed profile but still needs water forces.
+    void ApplyBuoyancy(UPrimitiveComponent* Body, float LiftRatio = 1.8f, bool bIgnoreDryHull = false) const;
+    // Map-authored DryHullOrigin stays at rest; ship motion transforms queries into that frame.
+    FVector WorldToDryHullLocal(const FVector& Position) const;
+    void SetShipMotion(class ACalmyShipMotion* Motion);
     UPROPERTY(EditAnywhere) TObjectPtr<UMaterialInterface> SurfaceMaterial;
     UPROPERTY(EditAnywhere) TObjectPtr<UMaterialInterface> FoamMaterial;
     UPROPERTY(EditAnywhere) TObjectPtr<UMaterialInterface> InteractionMaterial;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UProceduralMeshComponent> Surface;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UProceduralMeshComponent> InteractionMesh;
 private:
+    TWeakObjectPtr<class ACalmyShipMotion> ShipMotion;
     TArray<FVector> Vertices;
     TArray<FVector> WaveSin, WaveCos;
     double SurfaceTime=0;

@@ -39,7 +39,10 @@ void UCalmyDoorProbe::Tick(float DT)
     if((Host||Solo)&&Stage==3&&StageAge>4){for(auto* D:Doors)if(!D->IsOpen()){Finish(false,FString::Printf(TEXT("not_open=%d"),D->DoorId));return;}if(Visual)Photo(TEXT("door-open"));Stage=4;StageAge=0;}
     // Explicit isolated network interaction fixture; no saved-map changes or traversal claim.
     if(Host&&Stage==4&&!Fixture){FActorSpawnParameters S;S.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-        RpcDoor=GetWorld()->SpawnActor<ACalmyDoor>(FVector(0,0,10000),FRotator::ZeroRotator,S);RpcDoor->DoorId=1000;RpcDoor->ForceNetUpdate();Fixture=true;}
+        // Fixture must start open: owning-client test closes then reopens it.
+        RpcDoor=GetWorld()->SpawnActor<ACalmyDoor>(FVector(0,0,10000),FRotator::ZeroRotator,S);
+        RpcDoor->DoorId=1000;RpcDoor->bStartOpen=true;RpcDoor->Angle=RpcDoor->OpenAngle;RpcDoor->TargetAngle=RpcDoor->OpenAngle;
+        RpcDoor->State=ECalmyDoorState::Open;RpcDoor->ApplyPose();RpcDoor->ForceNetUpdate();Fixture=true;}
     if(Host&&Fixture)for(TActorIterator<ACalmyCharacter> It(GetWorld());It;++It){auto* PC=Cast<APlayerController>(It->GetController());
         if(PC&&!PC->IsLocalController()&&!It->ActorHasTag(TEXT("DoorFixture"))){It->Tags.Add(TEXT("DoorFixture"));It->SetActorLocation(FVector(56,-150,10090),false,nullptr,ETeleportType::TeleportPhysics);It->GetCharacterMovement()->StopMovementImmediately();It->GetCharacterMovement()->SetMovementMode(MOVE_None);It->ForceNetUpdate();}}
     if(!Host&&!Solo&&Stage==1&&Age>22){

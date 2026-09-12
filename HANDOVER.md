@@ -1,5 +1,21 @@
 # Calmy Pirates Co. — начать продолжение здесь
 
+**Последнее изменение: [HOLD 1 FPS mind](Docs/Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md), 12 сентября.** Epic HOLD 1: с мозгом 80.87 FPS (`swarm_step` 1.97 мс), NoBrain 75.48 (`swarm_step` 0.45); vs S1 91.85 — сдвиг game thread от стека после S1, не от одного SNN. DLL `D7D175ED…`.
+
+**Последнее изменение: [Fly think + roam](Docs/Changes/FLY_THINK_TRAVEL_2026-09-12.md), 12 сентября.** Рой говорит о маршруте, HUD THINKING, soft nudge от меток; FlyTravel/FlyMind PASS; DLL `D7D175ED…`.
+
+**Последнее изменение: [FlyWire parity A](Docs/Changes/FLY_PARITY_A_2026-09-12.md), 12 сентября.** Sleep/arousal gates, gait→ascending, burst noise, air puff как в desktop-fly на 668. FlySwarm/FlyMind PASS; DLL `B6AA9C6D…`.
+
+**Последнее изменение: [FlyWire ← inscriptions](Docs/Changes/FLY_WIRE_INSCRIPTIONS_2026-09-12.md), 12 сентября.** Метки посетителей усиливают/ослабляют loom, JO sensory и ascending в LIF. `InscriptionsDriveFlyWire` + FlyMind PASS; DLL `5D622F47…`.
+
+**Последнее изменение: [Fly inscriptions](Docs/Changes/FLY_INSCRIPTIONS_2026-09-12.md), 12 сентября.** Dark Souls-метки на рое (колесо E, диагонали); echoes; репликация/сейв v2; влияют на занятие/речь. FlyMind PASS + SharedInscriptions; DLL `1F2F4DAB…`.
+
+**Последнее изменение: [Fly presence](Docs/Changes/FLY_PRESENCE_2026-09-12.md), 12 сентября.** Занятия заметны: речь при смене, HUD `SHIP RESIDENT | ACTIVITY`, Observe/Socialize/Rest с разным темпом; пауза travel только у диалога E. FlyTravel/FlyMind PASS; Fly* 7/7; DLL `FC7F68A2…`. Не феноменальное сознание.
+
+**Последнее изменение: [Ship drift + doors closed](Docs/Changes/SHIP_DRIFT_DOORS_2026-09-12.md), 12 сентября.** 61 дверь стартует закрытой; `ACalmyShipMotion` качает/дрейфует R7 от поля W1; dry-hull в rest-frame. 44/44 automation; Door/Ship/Water/WaterInteraction/FlyTravel PASS; DLL `EB86E392…`.
+
+**Последнее изменение: [Fly deck height](Docs/Changes/FLY_DECK_HEIGHT_2026-09-12.md), 12 сентября.** Rest ≈ на палубе (`WalkClearanceCm`), полёт ~1 м (`FlightHeightCm`); цели пути deck-relative, без hard Z-snap. FlyWire 668/18968 + LIF + cognition без новых претензий на феноменальное сознание. FlyTravel/FlyMind PASS; Fly* automation 7/7; DLL `6AB74606…`.
+
 **Последнее изменение: [Tutorial progress save](Docs/Changes/TUTORIAL_PROGRESS_SAVE_2026-09-11.md), 11 сентября.** После обучения прогресс пишется в `[Calmy.Progress]`; следующий обычный запуск сразу на корабль. В меню рубки — «REPLAY TRAINING / ОБУЧЕНИЕ СНОВА». 44/44 automation; Tutorial Solo + BridgeMenu Visual PASS. DLL `0D6DBDE5…`.
 
 **Последнее изменение: [Grip R2a](Docs/Changes/GRIP_R2A_HANDLES_2026-09-11.md), 11 сентября.** Kind-specific grip locals (смещение к R3 ручкам) + измерение wrist при yaw. 43/43 automation; Helper + LP4 GripViews PASS (static ~1.2/0.8 см, moving ~1.2 см). DLL `A935E36D…`. Пальцы/skin, mesh sockets, proxy/package не делались.

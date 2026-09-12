@@ -89,21 +89,27 @@ void UCalmyFlyMindProbe::Tick(float Dt)
     }
     else if (Stage == 2 && StageAge > 4.6f) { PC->RequestFlyTalk(EFlyUtterance::AskMemory); Stage = 3; StageAge = 0; }
     if (Stage == 3) bSawRecall |= Swarm->Speech.Contains(TEXT("Threats remembered: 1"));
+    // After AskMemory cooldown (~4s), leave a shared mark for replication checks.
+    if ((Host || Visual) && !bInscribed && Stage == 3 && StageAge > 4.6f && Swarm->CanConverse(PC))
+        bInscribed = Swarm->ReceiveInscription(PC, EFlyMessageKind::BeWary);
+    bSawMark |= Swarm->VisibleInscriptions.Num() > 0;
     if (Visual && Stage == 3 && StageAge > 1.f && StageAge < 1.f+Dt*2)
     {
         FString Dir; FParse::Value(FCommandLine::Get(), TEXT("CalmyReviewDir="), Dir);
         FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("Verification")/Dir/TEXT("01-memory-dialogue.png"), false, false);
     }
     if (Stage < 3 || StageAge < 3.f || (Host && PeersAge < 18.f)) return;
+    if ((Host || Visual) && !bSawMark) return;
+    if (!Host && !Visual && !bSawMark && Age < 110.f) return;
     if (Host || Visual)
     {
         int32 Participants = 0;
         for (const auto& P : Swarm->GetCognition().People) if (P.Conversations == 3 && P.Threats == 1) ++Participants;
-        if (Participants != (Visual ? 1 : 3) || !bFarRejected || !bInvalidRejected || !bSawRecall)
-        { Finish(false, FString::Printf(TEXT("participants=%d far_reject=%d invalid_reject=%d recall=%d"), Participants, bFarRejected, bInvalidRejected, bSawRecall)); return; }
+        if (Participants != (Visual ? 1 : 3) || !bFarRejected || !bInvalidRejected || !bSawRecall || !bSawMark)
+        { Finish(false, FString::Printf(TEXT("participants=%d far_reject=%d invalid_reject=%d recall=%d marks=%d"), Participants, bFarRejected, bInvalidRejected, bSawRecall, bSawMark)); return; }
         const bool Saved = !Visual && Swarm->SaveMemory();
-        Finish(Visual || Saved, FString::Printf(TEXT("participants=%d learned_threat_once=1 memory_recall=1 invalid_and_far_rejected=1 disk_saved=%d brains=%d serial=%d"), Participants, Saved, Swarm->GetSimulatedFlyCount(), Swarm->SpeechSerial));
+        Finish(Visual || Saved, FString::Printf(TEXT("participants=%d learned_threat_once=1 memory_recall=1 marks=1 invalid_and_far_rejected=1 disk_saved=%d brains=%d serial=%d"), Participants, Saved, Swarm->GetSimulatedFlyCount(), Swarm->SpeechSerial));
     }
-    else Finish(bSawRecall && Swarm->GetCognition().People.IsEmpty() && Swarm->GetSimulatedFlyCount() == 0,
-        FString::Printf(TEXT("replicated_recall=%d authority_only_memory=1 brains=%d serial=%d"), bSawRecall, Swarm->GetSimulatedFlyCount(), Swarm->SpeechSerial));
+    else Finish(bSawRecall && bSawMark && Swarm->GetCognition().People.IsEmpty() && Swarm->GetSimulatedFlyCount() == 0,
+        FString::Printf(TEXT("replicated_recall=%d replicated_marks=%d authority_only_memory=1 brains=%d serial=%d"), bSawRecall, bSawMark, Swarm->GetSimulatedFlyCount(), Swarm->SpeechSerial));
 }

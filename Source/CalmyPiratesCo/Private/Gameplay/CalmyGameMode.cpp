@@ -139,7 +139,8 @@ int32 ACalmyPlayerController::WheelSector(FVector2D Offset, float Radius)
 {
     if (Offset.Size() < Radius*.32f || Offset.Size() > Radius || Radius <= 0.f) return -1;
     const double Angle = FMath::Atan2(Offset.Y,Offset.X) + PI*.5;
-    return (FMath::FloorToInt((Angle + PI*.25) / (PI*.5)) + 4) % 4;
+    // Eight sectors: 0-3 talk, 4-7 leave shared marks.
+    return (FMath::FloorToInt((Angle + PI*.125) / (PI*.25)) + 8) % 8;
 }
 bool ACalmyPlayerController::TryOpenFlyWheel()
 {
@@ -173,10 +174,14 @@ float ACalmyPlayerController::GetFlyTalkCooldown() const
 void ACalmyPlayerController::ConfirmFlyWheel()
 {
     if (!bWheelInputLease || WheelSelection < 0 || GetFlyTalkCooldown() > 0.f) return;
-    auto* Swarm = WheelSwarm.Get(); const auto Intent = static_cast<EFlyUtterance>(WheelSelection);
+    auto* Swarm = WheelSwarm.Get();
+    const int32 Selection = WheelSelection;
     CloseFlyWheel();
-    if (IsValid(Swarm) && GetWorld()->GetTimeSeconds() - LastFlyTalkRequest >= 4.)
-    { LastFlyTalkRequest = GetWorld()->GetTimeSeconds(); ServerTalkToSwarm(Swarm, Intent); }
+    if (!IsValid(Swarm) || GetWorld()->GetTimeSeconds() - LastFlyTalkRequest < 4.) return;
+    LastFlyTalkRequest = GetWorld()->GetTimeSeconds();
+    // Even sectors = talk (cardinals); odd = leave shared marks (diagonals).
+    if ((Selection & 1) == 0) ServerTalkToSwarm(Swarm, static_cast<EFlyUtterance>(Selection / 2));
+    else ServerInscribeSwarm(Swarm, static_cast<EFlyMessageKind>(Selection / 2));
 }
 void ACalmyPlayerController::RequestFlyTalk(EFlyUtterance Intent)
 {
@@ -187,6 +192,10 @@ void ACalmyPlayerController::RequestFlyTalk(EFlyUtterance Intent)
 void ACalmyPlayerController::ServerTalkToSwarm_Implementation(AFlySwarmMob* Swarm, EFlyUtterance Intent)
 {
     if (IsValid(Swarm)) Swarm->ReceiveUtterance(this, Intent);
+}
+void ACalmyPlayerController::ServerInscribeSwarm_Implementation(AFlySwarmMob* Swarm, EFlyMessageKind Kind)
+{
+    if (IsValid(Swarm)) Swarm->ReceiveInscription(this, Kind);
 }
 void ACalmyPlayerController::ClientRestart_Implementation(APawn* NewPawn)
 {
@@ -450,12 +459,37 @@ void ACalmyHUD::DrawHUD()
         DrawScaledText(FString::Printf(TEXT("%.0f FPS | %.1f ms"),1000/FMath::Max(1.f,Ms),Ms),FLinearColor(.6,1,.8),Canvas->ClipX-205,18);
     }
 	const auto* Shift = ACalmyShift::Find(GetWorld());
-    if (const auto* Swarm = AFlySwarmMob::FindConversationalSwarm(PC); Swarm && !Swarm->Speech.IsEmpty())
+    if (const auto* Swarm = AFlySwarmMob::FindConversationalSwarm(PC); Swarm && (!Swarm->Speech.IsEmpty() || Swarm->VisibleInscriptions.Num() > 0))
     {
-        const float Y = Canvas->ClipY - 185.f;
-        DrawRect(FLinearColor(.02f,.04f,.035f,.90f), 16, Y, FMath::Min(900.f, Canvas->ClipX-32.f), 62);
-        DrawScaledText(TEXT("HOLD RESIDENT"), FLinearColor(.6f,1.f,.65f), 30, Y+10);
-        DrawScaledText(Swarm->Speech, FLinearColor::White, 30, Y+34);
+        const float PanelH = Swarm->Speech.IsEmpty() ? 78.f : 108.f;
+        const float Y = Canvas->ClipY - 40.f - PanelH;
+        DrawRect(FLinearColor(.02f,.04f,.035f,.90f), 16, Y, FMath::Min(900.f, Canvas->ClipX-32.f), PanelH);
+        DrawScaledText(FString::Printf(TEXT("SHIP RESIDENT  |  %s%s"),
+            *FFlyCognition::ActivityLabel(Swarm->Activity),
+            Swarm->bTravelPlanning ? TEXT("  ·  THINKING") : TEXT("")), FLinearColor(.6f,1.f,.65f), 30, Y+10);
+        float LineY = Y + 34.f;
+        if (!Swarm->Speech.IsEmpty())
+        {
+            DrawScaledText(Swarm->Speech, FLinearColor::White, 30, LineY);
+            LineY += 24.f;
+        }
+        // Shared marks: nearest few, Dark Souls appraisal style (xEchoes).
+        struct FNearMark { const FFlyInscriptionView* Mark; float DistSq; };
+        TArray<FNearMark, TInlineAllocator<8>> Near;
+        const FVector Eye = PC->GetPawn() ? PC->GetPawn()->GetActorLocation() : FVector::ZeroVector;
+        for (const auto& Mark : Swarm->VisibleInscriptions)
+        {
+            const float DistSq = FVector::DistSquared(Mark.Location, Eye);
+            if (DistSq <= FMath::Square(900.f)) Near.Add({&Mark, DistSq});
+        }
+        Near.Sort([](const FNearMark& A, const FNearMark& B) { return A.DistSq < B.DistSq; });
+        FString Marks;
+        for (int32 I = 0; I < Near.Num() && I < 3; ++I)
+        {
+            if (I) Marks += TEXT("   ·   ");
+            Marks += FString::Printf(TEXT("[%dx] %s"), Near[I].Mark->Echoes + 1, *FFlyCognition::MessageLabel(Near[I].Mark->Kind));
+        }
+        if (!Marks.IsEmpty()) DrawScaledText(Marks, FLinearColor(.85f,.78f,.45f), 30, LineY);
     }
 	const auto* Tutorial = ACalmyTutorial::Find(GetWorld());
 	const auto* Leak = ACalmyLeak::Find(GetWorld());
@@ -570,19 +604,28 @@ void ACalmyHUD::NotifyHitBoxClick(FName BoxName)
 void ACalmyHUD::DrawFlyWheel(ACalmyPlayerController* PC)
 {
     const FVector2D Center(Canvas->ClipX*.5f, Canvas->ClipY*.5f);
-    const float Radius = FMath::Min(Canvas->ClipX,Canvas->ClipY)*.25f;
+    const float Radius = FMath::Min(Canvas->ClipX,Canvas->ClipY)*.28f;
     DrawRect(FLinearColor(.005f,.012f,.018f,.55f),0,0,Canvas->ClipX,Canvas->ClipY);
-    const TCHAR* Labels[] = { TEXT("Greet"), TEXT("Calm gesture"), TEXT("Recall encounters"), TEXT("Shoo away") };
-    const TCHAR* Details[] = { TEXT("Make contact"), TEXT("Show peaceful intent"), TEXT("Ask what it remembers"), TEXT("Warn it to keep away") };
-    for (int32 Sector=0; Sector<4; ++Sector)
+    const TCHAR* Labels[] = {
+        TEXT("Greet"), TEXT("Be wary"), TEXT("Calm gesture"), TEXT("Safe here"),
+        TEXT("Recall"), TEXT("Praise flies"), TEXT("Shoo away"), TEXT("Try talking")
+    };
+    const TCHAR* Details[] = {
+        TEXT("Make contact"), TEXT("Leave a warning mark"), TEXT("Show peaceful intent"), TEXT("Mark this place as calm"),
+        TEXT("Ask what it remembers"), TEXT("Strengthen goodwill"), TEXT("Warn it to keep away"), TEXT("Invite the colony closer")
+    };
+    for (int32 Sector=0; Sector<8; ++Sector)
     {
         const bool Selected = PC->GetFlyWheelSelection()==Sector;
-        const FLinearColor Color = Selected ? FLinearColor(.12f,.38f,.32f,.96f) : FLinearColor(.028f,.06f,.075f,.96f);
+        const bool Mark = (Sector & 1) != 0;
+        const FLinearColor Color = Selected
+            ? (Mark ? FLinearColor(.38f,.28f,.1f,.96f) : FLinearColor(.12f,.38f,.32f,.96f))
+            : (Mark ? FLinearColor(.06f,.045f,.02f,.96f) : FLinearColor(.028f,.06f,.075f,.96f));
         TArray<FCanvasUVTri> Triangles;
-        for (int32 Segment=0; Segment<20; ++Segment)
+        for (int32 Segment=0; Segment<12; ++Segment)
         {
-            const float Start=-PI*.75f + Sector*PI*.5f + .025f;
-            const float A=Start+(PI*.5f-.05f)*Segment/20.f, B=Start+(PI*.5f-.05f)*(Segment+1)/20.f;
+            const float Start=-PI*.625f + Sector*PI*.25f + .02f;
+            const float A=Start+(PI*.25f-.04f)*Segment/12.f, B=Start+(PI*.25f-.04f)*(Segment+1)/12.f;
             const FVector2D DA(FMath::Cos(A),FMath::Sin(A)), DB(FMath::Cos(B),FMath::Sin(B));
             FCanvasUVTri T;
             T.V0_Pos=Center+DA*Radius*.32f; T.V1_Pos=Center+DA*Radius; T.V2_Pos=Center+DB*Radius;
@@ -590,14 +633,15 @@ void ACalmyHUD::DrawFlyWheel(ACalmyPlayerController* PC)
             T.V1_Pos=T.V2_Pos; T.V2_Pos=Center+DB*Radius*.32f; Triangles.Add(T);
         }
         FCanvasTriangleItem Item(Triangles,GWhiteTexture); Item.BlendMode=SE_BLEND_Translucent; Canvas->DrawItem(Item);
-        const float Angle=-PI*.5f+Sector*PI*.5f;
-        const FVector2D Label=Center+FVector2D(FMath::Cos(Angle),FMath::Sin(Angle))*Radius*.66f;
+        const float Angle=-PI*.5f+Sector*PI*.25f;
+        const FVector2D Label=Center+FVector2D(FMath::Cos(Angle),FMath::Sin(Angle))*Radius*.68f;
         float W,H; GetTextSize(Labels[Sector],W,H,GEngine->GetSmallFont());
         DrawScaledText(Labels[Sector],Selected?FLinearColor(1,.94f,.65f):FLinearColor(.85f,.92f,.9f),Label.X-W*.5f,Label.Y-H*.5f);
     }
     auto CenterText = [&](const FString& Text,float Y,FLinearColor Color)
     { float W,H; GetTextSize(Text,W,H,GEngine->GetSmallFont()); DrawScaledText(Text,Color,Center.X-W*.5f,Y,GEngine->GetSmallFont()); };
     CenterText(TEXT("FLY SWARM"),Center.Y-Radius-60,FLinearColor(.65f,1,.8f));
+    CenterText(TEXT("Talk  ·  Leave a mark for others"),Center.Y-Radius-38,FLinearColor(.75f,.7f,.45f));
     CenterText(PC->GetFlyTalkCooldown()>0.f?FString::Printf(TEXT("Give it a moment... %.1f s"),PC->GetFlyTalkCooldown()):
         PC->GetFlyWheelSelection()<0?TEXT("Choose an action"):Details[PC->GetFlyWheelSelection()],Center.Y+Radius+26,FLinearColor::White);
     CenterText(TEXT("Mouse to choose  /  Click to confirm  /  E or Esc to cancel"),Center.Y+Radius+54,FLinearColor(.7f,.8f,.8f));

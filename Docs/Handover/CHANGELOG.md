@@ -1,5 +1,37 @@
 # Журнал продолжения проекта
 
+## 2026-09-12 — HOLD 1 FPS: mind vs NoBrain
+
+[Отчёт](../Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md): Epic HOLD 1 — mind 80.87 FPS / swarm 1.97 мс, NoBrain 75.48 / 0.45 мс; vs S1 91.85. SNN не главный FPS-тормоз. DLL `D7D175ED…`.
+
+## 2026-09-12 — Fly think + ship roam
+
+[Отчёт](../Changes/FLY_THINK_TRAVEL_2026-09-12.md): travel-thoughts, HUD THINKING, soft mark nudge; FlyTravel/FlyMind PASS; DLL `D7D175ED…`.
+
+## 2026-09-12 — FlyWire parity A (desktop-fly 668)
+
+[Отчёт](../Changes/FLY_PARITY_A_2026-09-12.md): sensoryGate/activityScale, gait→ascending, burst noise, air puff; `DesktopFlyGatesAndGait` + SourceLIFParity PASS; FlyMind PASS; DLL `B6AA9C6D…`.
+
+## 2026-09-12 — FlyWire driven by inscriptions
+
+[Отчёт](../Changes/FLY_WIRE_INSCRIPTIONS_2026-09-12.md): wary/welcome метки → loom gain, airPuff sensory, ascending; `InscriptionsDriveFlyWire` PASS; FlyMind PASS; DLL `5D622F47…`.
+
+## 2026-09-12 — Fly inscriptions (Dark Souls marks)
+
+[Отчёт](../Changes/FLY_INSCRIPTIONS_2026-09-12.md): общие метки на рое, echoes, влияние на cognition, репликация/сейв v2. FlyMind PASS; SharedInscriptions + RadialSelection; DLL `1F2F4DAB…`.
+
+## 2026-09-12 — Fly presence (занятия заметны)
+
+[Отчёт](../Changes/FLY_PRESENCE_2026-09-12.md): utility Observe/Socialize, речь при смене занятия, HUD activity, travel-pause только у диалога E. FlyTravel/FlyMind PASS; Fly* 7/7; DLL `FC7F68A2…`.
+
+## 2026-09-12 — Ship drift G2 + doors closed
+
+[Отчёт](../Changes/SHIP_DRIFT_DOORS_2026-09-12.md): 61 дверь closed; `ACalmyShipMotion` от W1; 44/44; Door/Ship/Water/WaterInteraction/FlyTravel PASS; DLL `EB86E392…`.
+
+## 2026-09-12 — Fly deck height (~1 m flight / rest on deck)
+
+[Отчёт](../Changes/FLY_DECK_HEIGHT_2026-09-12.md): deck-relative Rest/FlightHeight; честный статус FlyWire SNN + cognition. FlyTravel/FlyMind PASS; Fly* automation 7/7; DLL `6AB74606…`.
+
 ## 2026-09-11 — Tutorial progress save + menu replay
 
 [Отчёт](../Changes/TUTORIAL_PROGRESS_SAVE_2026-09-11.md): сохранение прохождения; автопосадка на корабль; «Обучение снова» в меню рубки. 44/44; Tutorial+BridgeMenu PASS.

@@ -45,9 +45,11 @@ bool FFlyWheelTest::RunTest(const FString&)
     TestEqual(TEXT("Centre cancels"),ACalmyPlayerController::WheelSector(FVector2D(0,0),200),-1);
     TestEqual(TEXT("Outside wheel does not select"),ACalmyPlayerController::WheelSector(FVector2D(250,0),200),-1);
     TestEqual(TEXT("Top greets"),ACalmyPlayerController::WheelSector(FVector2D(0,-130),200),0);
-    TestEqual(TEXT("Right calms"),ACalmyPlayerController::WheelSector(FVector2D(130,0),200),1);
-    TestEqual(TEXT("Bottom recalls"),ACalmyPlayerController::WheelSector(FVector2D(0,130),200),2);
-    TestEqual(TEXT("Left shoos away"),ACalmyPlayerController::WheelSector(FVector2D(-130,0),200),3);
+    TestEqual(TEXT("Right calms"),ACalmyPlayerController::WheelSector(FVector2D(130,0),200),2);
+    TestEqual(TEXT("Bottom recalls"),ACalmyPlayerController::WheelSector(FVector2D(0,130),200),4);
+    TestEqual(TEXT("Left shoos away"),ACalmyPlayerController::WheelSector(FVector2D(-130,0),200),6);
+    TestEqual(TEXT("Upper-right be wary"),ACalmyPlayerController::WheelSector(FVector2D(92,-92),200),1);
+    TestEqual(TEXT("Lower-right safe here"),ACalmyPlayerController::WheelSector(FVector2D(92,92),200),3);
     return true;
 }
 #endif

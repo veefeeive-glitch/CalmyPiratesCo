@@ -16,6 +16,6 @@ private:
     FString Role;
     float Age = 0, StageAge = 0, PeersAge = 0;
     int32 Stage = 0;
-    bool bStarted = false, bFarRejected = false, bInvalidRejected = false, bSawRecall = false;
+    bool bStarted = false, bFarRejected = false, bInvalidRejected = false, bSawRecall = false, bInscribed = false, bSawMark = false;
     TSet<uint32> PlacedPlayers;
 };

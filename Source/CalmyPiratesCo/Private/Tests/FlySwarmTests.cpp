@@ -82,6 +82,30 @@ bool FFlyReferenceTest::RunTest(const FString&)
     return true;
 }
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FFlyDesktopParityGatesTest, "CalmyPiratesCo.FlySwarm.DesktopFlyGatesAndGait", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FFlyDesktopParityGatesTest::RunTest(const FString&)
+{
+    const FFlyConnectome& G = FFlyConnectome::Get();
+    TestTrue(TEXT("Sensory group present"), G.SensoryCount >= 16);
+    TestTrue(TEXT("Ascending group present"), G.AscendingCount >= 20);
+    FFlyLIFState Awake, Asleep, Gaited;
+    Awake.Initialize(7); Asleep.Initialize(7); Gaited.Initialize(7);
+    FFlyNeuralInputs On, Off, Walk;
+    On.LoomLeft = .8f; On.LoomRight = .8f; On.SensoryGain = .3f; On.bNoise = false;
+    Off = On; Off.SensoryGate = .35f; Off.ActivityScale = .5f;
+    Walk.bNoise = false; Walk.GaitDrive = 1.f; Walk.GaitPhase = .25f;
+    for (int32 I = 0; I < 500; ++I)
+    {
+        Awake.Step(G, On);
+        Asleep.Step(G, Off);
+        Walk.GaitPhase = FMath::Fmod(Walk.GaitPhase + .01f, 1.f);
+        Gaited.Step(G, Walk);
+    }
+    TestTrue(TEXT("Sleep gate damps looming population vs awake"), Asleep.Rates[1] + .5f < Awake.Rates[1]);
+    TestTrue(TEXT("Gait drive raises whole-population activity"), Gaited.Rates[0] > .05f);
+    return true;
+}
+
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FFlyDelayTest, "CalmyPiratesCo.FlySwarm.DelayAndRefractory", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FFlyDelayTest::RunTest(const FString&)
 {

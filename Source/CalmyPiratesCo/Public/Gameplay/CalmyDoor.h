@@ -21,12 +21,12 @@ public:
     UPROPERTY(EditAnywhere,Replicated) int32 DoorId=0;
     UPROPERTY(EditAnywhere) float WidthCm=112;
     UPROPERTY(EditAnywhere) float HeightCm=210;
-    UPROPERTY(EditAnywhere) bool bStartOpen=true;
+    UPROPERTY(EditAnywhere) bool bStartOpen=false;
     UPROPERTY(EditAnywhere) float SwingSign=1;
     UPROPERTY(EditAnywhere) float OpenAngle=180;
-    UPROPERTY(ReplicatedUsing=OnRep_Pose) float Angle=180;
+    UPROPERTY(ReplicatedUsing=OnRep_Pose) float Angle=0;
     UPROPERTY(Replicated) uint32 Revision=0;
-    UPROPERTY(Replicated) ECalmyDoorState State=ECalmyDoorState::Open;
+    UPROPERTY(Replicated) ECalmyDoorState State=ECalmyDoorState::Closed;
     UPROPERTY(VisibleAnywhere) TObjectPtr<USceneComponent> Hinge;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UBoxComponent> Collision;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UStaticMeshComponent> Leaf;
@@ -40,5 +40,5 @@ private:
     UFUNCTION() void OnRep_Pose();
     void ApplyPose();
     bool PoseBlocked(float Degrees) const;
-    float TargetAngle=180;
+    float TargetAngle=0;
 };

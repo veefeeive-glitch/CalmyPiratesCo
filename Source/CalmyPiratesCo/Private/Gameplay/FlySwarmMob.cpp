@@ -18,6 +18,8 @@
 #include "Net/UnrealNetwork.h"
 #include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
+#include "CollisionQueryParams.h"
+#include "Engine/HitResult.h"
 #include "FlyConnectomeData.inl"
 
 const FFlyConnectome& FFlyConnectome::Get()
@@ -25,7 +27,12 @@ const FFlyConnectome& FFlyConnectome::Get()
     namespace D = FlyConnectomeData;
     static_assert(UE_ARRAY_COUNT(D::RowStart) == NeuronCount + 1);
     static_assert(UE_ARRAY_COUNT(D::Targets) == EdgeCount && UE_ARRAY_COUNT(D::Weights) == EdgeCount);
-    static const FFlyConnectome Graph{D::RowStart, D::Targets, D::Weights, D::Baseline, D::Role, D::SensorSide, D::GroupCount};
+    static const FFlyConnectome Graph{
+        D::RowStart, D::Targets, D::Weights, D::Baseline, D::Role, D::SensorSide, D::GroupCount,
+        D::Sensory, D::Ascending,
+        static_cast<uint16>(UE_ARRAY_COUNT(D::Sensory)),
+        static_cast<uint16>(UE_ARRAY_COUNT(D::Ascending))
+    };
     return Graph;
 }
 
@@ -39,20 +46,46 @@ void FFlyLIFState::Initialize(int32 Seed)
     bEscape = false;
     SimulatedMs = 0;
     Random.Initialize(Seed);
+    AscendPhase0 = Random.FRand() * 2.f * PI;
+    BurstUntilMs = 0;
+    BurstNextMs = 15000ull + uint64(Random.RandRange(0, 25000));
 }
 
-void FFlyLIFState::Step(const FFlyConnectome& G, float LoomLeft, float LoomRight, float SensoryGain, bool bNoise)
+void FFlyLIFState::Step(const FFlyConnectome& G, float LoomLeft, float LoomRight, float SensoryGain, bool bNoise, float AirPuff, float AscendDrive)
+{
+    FFlyNeuralInputs In;
+    In.LoomLeft = LoomLeft; In.LoomRight = LoomRight; In.SensoryGain = SensoryGain;
+    In.bNoise = bNoise; In.AirPuff = AirPuff; In.AscendBias = AscendDrive;
+    Step(G, In);
+}
+
+void FFlyLIFState::Step(const FFlyConnectome& G, const FFlyNeuralInputs& In)
 {
     constexpr int32 N = FFlyConnectome::NeuronCount;
     constexpr float Decay = 0.9512f;
-    const float InputL = FMath::Clamp(LoomLeft, 0.f, 1.f) * SensoryGain;
-    const float InputR = FMath::Clamp(LoomRight, 0.f, 1.f) * SensoryGain;
+    const float Gate = FMath::Clamp(In.SensoryGate, 0.f, 1.5f);
+    const float Scale = FMath::Clamp(In.ActivityScale, 0.05f, 1.5f);
+    const float LoomGain = FMath::Clamp(In.SensoryGain, 0.f, 1.f) * Gate;
+    const float InputL = FMath::Clamp(In.LoomLeft, 0.f, 1.f) * LoomGain;
+    const float InputR = FMath::Clamp(In.LoomRight, 0.f, 1.f) * LoomGain;
+    const float Puff = FMath::Clamp(In.AirPuff, 0.f, 1.f) * 0.12f * Gate;
+    const float Gait = FMath::Clamp(In.GaitDrive, 0.f, 1.5f);
+    const float Bias = FMath::Clamp(In.AscendBias, 0.f, 1.f) * 0.09f;
+    const float Phase = In.GaitPhase * 2.f * PI;
     // Scratch belongs to this call, not each fly. Sum inhibition before clamping,
     // as the source does with its much larger 5*N float queue.
     float Inhibition[N] = {};
     uint16 Spiked[N];
     int32 SpikeCount = 0;
     int32 Counts[9] = {};
+    if (In.bNoise && SimulatedMs >= BurstNextMs)
+    {
+        BurstUntilMs = SimulatedMs + 400;
+        BurstNextMs = SimulatedMs + 15000ull + uint64(Random.RandRange(0, 25000));
+    }
+    const float NoiseP = In.bNoise
+        ? ((SimulatedMs < BurstUntilMs) ? 0.0022f * 6.f : 0.0022f) * Scale
+        : 0.f;
     for (int32 I = 0; I < N; ++I)
     {
         if (RefractoryMs[I] > 0)
@@ -62,12 +95,24 @@ void FFlyLIFState::Step(const FFlyConnectome& G, float LoomLeft, float LoomRight
         }
         else
         {
-            Potential[I] = Potential[I] * Decay + G.Baseline[I];
-            if (bNoise && Random.FRand() < 0.0022f) Potential[I] += 0.42f;
+            Potential[I] = Potential[I] * Decay + G.Baseline[I] * Scale;
+            if (NoiseP > 0.f && Random.FRand() < NoiseP) Potential[I] += 0.42f;
         }
         // Source also injects input into refractory cells; threshold check is gated.
         if (G.SensorSide[I] == 1) Potential[I] += InputL;
         else if (G.SensorSide[I] == 2) Potential[I] += InputR;
+    }
+    if (Puff > 0.001f && G.Sensory && G.SensoryCount > 0)
+        for (uint16 S = 0; S < G.SensoryCount; ++S) Potential[G.Sensory[S]] += Puff;
+    if ((Gait > 0.001f || Bias > 0.001f) && G.Ascending && G.AscendingCount > 0)
+    {
+        for (uint16 S = 0; S < G.AscendingCount; ++S)
+        {
+            const float Rhythm = Gait > 0.001f
+                ? Gait * 0.09f * (0.5f + 0.5f * FMath::Sin(Phase + AscendPhase0 + float(S) * 2.39996323f))
+                : 0.f;
+            Potential[G.Ascending[S]] += Rhythm + Bias;
+        }
     }
     const uint32* Delayed = SpikeHistory[(HistoryHead + 1) % 5]; // t - 4 ms
     for (int32 Word = 0; Word < Words; ++Word)
@@ -229,10 +274,44 @@ void AFlySwarmMob::SimulateSwarm()
     if (Travelling) { OldPositions.Reserve(Flies.Num()); for (const auto& F : Flies) OldPositions.Add(F.Position); }
     const float ThreatRadius = FMath::Max(1.f, DangerRadius);
     const float Gain = FMath::Clamp(SensoryGain, 0.f, 1.f);
-    const float TurnLimit = FMath::Max(0.f, MaxTurnRate);
-    const float Bounds = Travelling ? FMath::Clamp(ColonyRadius, 10.f, 75.f) : FMath::Max(1.f, RoamRadius);
     const float Cruise = FMath::Max(0.f, CruiseSpeed);
     const float Escape = FMath::Max(0.f, EscapeSpeed);
+    float SensoryGate = 1.f;
+    float ActivityScale = 1.f;
+    float GaitDrive = 0.f;
+    float MotionPuff = 0.f;
+    float MarkAir = 0.f;
+    float MarkAscend = 0.f;
+    float MarkGain = 1.f;
+    if (bEnableCognition)
+    {
+        MarkGain = Mind.InscriptionSensoryGain();
+        MarkAir = Mind.InscriptionAirPuff();
+        MarkAscend = Mind.InscriptionAscendDrive();
+        for (const auto& O : Observations) MotionPuff = FMath::Max(MotionPuff, O.Startle);
+        // desktop-fly sleep/arousal gates mapped from colony activity.
+        switch (Activity)
+        {
+        case EFlyActivity::Rest: SensoryGate = .35f; ActivityScale = .5f; break;
+        case EFlyActivity::Withdraw: SensoryGate = 1.15f; ActivityScale = 1.1f; break;
+        case EFlyActivity::Observe: SensoryGate = 1.05f; ActivityScale = 1.f; break;
+        case EFlyActivity::Socialize: SensoryGate = 1.f; ActivityScale = 1.05f; break;
+        case EFlyActivity::Explore: SensoryGate = 1.f; ActivityScale = 1.f; break;
+        default: checkNoEntry(); break;
+        }
+        GaitDrive = FMath::Clamp(ColonyVelocity.Size2D() / FMath::Max(1.f, Cruise), 0.f, 1.25f);
+        if (Activity == EFlyActivity::Rest) GaitDrive *= .12f;
+        else if (Activity == EFlyActivity::Socialize) GaitDrive = FMath::Max(GaitDrive, .4f);
+        else if (Activity == EFlyActivity::Withdraw) GaitDrive = FMath::Max(GaitDrive, .7f);
+        ColonyGaitPhase = FMath::Fmod(ColonyGaitPhase + Dt * (.75f + GaitDrive), 1.f);
+        if (ColonyGaitPhase < 0.f) ColonyGaitPhase += 1.f;
+    }
+    const float ContextGain = FMath::Clamp(Gain * MarkGain, 0.05f, 1.f);
+    const float Vigilance = bEnableCognition ? Mind.InscriptionCaution * .2f : 0.f;
+    const float AirPuff = FMath::Clamp(FMath::Max(MarkAir, MotionPuff), 0.f, 1.f);
+    const float GaitPhase = ColonyGaitPhase;
+    const float TurnLimit = FMath::Max(0.f, MaxTurnRate);
+    const float Bounds = Travelling ? FMath::Clamp(ColonyRadius, 10.f, 75.f) : FMath::Max(1.f, RoamRadius);
     FVector IntentTarget = Center;
     float IntentSpeed = 1.f;
     if (bEnableCognition)
@@ -246,6 +325,7 @@ void AFlySwarmMob::SimulateSwarm()
     }
     const bool HasIntent = bEnableCognition;
     const bool Scatter = ScatterSeconds > 0.f;
+    const bool Resting = WantsDeckRest();
     const FVector SwatPoint = SwatOrigin;
     FFlyAgentState* States = Flies.GetData();
     FFlySwarmPose* Output = Poses.GetData();
@@ -267,15 +347,29 @@ void AFlySwarmMob::SimulateSwarm()
         const float Intensity = bDanger ? FMath::Clamp((1.f - FMath::Sqrt(ClosestSq) / ThreatRadius) * LearnedGain, 0.f, 1.f) : 0.f;
         const FVector Right = FRotationMatrix(FRotator(0, Fly.Yaw, 0)).GetUnitAxis(EAxis::Y);
         const float Side = FVector::DotProduct(ToDanger.GetSafeNormal(), Right);
-        const float LeftInput = Intensity * (0.5f - 0.5f * Side);
-        const float RightInput = Intensity * (0.5f + 0.5f * Side);
+        const float LeftInput = FMath::Clamp(Intensity * (0.5f - 0.5f * Side) + Vigilance, 0.f, 1.f);
+        const float RightInput = FMath::Clamp(Intensity * (0.5f + 0.5f * Side) + Vigilance, 0.f, 1.f);
         Fly.Brain.bEscape = false;
         bool RunBrain = true;
 #if !UE_BUILD_SHIPPING
         static const bool SkipBrain = FString(FCommandLine::Get()).Contains(TEXT("CalmyPerformanceProbe=")) && FParse::Param(FCommandLine::Get(), TEXT("PerfNoBrain"));
         RunBrain = !SkipBrain;
 #endif
-        if (RunBrain) for (int32 Ms = 0; Ms < Steps; ++Ms) Fly.Brain.Step(Graph, LeftInput, RightInput, Gain);
+        if (RunBrain)
+        {
+            FFlyNeuralInputs Drive;
+            Drive.LoomLeft = LeftInput;
+            Drive.LoomRight = RightInput;
+            Drive.SensoryGain = ContextGain;
+            Drive.AirPuff = AirPuff;
+            Drive.GaitDrive = GaitDrive;
+            Drive.GaitPhase = GaitPhase;
+            Drive.AscendBias = MarkAscend;
+            Drive.SensoryGate = SensoryGate;
+            Drive.ActivityScale = ActivityScale;
+            Drive.bNoise = true;
+            for (int32 Ms = 0; Ms < Steps; ++Ms) Fly.Brain.Step(Graph, Drive);
+        }
         if (Fly.Brain.bEscape) Fly.EscapeSeconds = 0.45f;
         else Fly.EscapeSeconds = FMath::Max(0.f, Fly.EscapeSeconds - Dt);
 
@@ -288,7 +382,9 @@ void AFlySwarmMob::SimulateSwarm()
         }
         const double Phase = I * 2.39996323 + Fly.Brain.SimulatedMs * .00013;
         const float FormationRadius = Bounds * (.4f + .6f * (I % 7) / 6.f);
-        const FVector Formation = Travelling ? FVector(FMath::Cos(Phase), FMath::Sin(Phase), FMath::Sin(Phase * 1.7) * .5) * FormationRadius : FVector::ZeroVector;
+        // Rest flattens the cloud onto the deck; flight keeps the proven R6 vertical band.
+        const float Vertical = Resting ? .08f : .5f;
+        const FVector Formation = Travelling ? FVector(FMath::Cos(Phase), FMath::Sin(Phase), FMath::Sin(Phase * 1.7) * Vertical) * FormationRadius : FVector::ZeroVector;
         const FVector Home = Center + Formation - Fly.Position;
         if (HasIntent && Fly.EscapeSeconds <= 0.f)
             Turn += FMath::Clamp(FMath::FindDeltaAngleDegrees(Fly.Yaw, (IntentTarget - Fly.Position).Rotation().Yaw), -TurnLimit * .6f, TurnLimit * .6f);
@@ -299,12 +395,14 @@ void AFlySwarmMob::SimulateSwarm()
         if (Fly.Brain.Rates[4] > 25.f && Fly.Brain.Rates[4] > Fly.Brain.Rates[5]) Speed = -Speed;
         if (Fly.EscapeSeconds > 0.f) Speed = Escape;
         Fly.Velocity = FRotator(0, Fly.Yaw, 0).Vector() * Speed;
-        Fly.Velocity.Z = (Fly.EscapeSeconds > 0.f ? Escape * 0.25f : 0.f) + Home.Z * 0.5f;
+        const float Climb = Fly.EscapeSeconds > 0.f ? Escape * 0.25f : 0.f;
+        const float HomeLift = Resting && Fly.EscapeSeconds <= 0.f ? .15f : .5f;
+        Fly.Velocity.Z = Climb + Home.Z * HomeLift;
         if (Travelling)
         {
             // A common intention moves the whole mob. Individual biological
             // motor output adds flight variation, not 32 unrelated destinations.
-            Fly.Velocity = TravelVelocity + Fly.Velocity * .2f + Home.GetClampedToMaxSize(180.f) * 2.5f;
+            Fly.Velocity = TravelVelocity + Fly.Velocity * .35f + Home.GetClampedToMaxSize(180.f) * 2.5f;
         }
         if (Scatter)
         {
@@ -351,7 +449,17 @@ void AFlySwarmMob::SimulateSwarm()
                     if (CanFlySegment(F.Position, Next, 3.f)) F.Position = Next;
                 }
             }
+            // Deck pin only while resting; flight altitude is owned by the colony path.
+            if (Resting) PinFlyAltitude(F, I, Scatter);
             Poses[I].Position = F.Position;
+        }
+    }
+    else
+    {
+        for (int32 I = 0; I < Flies.Num(); ++I)
+        {
+            PinFlyAltitude(Flies[I], I, Scatter);
+            Poses[I].Position = Flies[I].Position;
         }
     }
     for (const FFlyAgentState& Fly : Flies) EscapeEvents += Fly.Brain.bEscape;
@@ -398,8 +506,10 @@ void AFlySwarmMob::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
     DOREPLIFETIME(AFlySwarmMob, bEnableCognition);
     DOREPLIFETIME(AFlySwarmMob, Activity);
     DOREPLIFETIME(AFlySwarmMob, TravelTarget);
+    DOREPLIFETIME(AFlySwarmMob, bTravelPlanning);
     DOREPLIFETIME(AFlySwarmMob, Speech);
     DOREPLIFETIME(AFlySwarmMob, SpeechSerial);
+    DOREPLIFETIME(AFlySwarmMob, VisibleInscriptions);
     DOREPLIFETIME(AFlySwarmMob, SwatCount); DOREPLIFETIME(AFlySwarmMob, bScattering);
     // Server is sole writer; clients/late join receive current poses without brain copies.
     // No RPCs or client intent. Disconnect removes its pawn from the next sensory sample.
@@ -471,7 +581,8 @@ bool AFlySwarmMob::CanConverse(const APlayerController* PC) const
     if (!bEnableCognition || !IsValid(PC) || !IsValid(PC->GetPawn()) || PC->GetWorld() != GetWorld()) return false;
     if (const auto* C = Cast<ACalmyCharacter>(PC->GetPawn()))
         if (C->Health <= 0 || C->Lifecycle != ECalmyPlayerLifecycleState::Controlled) return false;
-    if (FVector::DistSquared(PC->GetPawn()->GetActorLocation(), GetActorLocation()) > FMath::Square(400.f)) return false;
+    // Match perception range so spontaneous speech stays readable on approach.
+    if (FVector::DistSquared(PC->GetPawn()->GetActorLocation(), GetActorLocation()) > FMath::Square(650.f)) return false;
     FCollisionQueryParams Params(SCENE_QUERY_STAT(FlyTalk), true, this); Params.AddIgnoredActor(PC->GetPawn());
     FHitResult Hit;
     return !GetWorld()->LineTraceSingleByChannel(Hit, PC->GetPawn()->GetPawnViewLocation(), GetActorLocation(), ECC_Visibility, Params);
@@ -499,6 +610,28 @@ bool AFlySwarmMob::ReceiveUtterance(APlayerController* PC, EFlyUtterance Intent)
     Mind.AttentionPosition = PC->GetPawn()->GetActorLocation(); Mind.AttentionKey = Key;
     Activity = Mind.Activity; bMemoryDirty = true; ForceNetUpdate(); return true;
 }
+void AFlySwarmMob::PublishInscriptions()
+{
+    VisibleInscriptions.Reset();
+    VisibleInscriptions.Reserve(Mind.Inscriptions.Num());
+    for (const auto& Mark : Mind.Inscriptions)
+    {
+        FFlyInscriptionView& View = VisibleInscriptions.AddDefaulted_GetRef();
+        View.Id = Mark.Id; View.Kind = Mark.Kind; View.Location = Mark.Location; View.Echoes = Mark.Echoes;
+    }
+}
+bool AFlySwarmMob::ReceiveInscription(APlayerController* PC, EFlyMessageKind Kind)
+{
+    if (!HasAuthority() || uint8(Kind) > uint8(EFlyMessageKind::SeekContact) || !CanConverse(PC)) return false;
+    const double Now = GetWorld()->GetTimeSeconds();
+    if (const double* Previous = LastConversations.Find(PC)) if (Now - *Previous < 4.) return false;
+    LastConversations.Add(PC, Now);
+    bool Persistent; const FString Key = PersonKey(PC, Persistent);
+    const FVector MarkAt = PC->GetPawn()->GetActorLocation();
+    Speech = Mind.Inscribe(Key, Persistent, Kind, MarkAt); ++SpeechSerial; SpeechSeconds = 12.f; SilenceSeconds = 0.f;
+    Mind.AttentionPosition = MarkAt; Mind.AttentionKey = Key;
+    Activity = Mind.Activity; PublishInscriptions(); bMemoryDirty = true; ForceNetUpdate(); return !Speech.IsEmpty();
+}
 void AFlySwarmMob::UpdateCognition(float Dt)
 {
     Observations.Reset();
@@ -520,11 +653,19 @@ void AFlySwarmMob::UpdateCognition(float Dt)
     float NeuralAlarm = 0.f;
     for (const auto& Fly : Flies) NeuralAlarm += Fly.EscapeSeconds > 0.f ? 1.f : 0.f;
     NeuralAlarm /= FMath::Max(1, Flies.Num());
+    const EFlyActivity Previous = Mind.Activity;
     Mind.Step(Dt, Observations, NeuralAlarm); Activity = Mind.Activity; bMemoryDirty = true;
     SpeechSeconds -= Dt; SilenceSeconds += Dt;
     if (SpeechSeconds <= 0.f) Speech.Reset();
-    if (!Observations.IsEmpty() && SilenceSeconds >= 20.f)
-    { Speech = Mind.DescribeActivity(); ++SpeechSerial; SpeechSeconds = 10.f; SilenceSeconds = 0.f; }
+    // Announce activity changes immediately so presence is readable; repeats stay on the long cadence.
+    if (Activity != Previous)
+    {
+        Speech = Mind.DescribeActivity(); ++SpeechSerial; SpeechSeconds = 10.f; SilenceSeconds = 0.f;
+    }
+    else if (!Observations.IsEmpty() && SilenceSeconds >= 20.f)
+    {
+        Speech = Mind.DescribeActivity(); ++SpeechSerial; SpeechSeconds = 10.f; SilenceSeconds = 0.f;
+    }
     for (auto It = LastConversations.CreateIterator(); It; ++It) if (!It.Key().IsValid()) It.RemoveCurrent();
     SaveSeconds += Dt;
     if (SaveSeconds >= 30.f) { SaveSeconds = 0.f; if (!MemorySlot().IsEmpty()) SaveMemory(); }
@@ -535,11 +676,55 @@ bool AFlySwarmMob::IsOnShip(const FVector& Position) const
     const auto* Ocean = ShipOcean.Get();
     if (!Ocean || Ocean->DryHullStations.Num() < 2 || Ocean->DryHullVertical.Num() < 2)
         return FVector::DistSquared(Position, HomePosition) <= FMath::Square(FMath::Max(1.f, RoamRadius));
-    const FVector Local = Position - Ocean->DryHullOrigin;
+    const FVector Local = Ocean->WorldToDryHullLocal(Position);
     const double Beam = FCalmyDryHullProfile::Sample(Ocean->DryHullStations, Local.X);
     const double Bottom = Ocean->DryHullVertical[0].X, Top = Ocean->DryHullVertical.Last().X;
     if (Local.Z < Bottom + 30 || Local.Z > Top + 1100 || Beam < 80 || FMath::Abs(Local.Y) > Beam - 50) return false;
     return Local.Z >= Top - 30 || Ocean->IsInsideDryHull(Position);
+}
+bool AFlySwarmMob::FindDeckBelow(const FVector& Point, float& OutFloorZ) const
+{
+    if (!GetWorld() || Point.ContainsNaN()) return false;
+    FHitResult Hit;
+    FCollisionQueryParams Q(SCENE_QUERY_STAT(FlyDeck), false, this);
+    const FVector Start(Point.X, Point.Y, Point.Z + 150.f);
+    const FVector End(Point.X, Point.Y, Point.Z - 1400.f);
+    if (!GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Q) || !Hit.bBlockingHit) return false;
+    // Need a walkable deck/top surface, not a bulkhead.
+    if (Hit.ImpactNormal.Z < .65f) return false;
+    OutFloorZ = Hit.ImpactPoint.Z;
+    return true;
+}
+bool AFlySwarmMob::WantsDeckRest() const
+{
+    return bEnableCognition && Activity == EFlyActivity::Rest && ScatterSeconds <= 0.f;
+}
+void AFlySwarmMob::PinFlyAltitude(FFlyAgentState& Fly, int32 Index, bool bScatter) const
+{
+    (void)Index;
+    // Escape/scatter keep full 3D motor output.
+    if (bScatter || Fly.EscapeSeconds > 0.f) return;
+    float FloorZ = 0.f;
+    // Colony leader samples the deck once so individuals do not dive through grate holes
+    // onto a lower deck found under their own XY.
+    const FVector Sample = IsRoamingShip() ? GetActorLocation() : Fly.Position;
+    if (!FindDeckBelow(Sample, FloorZ)) return;
+    const bool OnDeck = WantsDeckRest();
+    // During Rest the colony sits on deck regardless of residual wing rates.
+    float TargetZ = FloorZ + (OnDeck ? WalkClearanceCm : FlightHeightCm);
+    // Reject absurd floor samples (openings that see a deck far below).
+    if (FMath::Abs(TargetZ - Fly.Position.Z) > FlightHeightCm + 80.f) return;
+    constexpr float MaxStepCm = 6.f;
+    float SoftZ = FMath::FInterpTo(Fly.Position.Z, TargetZ, .033f, 6.f);
+    SoftZ = FMath::Clamp(SoftZ, Fly.Position.Z - MaxStepCm, Fly.Position.Z + MaxStepCm);
+    FVector Next = Fly.Position;
+    Next.Z = SoftZ;
+    if (FMath::Abs(Next.Z - Fly.Position.Z) < .05f) return;
+    if (CanFlySegment(Fly.Position, Next, 3.f))
+    {
+        Fly.Position = Next;
+        Fly.Velocity.Z *= .15f;
+    }
 }
 bool AFlySwarmMob::CanFlySegment(const FVector& From, const FVector& To, float Radius) const
 {
@@ -555,47 +740,130 @@ void AFlySwarmMob::UpdateTravel(float Dt)
     Navigation.Visit(Center, Mind.LivedSeconds);
     if (Activity != PlannedActivity)
     {
-        Navigation.Path.Reset(); bPlanning = false; TravelWait = 0; PlannedActivity = Activity;
+        Navigation.Path.Reset(); bPlanning = false; bTravelPlanning = false; TravelWait = 0; PlannedActivity = Activity;
     }
-    if (Activity == EFlyActivity::Rest || ScatterSeconds > 0.f)
-    { Navigation.Path.Reset(); bPlanning = false; TravelTarget = Center; return; }
-    if (TravelWait > 0.f) return;
-    // Briefly stay available while being addressed. A threat overrides courtesy.
-    if (Activity != EFlyActivity::Withdraw && SpeechSeconds > 8.f && !Observations.IsEmpty()) return;
-    if (Navigation.Path.IsEmpty() && !bPlanning)
+    float FloorZ = Center.Z - FlightHeightCm;
+    const bool HaveFloor = FindDeckBelow(Center, FloorZ);
+    float AirZ = HaveFloor ? FloorZ + FlightHeightCm : Center.Z;
+    if (HaveFloor)
     {
-        FVector Desired = TravelRandom.VRand(); Desired.Z = FMath::Abs(Desired.Z) * .65f;
-        // Above the main deck, explore both higher and lower decks.
-        if (Center.Z > HomePosition.Z + 650.f) Desired.Z = TravelRandom.FRandRange(-.7f, .4f);
-        Desired.Normalize(); bool Directed = false;
-        if (!Mind.AttentionKey.IsEmpty())
+        float HomeFloor = 0.f;
+        // On the home deck keep the authored spawn band so HOLD corridors stay reachable.
+        if (FindDeckBelow(HomePosition, HomeFloor) && FMath::Abs(FloorZ - HomeFloor) < 50.f)
+            AirZ = FMath::Max(AirZ, HomePosition.Z);
+    }
+    const float ClimbZ = AirZ + 35.f;
+    const float RestZ = HaveFloor ? FloorZ + WalkClearanceCm : Center.Z;
+    if (Activity == EFlyActivity::Rest || ScatterSeconds > 0.f)
+    {
+        Navigation.Path.Reset(); bPlanning = false; bTravelPlanning = false; TravelTarget = Center;
+        if (HaveFloor && Activity == EFlyActivity::Rest)
         {
-            const FVector Away = (Center - Mind.AttentionPosition).GetSafeNormal();
-            if (Activity == EFlyActivity::Withdraw) { Desired = Center + Away * 900.f + FVector(0,0,120); Directed = true; }
-            else if (Activity == EFlyActivity::Socialize || Activity == EFlyActivity::Observe)
+            FVector Settled = Center;
+            Settled.Z = FMath::Clamp(FMath::FInterpTo(Center.Z, RestZ, Dt, 8.f), Center.Z - 6.f, Center.Z + 6.f);
+            if (CanFlySegment(Center, Settled, 18.f) && IsOnShip(Settled))
             {
-                Desired = Mind.AttentionPosition + Away * (Activity == EFlyActivity::Observe ? 260.f : 170.f) + FVector(0,0,60);
-                if (FVector::Dist(Center, Desired) < 75.f) { TravelTarget = Center; TravelWait = 1.f; return; }
-                Directed = true;
+                SetActorLocation(Settled);
+                ColonyVelocity = (Settled - Center) / Dt;
             }
         }
-        Navigation.Begin(Center, Desired, Directed, Mind.LivedSeconds); bPlanning = true;
+        return;
+    }
+    if (TravelWait > 0.f) return;
+    // Briefly stay available while being addressed. A threat overrides courtesy.
+    // Only E-wheel / swat replies should park the colony; activity announcements do not.
+    if (Activity != EFlyActivity::Withdraw && SpeechSeconds > 11.f && !Observations.IsEmpty()) return;
+    if (Navigation.Path.IsEmpty() && !bPlanning)
+    {
+        bool Directed = false, TowardMark = false, FleeMark = false;
+        // Hold station when already at observe/socialize standoff.
+        if (!Mind.AttentionKey.IsEmpty() && (Activity == EFlyActivity::Observe || Activity == EFlyActivity::Socialize))
+        {
+            const float Standoff = Activity == EFlyActivity::Observe ? 300.f : 140.f;
+            const float Hold = Activity == EFlyActivity::Observe ? 90.f : 55.f;
+            const FVector Away = (Center - Mind.AttentionPosition).GetSafeNormal();
+            const FVector HoldAt = Mind.AttentionPosition + Away * Standoff;
+            if (FVector::Dist(Center, HoldAt) < Hold)
+            { TravelTarget = Center; TravelWait = Activity == EFlyActivity::Observe ? 1.6f : .7f; return; }
+        }
+        const FVector Desired = ChooseTravelDesire(Center, AirZ, ClimbZ, Directed, TowardMark, FleeMark);
+        if (SilenceSeconds > 5.f)
+        {
+            Speech = Mind.DescribeTravelThought(true, TowardMark, FleeMark);
+            ++SpeechSerial; SpeechSeconds = 8.f; SilenceSeconds = 0.f;
+        }
+        // Incremental Advance is the visible “thinking”; do not stall travel with an extra wait.
+        Navigation.Begin(Center, Desired, Directed, Mind.LivedSeconds);
+        bPlanning = true; bTravelPlanning = true; ForceNetUpdate();
     }
     if (bPlanning)
     {
         if (!Navigation.Advance([this](const FVector& A, const FVector& B) { return CanFlySegment(A, B, 18.f); })) return;
-        bPlanning = false;
-        if (Navigation.Path.IsEmpty()) { TravelWait = 1.f; TravelTarget = Center; return; }
+        bPlanning = false; bTravelPlanning = false;
+        if (Navigation.Path.IsEmpty()) { TravelWait = 1.f; TravelTarget = Center; ForceNetUpdate(); return; }
         TravelTarget = Navigation.Path.Last();
+        if (SilenceSeconds > 4.f)
+        {
+            const bool TowardMark = Mind.InscriptionWelcome > .35f;
+            const bool FleeMark = Mind.InscriptionCaution > .35f && Activity != EFlyActivity::Socialize;
+            Speech = Mind.DescribeTravelThought(false, TowardMark, FleeMark);
+            ++SpeechSerial; SpeechSeconds = 9.f; SilenceSeconds = 0.f;
+        }
+        ForceNetUpdate();
     }
+    // Proven R6 motion: follow the path in 3D. Soft altitude is encoded in path goals,
+    // not a per-tick Z snap that can tunnel deck openings.
     const FVector Next = FMath::VInterpConstantTo(Center, Navigation.Path[0], Dt,
-        FMath::Clamp(ColonySpeed, 20.f, 250.f) * (Activity == EFlyActivity::Withdraw ? 1.65f : 1.f));
+        FMath::Clamp(ColonySpeed, 20.f, 250.f)
+            * (Activity == EFlyActivity::Withdraw ? 1.65f : Activity == EFlyActivity::Observe ? .55f : Activity == EFlyActivity::Socialize ? .85f : 1.f));
     if (!CanFlySegment(Center, Next, 18.f))
-    { Navigation.Path.Reset(); TravelWait = .4f; return; } // Closing door: stop, then search current geometry again.
+    { Navigation.Path.Reset(); TravelWait = .4f; bTravelPlanning = false; return; }
     SetActorLocation(Next); ColonyVelocity = (Next - Center) / Dt;
     if (TravelTrail.IsEmpty() || FVector::Dist(TravelTrail.Last(), Next) >= 20.f)
     { if (TravelTrail.Num() >= 96) TravelTrail.RemoveAt(0); TravelTrail.Add(Next); }
     if (FVector::DistSquared(Next, Navigation.Path[0]) < 1.f) Navigation.Path.RemoveAt(0);
+}
+FVector AFlySwarmMob::ChooseTravelDesire(const FVector& Center, float AirZ, float ClimbZ, bool& bDirected, bool& bTowardMark, bool& bFleeMark)
+{
+    bDirected = false; bTowardMark = false; bFleeMark = false;
+    if (!Mind.AttentionKey.IsEmpty())
+    {
+        const FVector Away = (Center - Mind.AttentionPosition).GetSafeNormal();
+        if (Activity == EFlyActivity::Withdraw)
+        {
+            bDirected = true;
+            FVector Desired = Center + Away * 900.f; Desired.Z = ClimbZ; return Desired;
+        }
+        if (Activity == EFlyActivity::Socialize || Activity == EFlyActivity::Observe)
+        {
+            const float Standoff = Activity == EFlyActivity::Observe ? 300.f : 140.f;
+            FVector Desired = Mind.AttentionPosition + Away * Standoff;
+            Desired.Z = AirZ; bDirected = true; return Desired;
+        }
+    }
+    // Proven R6 roam length; mind only nudges heading (marks / novelty), soft.
+    FVector Dir = TravelRandom.VRand(); Dir.Z = FMath::Abs(Dir.Z) * .65f;
+    if (Center.Z > HomePosition.Z + 650.f) Dir.Z = TravelRandom.FRandRange(-.7f, .4f);
+    Dir.Normalize();
+    FVector Nudge = FVector::ZeroVector;
+    for (const auto& Mark : Mind.Inscriptions)
+    {
+        const FVector To = Mark.Location - Center;
+        const float Dist = To.Size();
+        if (Dist < 1.f || Dist > 1400.f) continue;
+        const FVector N = To / Dist;
+        const float W = 1.f + Mark.Echoes * .25f;
+        if (Mark.Kind == EFlyMessageKind::BeWary && Mind.InscriptionCaution > .2f)
+        { Nudge -= N * (55.f * W * Mind.InscriptionCaution); bFleeMark = true; }
+        if ((Mark.Kind == EFlyMessageKind::SafeHere || Mark.Kind == EFlyMessageKind::SeekContact || Mark.Kind == EFlyMessageKind::PraiseColony)
+            && Mind.InscriptionWelcome > .2f)
+        { Nudge += N * (45.f * W * Mind.InscriptionWelcome); bTowardMark = true; }
+    }
+    if (const float* Seen = Navigation.LastVisit.Find(Navigation.Cell(Center + Dir * 900.f)))
+        if (Mind.LivedSeconds - *Seen < 40.f) Dir = (Dir + TravelRandom.VRand() * .35f).GetSafeNormal();
+    FVector Desired = Center + Dir * 900.f + Nudge.GetClampedToMaxSize(180.f);
+    Desired.Z = AirZ;
+    return Desired;
 }
 FString AFlySwarmMob::MemorySlot() const
 {
@@ -617,7 +885,7 @@ bool AFlySwarmMob::SaveMemory()
 {
     if (!HasAuthority() || !bEnableCognition || MemorySlot().IsEmpty()) return false;
     auto* Save = Cast<UFlyCognitionSave>(UGameplayStatics::CreateSaveGameObject(UFlyCognitionSave::StaticClass()));
-    Save->Mind = Mind; Save->Mind.Sanitize(true);
+    Save->Version = 2; Save->Mind = Mind; Save->Mind.Sanitize(true);
     const bool OK = UGameplayStatics::SaveGameToSlot(Save, MemorySlot(), 0);
     if (OK) bMemoryDirty = false;
     else UE_LOG(LogTemp, Warning, TEXT("Fly mind save failed: %s"), *MemorySlot());
@@ -627,6 +895,18 @@ bool AFlySwarmMob::LoadMemory()
 {
     if (!HasAuthority() || !bEnableCognition || MemorySlot().IsEmpty() || !UGameplayStatics::DoesSaveGameExist(MemorySlot(), 0)) return false;
     if (const auto* Save = Cast<UFlyCognitionSave>(UGameplayStatics::LoadGameFromSlot(MemorySlot(), 0)))
-        if (Save->Version == 1) { Mind = Save->Mind; Mind.Sanitize(true); return true; }
+        if (Save->Version >= 1 && Save->Version <= 2) { Mind = Save->Mind; Mind.Sanitize(true); PublishInscriptions(); return true; }
     UE_LOG(LogTemp, Warning, TEXT("Fly mind save could not be loaded: %s"), *MemorySlot()); return false;
+}
+void AFlySwarmMob::ApplyShipMotion(const FTransform& Delta)
+{
+    if (!HasAuthority() || Delta.Equals(FTransform::Identity, 0.05f)) return;
+    HomePosition = Delta.TransformPosition(HomePosition);
+    TravelTarget = Delta.TransformPosition(TravelTarget);
+    SetActorLocation(Delta.TransformPosition(GetActorLocation()), false, nullptr, ETeleportType::None);
+    for (FFlyAgentState& Fly : Flies) Fly.Position = Delta.TransformPosition(Fly.Position);
+    for (FFlySwarmPose& Pose : Poses) Pose.Position = Delta.TransformPosition(FVector(Pose.Position));
+    for (FVector& Point : TravelTrail) Point = Delta.TransformPosition(Point);
+    Navigation.Origin = HomePosition;
+    UpdateInstances();
 }

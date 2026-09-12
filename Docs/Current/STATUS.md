@@ -1,4 +1,20 @@
-# Текущее состояние — 2026-09-11
+# Текущее состояние — 2026-09-12
+
+**12 сентября — [HOLD 1 FPS mind](../Changes/FLY_MIND_FPS_HOLD1_2026-09-12.md).** Epic: mind 80.87 / NoBrain 75.48 FPS; SNN +~1.5 мс swarm_step, FPS упирается в render; vs S1 91.85 — game_ms↑ от стека после S1. DLL `D7D175ED…`.
+
+**12 сентября — [Fly think + roam](../Changes/FLY_THINK_TRAVEL_2026-09-12.md).** Думает вслух о пути + путешествует; FlyTravel/FlyMind PASS; DLL `D7D175ED…`.
+
+**12 сентября — [FlyWire parity A](../Changes/FLY_PARITY_A_2026-09-12.md).** Gates/gait/burst как desktop-fly на 668; FlyMind PASS; DLL `B6AA9C6D…`.
+
+**12 сентября — [FlyWire ← inscriptions](../Changes/FLY_WIRE_INSCRIPTIONS_2026-09-12.md).** Метки → loom/JO/ascending LIF; FlyMind PASS; DLL `5D622F47…`.
+
+**12 сентября — [Fly inscriptions](../Changes/FLY_INSCRIPTIONS_2026-09-12.md).** Общие метки Dark Souls на рое; echoes; сейв v2; FlyMind PASS; DLL `1F2F4DAB…`.
+
+**12 сентября — [Fly presence](../Changes/FLY_PRESENCE_2026-09-12.md).** Занятия видны: речь/HUD/темп Observe·Socialize·Rest; travel-pause только у E. FlyTravel+FlyMind PASS; Fly* 7/7; DLL `FC7F68A2…`.
+
+**12 сентября — [Ship drift + doors closed](../Changes/SHIP_DRIFT_DOORS_2026-09-12.md).** Двери закрыты на старте; freighter дрейфует от W1; 44/44; Door/Ship/Water/WaterInteraction/FlyTravel PASS; DLL `EB86E392…`.
+
+**12 сентября — [Fly deck height](../Changes/FLY_DECK_HEIGHT_2026-09-12.md).** Отдых у палубы, полёт ~1 м; коннектом 668/18968 без претензии на феноменальное сознание. FlyTravel+FlyMind PASS; Fly* 7/7; DLL `6AB74606…`.
 
 **11 сентября — [Tutorial progress save](../Changes/TUTORIAL_PROGRESS_SAVE_2026-09-11.md).** Прохождение сохраняется; повтор из меню рубки. 44/44; Tutorial+BridgeMenu PASS.
 

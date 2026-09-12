@@ -99,6 +99,9 @@ ACalmyCharacter::ACalmyCharacter(const FObjectInitializer& ObjectInitializer)
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
 	GetCharacterMovement()->MaxWalkSpeed = FCalmyMovementPolicy::MaxSpeedCentimetersPerSecond;
 	GetCharacterMovement()->bEnablePhysicsInteraction = false;
+	// Ride moving freighter decks without inheriting roll into the camera.
+	GetCharacterMovement()->bIgnoreBaseRotation = true;
+	GetCharacterMovement()->SetWalkableFloorAngle(50.f);
 	Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GreyboxBody"));
 	Body->SetupAttachment(GetRootComponent());
 	Body->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -286,7 +289,8 @@ FString ACalmyCharacter::GetInteractionHint() const
     if(FeedbackUntil>GetWorld()->GetTimeSeconds()) return GrabFeedbackText(LastGrabFeedback);
     if(HeldCargo) return HeldCargo->GetHandlingHint(this);
     if (const auto* PC=Cast<ACalmyPlayerController>(GetController()))
-        if (AFlySwarmMob::FindAimedSwarm(PC)) return TEXT("E - INTERACT WITH SWARM | LMB - SWAT");
+        if (const auto* AimedSwarm = AFlySwarmMob::FindAimedSwarm(PC))
+            return FString::Printf(TEXT("E - TALK  |  LMB - SWAT  |  %s"), *FFlyCognition::ActivityLabel(AimedSwarm->Activity));
     if (const auto* Misha=Cast<ACalmyCrewHelper>(FindMeleeTarget()))
         return Misha->Reaction.IsEmpty()?TEXT("MISHA | H - ASK FOR HELP | LMB - PUNCH"):Misha->Reaction;
     return GrabFeedbackText(GetGrabFeedback(FindGrabTarget()));

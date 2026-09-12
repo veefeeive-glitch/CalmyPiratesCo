@@ -1,4 +1,5 @@
 #include "Gameplay/CalmyOcean.h"
+#include "Gameplay/CalmyShipMotion.h"
 #include "Core/DryHullProfile.h"
 #include "ProceduralMeshComponent.h"
 #include "Components/PrimitiveComponent.h"
@@ -112,11 +113,12 @@ bool ACalmyOcean::IsOutsideSafetyArea(const FVector& P) const
     return P.ContainsNaN() || FVector2D(P - GetActorLocation()).SizeSquared() > FMath::Square(25000.f)
         || P.Z < GetActorLocation().Z - 1800.f;
 }
-void ACalmyOcean::ApplyBuoyancy(UPrimitiveComponent* Body, float LiftRatio) const
+void ACalmyOcean::ApplyBuoyancy(UPrimitiveComponent* Body, float LiftRatio, bool bIgnoreDryHull) const
 {
     // Clients forward-simulate the same forces for smooth rigid-body presentation;
     // replicated server body state remains authoritative (no client force RPC).
-    if (!Body || !Body->IsSimulatingPhysics() || IsInsideDryHull(Body->GetComponentLocation())) return;
+    if (!Body || !Body->IsSimulatingPhysics()) return;
+    if (!bIgnoreDryHull && IsInsideDryHull(Body->GetComponentLocation())) return;
     const float Mass = Body->GetMass();
     // Use scaled local bounds. Rotating a world AABB again inflated sample
     // spacing as a crate rolled, changing its buoyancy with yaw alone.
@@ -128,7 +130,7 @@ void ACalmyOcean::ApplyBuoyancy(UPrimitiveComponent* Body, float LiftRatio) cons
     for (float X : {-1.f, 1.f}) for (float Y : {-1.f, 1.f})
     {
         const FVector Point = Body->GetComponentLocation() + Transform.GetRotation().RotateVector(FVector(X*RX,Y*RY,0));
-        const float Wet = IsInsideDryHull(Point)?0.f:Immersion(HeightAt(Point) - Point.Z, Radius);
+        const float Wet = (!bIgnoreDryHull && IsInsideDryHull(Point))?0.f:Immersion(HeightAt(Point) - Point.Z, Radius);
         if (Wet <= 0) continue;
         const FVector V = Body->GetPhysicsLinearVelocityAtPoint(Point);
         const float WaterVZ=VerticalVelocityAt(Point);
@@ -178,7 +180,25 @@ void ACalmyOcean::BeginPlay()
 }
 bool ACalmyOcean::IsInsideDryHull(const FVector& Position) const
 {
-    return FCalmyDryHullProfile::Contains(Position-DryHullOrigin,DryHullStations,DryHullVertical);
+    return FCalmyDryHullProfile::Contains(WorldToDryHullLocal(Position),DryHullStations,DryHullVertical);
+}
+FVector ACalmyOcean::WorldToDryHullLocal(const FVector& Position) const
+{
+    if (const ACalmyShipMotion* Ship = ShipMotion.Get())
+    {
+        if (Ship->HasRestPose())
+        {
+            // World -> current ship local -> rest ship world -> rest dry-hull local.
+            const FVector InRest = Ship->GetRestTransform().TransformPosition(
+                Ship->GetActorTransform().InverseTransformPosition(Position));
+            return InRest - Ship->GetRestDryHullOrigin();
+        }
+    }
+    return Position - DryHullOrigin;
+}
+void ACalmyOcean::SetShipMotion(ACalmyShipMotion* Motion)
+{
+    ShipMotion = Motion;
 }
 void ACalmyOcean::UpdateSurface()
 {
