@@ -33,6 +33,17 @@ S1: [run_performance_review.ps1](run_performance_review.ps1) — изолиро�
 - [run_ship_r7_review.ps1](run_ship_r7_review.ps1), [run_bridge_menu_review.ps1](run_bridge_menu_review.ps1) — реальные GPU; локальный путь engine внутри требует адаптации на новом ПК.
 - `run_ocean_physics`, `test_*`, `verify_ocean_*`, `audit_*`, `recheck_*` — разные исторические стенды; сначала читать конкретный script и отчёт, не складывать PASS разных профилей.
 
+## Играбельность корабля (съёмка палуб, ходоки, прохождение, фото)
+
+- [run_ship_playability_ue.ps1](run_ship_playability_ue.ps1) — съёмка всех палуб R7 в игре капсулой игрока (NullRHI, все двери открыты): пол, связи, обрывы, варианты «без леера S2» и «без деталей S3», клетки использования каждой задачи. `-IgnoreRails` — голая палуба для пересборки леера. Сама ничего не меняет.
+- [analyze_ship_playability.py](analyze_ship_playability.py) — отчёт и карты палуб сверху по этой съёмке: достижимость от спавна, острова, обрывы, что закрыто леером.
+- [playability_routes.py](playability_routes.py) + `run_ship_traversal_ue.ps1 -Routes` — пути до каждой задачи по снятому полу и прогон настоящими ходоками. [playthrough_legs.py](playthrough_legs.py) — участки для прохождения.
+- [run_ship_traversal_ue.ps1](run_ship_traversal_ue.ps1) — исторические 332 маршрута и поиск незащищённых краёв; `-Routes` подменяет набор маршрутов, `-Label` фиксирует имя каталога.
+- `-CalmyPlaythroughProbe=<legs.json>` — прохождение реальным персонажем: вахта → трюм → заделать течь → ящик → сдача → заправка, двери открываются нажатием E, кадры на каждом шаге. Вердикт — строка `CALMY_PLAYTHROUGH PASS/FAIL`.
+- `-CalmyPhotoTour=doors|<shots.json>` + [playability_shots.py](playability_shots.py), [make_contact_sheets.py](make_contact_sheets.py) — фото дверей с обеих сторон, обрывов и задач с места игрока, контактные листы для просмотра.
+- [playability_to_falls.py](playability_to_falls.py), [combine_guardrail_falls.py](combine_guardrail_falls.py) — вход строителя леера из снятых кромок (диагональные кромки вроде штевня раскладываются на осевые); [export_r7_door_leaves_ue.py](export_r7_door_leaves_ue.py) — размеры и позы дверей для проверки просветов створок.
+- [import_polyhaven_ship_props.py](import_polyhaven_ship_props.py) / [place_ship_r7_props.py](place_ship_r7_props.py) — импорт CC0-моделей Poly Haven и их расстановка на карте (настенные без коллизии, напольные с коробкой, вне проходов). Карта сохраняется, бэкап в `SourceAssets/Backups/Before-PolyHavenProps-<дата>`.
+
 ## Авторинг персонажей
 
 [create_crew_r8.py](create_crew_r8.py) / [import_crew_r8.py](import_crew_r8.py) — последний candidate; R7/R6/R5/R4/R3 сохранены. `create_*` создаёт output, `import_*` пишет Content; **не setup и не read-only**. Защиту существующей папки не обходить. Import R8 не был выполнен, чистый shutdown не доказан.

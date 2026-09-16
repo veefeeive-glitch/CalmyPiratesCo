@@ -1,4 +1,38 @@
-# Текущее состояние — 2026-09-12
+# Текущее состояние — 2026-09-16
+
+**16 сентября — [полный аудит](../Changes/FULL_AUDIT_2026-09-16.md).** Editor-цикл PortHub→R7 играбелен (automation 61/61, playability PASS по артефактам). **Критично:** нет git remote, ~214 dirty entries (PortHub/S80–82/ThirdParty untracked). Package Share 12 сен устарел. Doc drift CrewR8 vs R6B. Не human fun gate.
+
+**15–16 сентября — [играбельность корабля](../Changes/SHIP_PLAYABILITY_REWORK_2026-09-15.md).** Съёмка палуб в игре (`UCalmyPlayabilityProbe`), ходоки до задач, прохождение персонажем PASS; задачи перенесены и подтверждены кадрами; леер пересобран по кромкам (Nanite, 0 регрессий маршрутов); двери 61/61 с обеих сторон; CC0-модели Poly Haven на борту. Automation 61/61; смоуки 21/21; документы PASS.
+
+**15 сентября — [служебные помещения S3](../Changes/SHIP_DETAILS_S3_2026-09-15.md).** CO2 room (твиндек МО), paint store и deck store (нос), 3 светильника; traversal 291/332 и 0/515, Door audit 61/61, смоуки PASS, automation 60/60, HUD 23 кадра; свет помещений 35%, рабочие лампы носа вынесены из кладовых; карта `c07ab955…`, DLL `c936591c…`.
+
+**15 сентября — [R7 deck details S3](../Changes/SHIP_DETAILS_S3_2026-09-15.md).** Бункеровка, вентиляторы трюмов, кницы/задрайки комингсов, комплект крыши мостика, плоты, забортные трапы (118 групп, Nanite); кормовой леер площадки у крыши мостика; traversal 291/332 и 0/515, Door audit 61/61, Ship/Door/Interior/Cargo/FlyTravel PASS, automation 60/60, HUD review 20 кадров без VSM-предупреждения; карта `165f1ff3…`.
+
+**14 сентября — [Heavy doors, audio, arrow, guardrails](../Changes/HEAVY_DOORS_AUDIO_ARROW_RAILS_2026-09-14.md).** Двери с весом и захватом, мировые звуки с затуханием/окклюзией, стрелка поломки в HUD, traversal-аудит в UE и леер S2 (падения 0/515, проходы 291/332, 0 регрессий), Door audit 61/61 по позе карты; Door/Ship/Interior/Cargo/FlyTravel/HUD review PASS; DLL `0018618f…`, карта `2d17f389…`.
+
+**13 сентября — материалы дверей ([аудит](../Changes/SUPER_AUDIT_2026-09-13.md)).** Нанит-флаг на проектной копии glTF-материала; предупреждений 0, Door PASS.
+
+**13 сентября — [Ship rider carry fix](../Changes/SHIP_RIDER_CARRY_FIX_2026-09-13.md).** Мухи, лежащий груз и Миша больше не смещаются относительно корпуса при крене; FlyTravel снова PASS. Все 21 сетевой suite PASS, automation 57/57. Предупреждения C4305 устранены.
+
+**13 сентября — [Remaining fixes](../Changes/REMAINING_FIXES_2026-09-13.md) + [Super audit](../Changes/SUPER_AUDIT_2026-09-13.md).** Settings/Melee/FlySwarm снова PASS, звук роя у клиентов, лимит 4 при одновременном входе, без урона по своим, контракт из каталога, automation не трогает настоящие настройки. 20/21 smoke PASS; FlyTravel — открытый дефект симуляции мух. Работа не закоммичена, remote нет.
+
+**13 сентября — [Cursor review fixes + R7 service spaces S1](../Changes/CURSOR_REVIEW_FIX_AND_SHIP_S1_2026-09-13.md).** Механика G4 после ревью: рестарт после топлива, фикстуры едут с кораблём, звук у клиентов, защёлки перехода. Tutorial снова PASS до PortHub. Корабль: цепной ящик, аварийный генератор, провизия, офис, фок-мачта, огни, марки и название. 56/56; 7 smoke PASS. DLL `c7604ba1…`.
+
+**13 сентября — [Audio voyage/atmosphere/combat](../Changes/AUDIO_VOYAGE_SFX_2026-09-13.md).** Procedural SFX + ambient beds (UI/voyage/doors/cargo/storm/leak/fuel/punch/flies). Automation **55/55**; Door/Bridge/Ship/Cargo/Carry/FlyTravel PASS; Melee wheel_hover FAIL (P1). DLL `F733684A…`. Не WAV banks / human listen.
+
+**13 сентября — [Voyage Loop G4](../Changes/VOYAGE_LOOP_G4_2026-09-13.md).** PortHub → mission board → OceanFreighterR7 (G3b) → RETURN TO PORT. Playability gate (menu/doors/live HOLD1). Automation **55/55**; Door/Bridge/Ship/Cargo/Carry/FlyTravel PASS; DLL `50876B80…`. Не fun gate / Steam / Chaos.
+
+**13 сентября — [Door visual V1](../Changes/DOOR_VISUAL_V1_2026-09-13.md).** 61 дверь: watertight leaf вместо синих кубов; закрытая посадка. 54/54; Door + Visual PASS; DLL `0F15C432…`.
+
+**13 сентября — [Voyage G3b + cargo HOLD 1](../Changes/VOYAGE_G3B_CARGO_HOLD_2026-09-13.md).** ~18 мин watch; 4 kind из HOLD 1; storm/leak/fuel; FlyTravel PASS (spread≤228). 54/54; DLL `C53C5189…`. Не порт, не fun gate.
+
+**13 сентября — [Regression sweep](../Changes/REGRESSION_SWEEP_2026-09-13.md) + [ship visual baseline](../Changes/SHIP_MODEL_FIX_2026-09-13.md).** 14 network PASS; Tutorial/Settings/Melee P1 backlog; R7-ART без reimport.
+
+**13 сентября — [Minimal HUD + wheelhouse screens H1](../Changes/HUD_MINIMAL_H1_2026-09-13.md).** Перегруженный текстовый HUD заменён минимальным; состояние вахты, течей, экипажа и моря на экранах ALARMS / CREW / WATCH / SEA в рубке; вкладка «Подсказки» в настройках. 54/54; HUD review PASS; smoke PASS. DLL `B3F5F9A0…`.
+
+**12 сентября — [Bridge menu visual M1](../Changes/BRIDGE_MENU_VISUAL_M1_2026-09-12.md).** Меню рубки не выцветшее, не под углом и не уезжает с пульта при качке: экран 94×40 см и камера прикреплены к кораблю, фиксированная экспозиция, без двоения при смене страниц, FOV под пропорции окна; hover не перехватывает строку при старте. 53/53; Visual PASS (solo 3 разрешения, клиент); smoke 3/3. DLL `AE6D1091…`.
+
+**12 сентября — [Replay training host-only](../Changes/REPLAY_HOST_ONLY_2026-09-12.md).** Удалён незащищённый `ServerReplayTutorial`; replay только у local host/solo, у клиента строка `(HOST)`. 53/53; BridgeMenu smoke 5/5 PASS после исправления гонки пробы на шаге 5 (re-baseline при входе игрока). DLL `A4DE1FF0…`. Packaged build всё ещё ломает `SetActorLabel` в VoyageDirector.
 
 **12 сентября — Stream merge on `main`.** Integration branch `cursor/stream-merge-2b40` merged into `main` @ `6c7335d` (docs tip follows): Stabilize fly+ship (`def928b`/`f39759c`) + Hero G1 + Voyage G3 + Sea G2 + Net G4. Build PASS; stream smoke VoyageCycle + Ship/Water/Bridge/Session/HandSockets/HandleGrips PASS; DLL `700A808B…`. Bridge keeps voyage BEGIN/NEW WATCH + CREW SESSION. PendingOtherStreams archived as superseded. No remote/push. Не fun gate.
 

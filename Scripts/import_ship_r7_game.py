@@ -68,10 +68,12 @@ for i,(x,y) in enumerate([(-2400,850),(-2550,850),(-2700,850),(-2850,850)]):
     p=actors.spawn_actor_from_class(unreal.PlayerStart,unreal.Vector(x,y,1155));p.set_editor_property('tags',[unreal.Name('P'+str(i))])
 npc=actors.spawn_actor_from_class(unreal.load_class(None,'/Script/CalmyPiratesCo.CalmyCrewHelper'),unreal.Vector(-2370,-820,1155),unreal.Rotator(yaw=0))
 npc.set_actor_label('R7_Misha_Waits_On_Opposite_Side_Deck')
-# Local deck task, not a full voyage. Keep primary circulation clear.
+# HOLD 1 stowage (floor), delivery stays on weather deck green zone.
+HOLD1=[(-1150,-420,320),(-950,-420,320),(-750,-420,320),(-550,-420,320)]
 for i,kind in enumerate([unreal.CalmyCargoKind.STANDARD,unreal.CalmyCargoKind.UNSTABLE,unreal.CalmyCargoKind.FRAGILE,unreal.CalmyCargoKind.BULKY]):
-    c=actors.spawn_actor_from_class(unreal.load_class(None,'/Script/CalmyPiratesCo.CalmyCargo'),unreal.Vector(-1900+i*230,-820,1120))
-    c.set_editor_property('cargo_id',i+1);c.set_editor_property('kind',kind);c.set_actor_label('R7_DeckTask_Cargo_'+str(i+1))
+    x,y,z=HOLD1[i]
+    c=actors.spawn_actor_from_class(unreal.load_class(None,'/Script/CalmyPiratesCo.CalmyCargo'),unreal.Vector(x,y,z))
+    c.set_editor_property('cargo_id',i+1);c.set_editor_property('kind',kind);c.set_actor_label('R7_Hold1_Cargo_'+str(i+1))
 shift=actors.spawn_actor_from_class(unreal.load_class(None,'/Script/CalmyPiratesCo.CalmyShift'),unreal.Vector(0,-830,1130))
 shift.delivery_zone.set_box_extent(unreal.Vector(250,90,140));shift.set_actor_label('R7_DeckTask_Delivery')
 mark=actors.spawn_actor_from_class(unreal.StaticMeshActor,unreal.Vector(0,-830,1060))

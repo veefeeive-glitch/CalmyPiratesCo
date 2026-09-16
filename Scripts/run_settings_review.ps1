@@ -5,7 +5,7 @@ $label='Settings-S1-'+(Get-Date -Format 'yyyyMMdd-HHmmss')
 $evidencePath=Join-Path $projectRoot ('Saved/Verification/'+$label)
 New-Item -ItemType Directory -Path $evidencePath | Out-Null
 $log=Join-Path $evidencePath 'Visual.log'
-$argsList=@(('"'+$projectRoot+'/CalmyPiratesCo.uproject"'),'/Game/Maps/OceanFreighterR7','-game','-unattended','-DisablePython','-windowed',"-ResX=$Width","-ResY=$Height",'-CalmySettingsProbe=Visual',"-CalmyReviewDir=$label",('-abslog="'+$log+'"'),'-ini:EditorPerProjectUserSettings:[/Script/ModelContextProtocolEngine.ModelContextProtocolSettings]:bAutoStartServer=False')
+$argsList=@(('"'+$projectRoot+'/CalmyPiratesCo.uproject"'),'/Game/Maps/OceanFreighterR7','-game','-unattended','-DisablePython','-windowed',"-ResX=$Width","-ResY=$Height",'-CalmySettingsProbe=Visual',"-CalmyReviewDir=$label",('-UserDir="'+(Join-Path $evidencePath 'Profile')+'/"'),('-abslog="'+$log+'"'),'-ini:EditorPerProjectUserSettings:[/Script/ModelContextProtocolEngine.ModelContextProtocolSettings]:bAutoStartServer=False')
 $testProcess=Start-Process 'E:/Games/UE_5.8/Engine/Binaries/Win64/UnrealEditor.exe' -ArgumentList $argsList -WindowStyle Hidden -PassThru
 Write-Output "Evidence: $evidencePath"
 try {

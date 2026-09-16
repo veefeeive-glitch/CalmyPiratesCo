@@ -7,7 +7,7 @@ param(
     [ValidateSet('None','Lag100','Lossy')][string]$NetProfile = 'None',
     [string]$PackagedExe,
     [switch]$FlyPlaced,
-    [ValidateSet('WaterLab','OceanFreighterR7')][string]$FlyMap = 'WaterLab'
+    [ValidateSet('WaterLab','OceanFreighterR7')][string]$FlyMap = 'OceanFreighterR7'  # the gameplay colony (FlyR2_Gameplay) lives only in HOLD 1 of the ship
 )
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
@@ -48,7 +48,8 @@ elseif ($NetProfile -eq 'Lossy') { $common += @('-PktLag=200', '-PktLoss=2', '-P
 function Start-Probe([string]$Role, [string]$Map) {
     $prefixArgs = if ($PackagedExe) { @($Map) } else { @('"' + $project + '"', $Map) }
     $probeArgs = @($prefixArgs) + $common + @("-$probeOption=$Role", "-port=$Port", ('-abslog="' + (Join-Path $evidence "$Role.log") + '"'))
-    if($PackagedExe){$probeArgs+=('-UserDir="'+(Join-Path $evidence ($Role+'-Profile'))+'/"')}
+    # Settings writes GameUserSettings/preferences; UE 5.8 re-resolves that ini on every save, so isolate the whole user dir.
+    if($PackagedExe -or $Suite -eq 'Settings'){$probeArgs+=('-UserDir="'+(Join-Path $evidence ($Role+'-Profile'))+'/"')}
     $proc = Start-Process -FilePath $Editor -ArgumentList $probeArgs -PassThru -WindowStyle Hidden
     $processes.Add($proc)
     return $proc

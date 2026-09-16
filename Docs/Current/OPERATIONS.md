@@ -27,7 +27,7 @@ Play по умолчанию **WaterLab: обучение → корабль**. 
 
 ## Игровые карты и проверки
 
-Runtime герои **CrewR6B**, не R8. BridgeMenu entry/resume исправлен в R2 и повторно проверен после Tutorial T1 travel; это не законченный рейс или проверка другого устройства. Ship/Door fixtures намеренно стартуют на weather deck. Обычная WaterLab теперь туториал; для прежней свободной лаборатории добавить движку `-CalmyLab`. Существующие test-probe флаги также отключают tutorial, кроме CalmyTutorialProbe.
+Runtime герои **CrewR8** (`/Game/Characters/CrewR8`, [runtime](../Changes/CREW_R8_RUNTIME_2026-09-11.md)); R6B сохранён как предыдущая версия. BridgeMenu entry/resume исправлен в R2 и повторно проверен после Tutorial T1 travel; это не законченный рейс или проверка другого устройства. Ship/Door fixtures намеренно стартуют на weather deck. Обычная WaterLab теперь туториал; для прежней свободной лаборатории добавить движку `-CalmyLab`. Существующие test-probe флаги также отключают tutorial, кроме CalmyTutorialProbe.
 
 Старые `start_game.ps1` / `start_dev.ps1` / `Open-OceanFreighter.ps1` сохранены с локальными путями. Для сети: `run_network_smoke.ps1 -Suite Character -Editor <полный путь UnrealEditor.exe> -Port 17777`, аналогично Helper/Ship/Water/Pause. Loopback, уникальные порты, без firewall changes. GPU runners местами hardcode engine path, проверять перед запуском.
 

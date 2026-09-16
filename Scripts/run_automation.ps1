@@ -2,7 +2,9 @@ param([string]$Editor = 'E:\Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $log = Join-Path $projectRoot ('Saved\Logs\Automation-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '.log')
-& $Editor (Join-Path $projectRoot 'CalmyPiratesCo.uproject') -unattended -nop4 -NullRHI -NoSound `
+# Tests persist tutorial/contract/preferences through GGameUserSettingsIni; keep them out of the player's real settings.
+$userDir = Join-Path $projectRoot ('Saved\Verification\Automation-Profile-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
+& $Editor (Join-Path $projectRoot 'CalmyPiratesCo.uproject') -unattended -nop4 -NullRHI -NoSound "-UserDir=$userDir/" `
     '-ExecCmds=Automation RunTests CalmyPiratesCo' '-TestExit=Automation Test Queue Empty' "-abslog=$log" `
     '-ini:EditorPerProjectUserSettings:[/Script/ModelContextProtocolEngine.ModelContextProtocolSettings]:bAutoStartServer=False' | Out-Null
 $code = $LASTEXITCODE

@@ -1,6 +1,16 @@
 # Судно — R7-Cargo-C06
 
+**15–16 сентября — [переработка играбельности](../Changes/SHIP_PLAYABILITY_REWORK_2026-09-15.md).** Съёмка всех палуб в игре капсулой игрока (`Scripts/run_ship_playability_ue.ps1`) вместо проверки по старым маршрутам: достижимость от точек спавна, обрывы, места, закрытые леером или деталями, и клетки, откуда каждая задача выполнима. Задачи перенесены на осмысленные места (клапан течи — переборка трюма 1, вода у льяльного колодца; топливо — бункеровочная станция S3; метки маршрута на полу). Леер S2 пересобран по снятым кромкам голой палубы. CC0-модели Poly Haven (огнетушители, спасательные круги, светильники, щиты, бочки, знак у затопленного трюма) — `Scripts/place_ship_r7_props.py`.
+
+**14 сентября — [референс для детализации](SHIP_REFERENCE_DETAILING.md) и [аудит проходимости в игре](../Changes/HEAVY_DOORS_AUDIO_ARROW_RAILS_2026-09-14.md).** Прототип: Damen Combi Freighter 11000 (MV Franziska) и публичные чертежи HAER. `Scripts/run_ship_traversal_ue.ps1` проходит 332 маршрута капсулами на движущемся корабле и ищет незащищённые края; леера S2 (`SM_R7_81_GUARDRAILS`) закрывают найденные края.
+
+**13 сентября — [Voyage Loop G4](../Changes/VOYAGE_LOOP_G4_2026-09-13.md).** Новая карта PortHub (причал + доска); OceanFreighterR7 — морская нога цикла. Route marks/lights HOLD1↔green zone runtime. Door V2 seating (seal/floor/hinge).
+
+**13 сентября — [Voyage G3b + cargo HOLD 1](../Changes/VOYAGE_G3B_CARGO_HOLD_2026-09-13.md).** Четыре `ACalmyCargo` в HOLD 1 `(-1150…-550, -420, 320)`; delivery остаётся на weather deck. Backup `Before-CargoHold1-20260913`. Visual baseline 7 PNG; R7-ART-01/02 открыты без reimport.
+
 **12 сентября — [G2 storm / proxy / helm](../Changes/SHIP_G2_STORM_PROXY_HELM_2026-09-12.md).** `StormIntensity` на океане; `StormBoost`+helm+boarding ramp на `ACalmyShipMotion`; отдельный `ACalmyHullProxy` (mass/COM/buoyancy). 52/52 automation; Ship/Water PASS; DLL `0128BC98…`. Не Chaos R7 / не fun gate. WaterLab proxy install отложен (занятый Editor).
+
+**13 сентября — [Door visual V1](../Changes/DOOR_VISUAL_V1_2026-09-13.md).** 61 полотно = `SM_WatertightDoor` (не engine Cube); закрытая посадка oversize/embed. Door/Visual PASS; DLL `0F15C432…`.
 
 **12 сентября — [Ship drift + doors closed](../Changes/SHIP_DRIFT_DOORS_2026-09-12.md).** Двери стартуют закрытыми. `ShipMotion_R7` кинематически следует водному полю W1 (heave/heel/drift с лимитами); 72 mesh/door attached; dry-hull queries в rest-frame. Корабль больше не абсолютно статичен; полный Chaos на всём меше не заявлен. Door/Ship/Water/FlyTravel PASS; DLL `EB86E392…`.
 

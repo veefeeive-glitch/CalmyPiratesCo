@@ -8,7 +8,9 @@
 
 Актуальный реестр на основе локальных файлов и прежней provenance-записи. [Статус](STATUS.md). В проходе R3 ниже интернет использован для референсов; новые внешние модели не скачивались и не покупались. Лицензии старой библиотеки целиком заново не аудировались.
 
-## Актуальные персонажи — Crew R6B
+## Актуальные персонажи — Crew R8
+
+В runtime — **Crew R8**: `ACalmyCrewPresentation` собирает 10 частей Deckhand/Миши из `/Game/Characters/CrewR8` ([импорт](../Changes/CREW_R8_IMPORT_2026-09-11.md), [runtime](../Changes/CREW_R8_RUNTIME_2026-09-11.md)); проверка ассетов — automation `CrewLowPolyTests`. Ниже — предыдущая версия R6B, сохранена.
 
 [Crew R6, 8 сентября](../Changes/CREW_R6_2026-09-08.md): собственные Deckhand 4802 / Миша 4882 triangles, 20 GLB, master `SourceAssets/Generated/CrewR6B/Crew_R6.blend`, импорт `/Game/Characters/CrewR6B`. Два прохода геометрии, новые материалы рабочей одежды/каски/перчаток, сохранён физический контракт 10 частей. R5 и первый кандидат R6 сохранены. Внешних ассетов/анимаций нет. `SourceAssets/References/CrewR6/CONCEPT-not-gameplay.png` — imagegen-референс, не runtime. Ограничения: жёсткие стыки, однородная ткань, недостаточная читаемость в сумраке.
 
@@ -92,6 +94,11 @@ R3 — исторический этап; текущий статус R7 нах�
 - License: CC0 — https://polyhaven.com/license
 - Local source: `SourceAssets/ThirdParty/PolyHaven`.
 - Imported subset: deck base-colour/DirectX-normal/ARM maps and the textured barrel model.
+
+**2026-09-15 — ship props for the playability rework** (разрешение пользователя на загрузку получено в сессии):
+- Assets (glTF 1K): [Lifebuoy](https://polyhaven.com/a/lifebuoy), [Korean Fire Extinguisher 01](https://polyhaven.com/a/korean_fire_extinguisher_01), [Fire Alarm](https://polyhaven.com/a/fire_alarm), [Industrial Caged Sconce](https://polyhaven.com/a/industrial_caged_sconce), [Modular Industrial Pipes 01](https://polyhaven.com/a/modular_industrial_pipes_01), [Power Box 01](https://polyhaven.com/a/power_box_01), [Barrel 01](https://polyhaven.com/a/Barrel_01), [Wet Floor Sign 01](https://polyhaven.com/a/WetFloorSign_01).
+- License: CC0; authors, byte sizes and SHA-256 of all 50 files: `SourceAssets/ThirdParty/PolyHaven/LICENSE-PROVENANCE-2026-09-15.md`, `MANIFEST-2026-09-15.json`.
+- Import: `Scripts/import_polyhaven_ship_props.py` → `/Game/ThirdParty/PolyHaven/<asset>`; wall/ceiling fittings without collision, floor props with a simple box.
 
 ## ambientCG
 

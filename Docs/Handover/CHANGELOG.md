@@ -1,5 +1,73 @@
 # Журнал продолжения проекта
 
+## 2026-09-16 — Full project audit
+
+[Отчёт](../Changes/FULL_AUDIT_2026-09-16.md): срез после playability/S3/heavy doors/voyage; automation 61/61; критично — 0 remotes + untracked Content; package Share 12 сен устарел; CrewR8 doc drift.
+
+## 2026-09-15/16 — Ship playability rework
+
+[Отчёт](../Changes/SHIP_PLAYABILITY_REWORK_2026-09-15.md): `UCalmyPlayabilityProbe` + `analyze_ship_playability.py` (сетка пола всех палуб, обрывы, что закрыто леером/деталями, клетки использования задач), `playability_routes.py` + `run_ship_traversal_ue.ps1 -Routes`, `UCalmyPlaythroughProbe` (вахта → течь → груз → сдача → заправка, двери открываются по E), `UCalmyPhotoTourProbe` + `playability_shots.py`/`make_contact_sheets.py`; места задач вынесены в `ACalmyVoyageDirector::LeakValveLocal/LeakPoolLocal/FuelStationLocal/DeliveryLocal` и закреплены тестом `CalmyPiratesCo.Ship.ActivityAnchors`; вода течи разливается по танктопу трюма; насос скрыт за станцией S3, лампа приглушена; леер S2 пересобран из снятых кромок и переведён на Nanite; CC0-модели Poly Haven (`import_polyhaven_ship_props.py`, `place_ship_r7_props.py`).
+
+## 2026-09-15 — R7 service rooms (CO2, paint store, deck store)
+
+[Отчёт](../Changes/SHIP_DETAILS_S3_2026-09-15.md): `build_ship_r7_details.py` — `room()` и три помещения, проверенные против отрезков маршрутов и дуг дверей 15 и 28/29; `install_ship_r7_details.py` — светильники `S3_Light_*` (35% от `Nightwatch_Service_Fill`); `CalmyHudReviewProbe` — кадры 21–23, стадии 70…97, тайм-аут 205 с.
+
+## 2026-09-15 — R7 deck details S3
+
+[Отчёт](../Changes/SHIP_DETAILS_S3_2026-09-15.md): `Scripts/build_ship_r7_details.py` (проверка объёмов против мастера, S1, S2, собственных групп и проёмов входов в трюмы) и `Scripts/install_ship_r7_details.py` (Nanite, usage на проектных инстансах); леер S2 пересобран с отчётом `ShipTraversal-UE-20260915-113439`; `CalmyShipProbe` — 13 мешей и `SM_R7_82_DETAILS`; `CalmyHudReviewProbe` — кадры 16–20, стадии 70…91, тайм-аут 185 с. Справка `SHIP_REFERENCE_DETAILING.md`: отмечено уже существующее оборудование и пункты 1, 6, 11, 13, 14, 15.
+
+## 2026-09-14 — Heavy doors, positional audio, breakdown arrow, R7 guardrails
+
+[Отчёт](../Changes/HEAVY_DOORS_AUDIO_ARROW_RAILS_2026-09-14.md): `FCalmyDoorMotion` + `ACalmyDoor` (Grab/Drag/AutoTarget, Blocked, импакты по счётчику), RPC `ServerDoorGrab`/`ServerDoorDrag`; `FCalmyAudio::PlayAt` с `MakeAttenuation` (радиусы по звуку, окклюзия); `FCalmyBreakdownCompass` + стрелка в HUD (кадр 13); `UCalmyTraversalProbe` / `run_ship_traversal_ue.ps1`; `build_ship_r7_guardrails.py` (дуги створок по реальной ширине, фальшборт на кронштейнах) и `install_ship_r7_guardrails.py`; `limit_r7_landing_door_swing.py` (90°, 58/59 в корму); Door audit проверяет позу карты (`DOOR_SWING`, `map_pose_clear`). Справка по прототипу: `Docs/Current/SHIP_REFERENCE_DETAILING.md`.
+
+## 2026-09-13 — Door material Nanite usage
+
+[Аудит, находка 11](../Changes/SUPER_AUDIT_2026-09-13.md): `Scripts/fix_door_material_nanite_usage.py`, `/Game/Art/FreighterInterior/Materials/MI_Gltf_Default_Opaque_DS_Nanite` → `M_Gltf_Default_Nanite`; движковый `M_Default` пересохранён с исходным флагом `False`. HUD review 0 предупреждений, Door smoke/Visual PASS.
+
+## 2026-09-13 — Ship rider carry fix
+
+[Отчёт](../Changes/SHIP_RIDER_CARRY_FIX_2026-09-13.md): `ACalmyShipMotion::ConsumeRiderDelta` (накопление, `Last.Inverse() * Current`), `Cargo * Delta`, рой без порога, шаг отставшей мухи вдоль следа, проба FlyTravel в системе корабля; automation `Ship.RidersKeepSmallMotion`. FlyTravel ×3, Ship, Cargo, Helper, Carry, Melee, FlyMind, Shift, Leak, Tutorial, BridgeMenu, FlySwarm PASS; 57/57.
+
+## 2026-09-13 — Remaining fixes + super audit
+
+[Исправления](../Changes/REMAINING_FIXES_2026-09-13.md) и [аудит](../Changes/SUPER_AUDIT_2026-09-13.md): Settings smoke изолирован `-UserDir` (UE 5.8 пересчитывает `GGameUserSettingsIni` в `SaveSettings`), Melee под восьмисекторное колесо, `SwatAudioAt`/`VoiceAudioAt`, `FCalmySession::SeatsTakenAtPreLogin`, `FCalmyMeleePolicy`, свет S1, `LoadAccepted` из каталога, `run_automation.ps1 -UserDir`, FlySwarm клиент/карта. 56/56; все suite кроме FlyTravel PASS.
+
+## 2026-09-13 — Cursor review fixes + R7 service spaces S1
+
+[Отчёт](../Changes/CURSOR_REVIEW_FIX_AND_SHIP_S1_2026-09-13.md): 12 исправлений по ревью Voyage G4, регрессия Tutorial (коммит `9ab78a4`), недостающие помещения R7 через `build_ship_r7_service_spaces.py` / `install_ship_r7_service_spaces.py` с бэкапом карты. 56/56; Tutorial, Shift, Leak, Ship, Door, Carry, BridgeMenu PASS; HUD review 12 кадров. Master `8b4fe72d…` не изменён.
+
+## 2026-09-13 — Audio voyage / atmosphere / combat SFX
+
+[Отчёт](../Changes/AUDIO_VOYAGE_SFX_2026-09-13.md): procedural `FCalmyAudio` + `ACalmyAmbientBeds`; UI/voyage/doors/cargo/storm/leak/fuel/punch/flies. 55/55; Door/Bridge/Ship/Cargo/Carry/FlyTravel PASS; Melee P1 FAIL; DLL `F733684A…`.
+
+## 2026-09-13 — Voyage Loop G4 (порт → миссия → море → порт)
+
+[Отчёт](../Changes/VOYAGE_LOOP_G4_2026-09-13.md): PortHub + MissionBoard + contract → R7 G3b watch → RETURN TO PORT; menu/doors/live HOLD1 gate; 55/55; smoke PASS; DLL `50876B80…`.
+
+## 2026-09-13 — Door visual V1 (watertight)
+
+[Отчёт](../Changes/DOOR_VISUAL_V1_2026-09-13.md): 61 дверь на `SM_WatertightDoor`; закрытая посадка; 54/54; Door + Visual PASS; DLL `0F15C432…`.
+
+## 2026-09-13 — Voyage G3b + cargo HOLD 1
+
+[Отчёт](../Changes/VOYAGE_G3B_CARGO_HOLD_2026-09-13.md): длинный watch ~18 мин, 4 груза из трюма, storm/leak/fuel; FlyTravel P0; 54/54; Ship/Door/Cargo/Carry/Bridge/FlyTravel PASS; DLL `C53C5189…`.
+
+## 2026-09-13 — Regression sweep + ship visual baseline
+
+[REGRESSION](../Changes/REGRESSION_SWEEP_2026-09-13.md) / [SHIP_MODEL](../Changes/SHIP_MODEL_FIX_2026-09-13.md): 14 network PASS; 4 P1 FAIL; baseline 7 PNG.
+
+## 2026-09-13 — Minimal HUD + wheelhouse screens H1
+
+[Отчёт](../Changes/HUD_MINIMAL_H1_2026-09-13.md): минимальный HUD с раскладкой без наложений и автотестом, четыре экрана рубки на пультах корабля, вкладка настроек «Подсказки», проба `-CalmyHudReview`. 54/54; HUD review PASS (ship 1920×1080, ship 4:3, WaterLab); BridgeMenu smoke PASS. DLL `B3F5F9A0…`.
+
+## 2026-09-12 — Bridge menu visual M1
+
+[Отчёт](../Changes/BRIDGE_MENU_VISUAL_M1_2026-09-12.md): геометрия и камера меню рубки в системе корабля, post-process и camera cut, FOV под пропорции окна, раскладка и шрифт, hover по реальному движению курсора; проба: обход страниц, логи клика, учёт недавнего входа, стоячесть в системе корабля с порогом 25 см. 53/53; Visual PASS solo 1920×1080 / 21:9 / 4:3 и клиент; BridgeMenu smoke 3/3. DLL `AE6D1091…`.
+
+## 2026-09-12 — Replay training host-only
+
+[Отчёт](../Changes/REPLAY_HOST_ONLY_2026-09-12.md): удалён server RPC `ServerReplayTutorial` (любой клиент мог сделать `ServerTravel` всей сессии), политика `CanRequestSessionTravel` + automation, шаг в BridgeMenu probe. 53/53; BridgeMenu smoke 5/5 PASS после исправления гонки пробы (`menu_teleported_pawn` при входе клиента → REBASE). `Scripts/__pycache__` убран из Git. DLL `A4DE1FF0…`. INVENTORY не обновлён: нужен PowerShell 7.
+
 ## 2026-09-12 — Stream merge (Hero+Voyage+Sea+Net → main)
 
 Интеграция параллельных потоков в `main` @ `6c7335d` через `cursor/stream-merge-2b40`. Build PASS; focused smoke PASS (VoyageCycle, Ship.*, StormScale, Bridge, SessionLanHelpers, HandSockets, HandleGrips). DLL `700A808B…`. PendingOtherStreams → `Saved/PendingOtherStreams/Archive-20260912-superseded`. Releases ZIP 2026-09-12 не трогали. Не fun gate.

@@ -1,5 +1,12 @@
 # Проверки и границы доказательств
 
+**15–16 сентября — [играбельность корабля](../Changes/SHIP_PLAYABILITY_REWORK_2026-09-15.md).** Новые доказательства с точки зрения игрока, а не по историческим маршрутам:
+- `UCalmyPlayabilityProbe` (`Scripts/run_ship_playability_ue.ps1`, `-IgnoreRails` для голой палубы) — сетка пола 25 см по всем палубам на реальной коллизии, капсула игрока (радиус 32, рост 176, шаг 45), связи свипами, обрывы, варианты «без леера S2» и «без деталей S3», клетки использования каждой задачи (дистанция + видимость); `Scripts/analyze_ship_playability.py` — достижимость, острова, карты палуб.
+- `Scripts/playability_routes.py` + `run_ship_traversal_ue.ps1 -Routes` — настоящие ходоки CharacterMovement по снятым путям до каждой задачи.
+- `UCalmyPlaythroughProbe` (`Scripts/playthrough_legs.py`) — прохождение реальным персонажем его же командами: вахта → трюм → заделать течь → взять ящик → сдать → заправиться, с открытием дверей по пути и кадрами на каждом шаге.
+- `UCalmyPhotoTourProbe` + `Scripts/playability_shots.py`, `make_contact_sheets.py` — фото каждой двери с обеих сторон, обрывов, заблокированных мест и задач с места игрока.
+- Границы: съёмка описывает пол и проходы, а не бой, физику груза в движении и сетевые расхождения; «использовать задачу» проверяется по дистанции и прямой видимости, сам успех действия подтверждает прохождение и smoke-наборы.
+
 **11 сентября — [Crew R8 runtime](../Changes/CREW_R8_RUNTIME_2026-09-11.md).** Automation 42/42; Character `20260911-195105-Character` PASS (joint 0.09); Helper PASS; DLL `fbe951fa…`.
 
 **11 сентября — [Crew R8 import](../Changes/CREW_R8_IMPORT_2026-09-11.md).** Import PASS (assets); первая Character FAIL на recovery — закрыта runtime-этапом.
