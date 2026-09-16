@@ -1,0 +1,357 @@
+{
+ "downloaded": "2026-09-15",
+ "license": "CC0 1.0 https://polyhaven.com/license",
+ "source": "https://polyhaven.com",
+ "files": [
+  {
+   "asset": "lifebuoy",
+   "file": "lifebuoy/lifebuoy_1k.gltf",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/lifebuoy/lifebuoy_1k.gltf",
+   "bytes": 2724,
+   "sha256": "d9c76a8f2471249f314b3efcffe0d3956ba2d3f0b8ba528cc0f2b861561580f3"
+  },
+  {
+   "asset": "lifebuoy",
+   "file": "lifebuoy/textures/lifebuoy_nor_gl_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/lifebuoy/lifebuoy_nor_gl_1k.jpg",
+   "bytes": 907524,
+   "sha256": "df02aca2cca3aa87daa0f1d4cd5fa2584d60ecea85672517fa334aea725dbf23"
+  },
+  {
+   "asset": "lifebuoy",
+   "file": "lifebuoy/textures/lifebuoy_diff_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/lifebuoy/lifebuoy_diff_1k.jpg",
+   "bytes": 841106,
+   "sha256": "f0095beca9e97996692ffdab3d3ace3fae64a3c3adf5c8eff71172add4e4cb2e"
+  },
+  {
+   "asset": "lifebuoy",
+   "file": "lifebuoy/textures/lifebuoy_arm_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/lifebuoy/lifebuoy_arm_1k.jpg",
+   "bytes": 614864,
+   "sha256": "fe33182e45c2b1049195641a8081ab22e90e520b2c0dafa9cce568a53af7a207"
+  },
+  {
+   "asset": "lifebuoy",
+   "file": "lifebuoy/lifebuoy.bin",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/lifebuoy/lifebuoy.bin",
+   "bytes": 255280,
+   "sha256": "aa45c8d43ee11e12a4ab9f46bfb06d1baa6c687d61776ad9b06ea6b5664c0bc2"
+  },
+  {
+   "asset": "korean_fire_extinguisher_01",
+   "file": "korean_fire_extinguisher_01/korean_fire_extinguisher_01_1k.gltf",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/korean_fire_extinguisher_01/korean_fire_extinguisher_01_1k.gltf",
+   "bytes": 7450,
+   "sha256": "565f9e41909165c2bead24b722746e29ba55e8eb5e541f61fe0d1ef7e66d2ecf"
+  },
+  {
+   "asset": "korean_fire_extinguisher_01",
+   "file": "korean_fire_extinguisher_01/textures/korean_fire_extinguisher_01_paper_nor_gl_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/korean_fire_extinguisher_01/korean_fire_extinguisher_01_paper_nor_gl_1k.jpg",
+   "bytes": 267306,
+   "sha256": "caaa26dd438e827e994c69605091d58ecc6a152813ece776cc561e0b24a8433a"
+  },
+  {
+   "asset": "korean_fire_extinguisher_01",
+   "file": "korean_fire_extinguisher_01/textures/korean_fire_extinguisher_01_paper_diff_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/korean_fire_extinguisher_01/korean_fire_extinguisher_01_paper_diff_1k.jpg",
+   "bytes": 161849,
+   "sha256": "2d56948aa72a9bad6133db3e6b17fa0df1a56cdf25db4b7e21e6ceb21999a038"
+  },
+  {
+   "asset": "korean_fire_extinguisher_01",
+   "file": "korean_fire_extinguisher_01/textures/korean_fire_extinguisher_01_body_nor_gl_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/korean_fire_extinguisher_01/korean_fire_extinguisher_01_body_nor_gl_1k.jpg",
+   "bytes": 95607,
+   "sha256": "b6ba7a7cafa04557c93dc63b44260b635863f0a95f8ba1445b75758dac3443d3"
+  },
+  {
+   "asset": "korean_fire_extinguisher_01",
+   "file": "korean_fire_extinguisher_01/textures/korean_fire_extinguisher_01_paper_arm_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/korean_fire_extinguisher_01/korean_fire_extinguisher_01_paper_arm_1k.jpg",
+   "bytes": 221117,
+   "sha256": "542b45184bb0ea66cdd2f180792148c45d45862a12f1ac341f798e53029015b9"
+  },
+  {
+   "asset": "korean_fire_extinguisher_01",
+   "file": "korean_fire_extinguisher_01/textures/korean_fire_extinguisher_01_glass_diff_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/korean_fire_extinguisher_01/korean_fire_extinguisher_01_glass_diff_1k.jpg",
+   "bytes": 150097,
+   "sha256": "ca7e49959126aa51e2d4ab440aeb9f7ff17a8a6d025b116f6327f2343ee041af"
+  },
+  {
+   "asset": "korean_fire_extinguisher_01",
+   "file": "korean_fire_extinguisher_01/textures/korean_fire_extinguisher_01_glass_nor_gl_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/korean_fire_extinguisher_01/korean_fire_extinguisher_01_glass_nor_gl_1k.jpg",
+   "bytes": 36344,
+   "sha256": "3b299c54cb9b6f72d4f79e6ecd2f8cfcc618292c87881de1d17892b5ca668896"
+  },
+  {
+   "asset": "korean_fire_extinguisher_01",
+   "file": "korean_fire_extinguisher_01/textures/korean_fire_extinguisher_01_glass_arm_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/korean_fire_extinguisher_01/korean_fire_extinguisher_01_glass_arm_1k.jpg",
+   "bytes": 61925,
+   "sha256": "412712fddc3654d801949889f78c9ee92d8855624a1fe1057be29a38e766bda0"
+  },
+  {
+   "asset": "korean_fire_extinguisher_01",
+   "file": "korean_fire_extinguisher_01/korean_fire_extinguisher_01.bin",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/korean_fire_extinguisher_01/korean_fire_extinguisher_01.bin",
+   "bytes": 279480,
+   "sha256": "a460dd65b63477bb641196d77393258af0c8a6e2a64728156cb45d92658c86bd"
+  },
+  {
+   "asset": "korean_fire_extinguisher_01",
+   "file": "korean_fire_extinguisher_01/textures/korean_fire_extinguisher_01_body_diff_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/korean_fire_extinguisher_01/korean_fire_extinguisher_01_body_diff_1k.jpg",
+   "bytes": 127270,
+   "sha256": "2d874513cfb6d7485b67e936ee32e7af14992da6a5eedf980dbdfc32a2119987"
+  },
+  {
+   "asset": "korean_fire_extinguisher_01",
+   "file": "korean_fire_extinguisher_01/textures/korean_fire_extinguisher_01_body_arm_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/korean_fire_extinguisher_01/korean_fire_extinguisher_01_body_arm_1k.jpg",
+   "bytes": 209865,
+   "sha256": "2c8fa0a85d5acc5f4e784ecefd8bfd16e1aafd112e553bfcece0c81c9b129eea"
+  },
+  {
+   "asset": "fire_alarm",
+   "file": "fire_alarm/fire_alarm_1k.gltf",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/fire_alarm/fire_alarm_1k.gltf",
+   "bytes": 4264,
+   "sha256": "4a924f45a0f23036a938e06a251677f9654f39507f0e13d06cc4a0b05c83b959"
+  },
+  {
+   "asset": "fire_alarm",
+   "file": "fire_alarm/textures/fire_alarm_nor_gl_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/fire_alarm/fire_alarm_nor_gl_1k.jpg",
+   "bytes": 642044,
+   "sha256": "45aa3e47120decf5a28e81a2586e3a4c8d6cdb10ba5ceed66d905de74fe1dbb7"
+  },
+  {
+   "asset": "fire_alarm",
+   "file": "fire_alarm/textures/fire_alarm_diff_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/fire_alarm/fire_alarm_diff_1k.jpg",
+   "bytes": 540983,
+   "sha256": "fc0558110922f7f5ae83e488b913857b576946a33ef46c89886f7c6de722e660"
+  },
+  {
+   "asset": "fire_alarm",
+   "file": "fire_alarm/textures/fire_alarm_arm_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/fire_alarm/fire_alarm_arm_1k.jpg",
+   "bytes": 650243,
+   "sha256": "b98f4fe9f190b74581cdff5a9e075d42cd48c16c5f9aba321c5dfe8ce93058a7"
+  },
+  {
+   "asset": "fire_alarm",
+   "file": "fire_alarm/fire_alarm.bin",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/4k/fire_alarm/fire_alarm.bin",
+   "bytes": 112072,
+   "sha256": "f65b6fe5ed53c248497fe833ac66d5b8c452e28db4b02b8d1b67109fcc2ce132"
+  },
+  {
+   "asset": "industrial_caged_sconce",
+   "file": "industrial_caged_sconce/industrial_caged_sconce_1k.gltf",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/industrial_caged_sconce/industrial_caged_sconce_1k.gltf",
+   "bytes": 18429,
+   "sha256": "a2fa6163a5eab0e3f00815a39d0be5f75985c899ca2ed60420e8d77f9c5e086b"
+  },
+  {
+   "asset": "industrial_caged_sconce",
+   "file": "industrial_caged_sconce/textures/industrial_caged_sconce_emissive_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/industrial_caged_sconce/industrial_caged_sconce_emissive_1k.jpg",
+   "bytes": 49946,
+   "sha256": "0cedf24e7ca8589b3598101ed571e8db51ae4985b45d46326adc7acd5d3ba82d"
+  },
+  {
+   "asset": "industrial_caged_sconce",
+   "file": "industrial_caged_sconce/textures/industrial_caged_sconce_nor_gl_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/industrial_caged_sconce/industrial_caged_sconce_nor_gl_1k.jpg",
+   "bytes": 715927,
+   "sha256": "7253ba8d4bcca20479a8bf18e2e2b3fb47b319f5339f40eaffba3677d9886314"
+  },
+  {
+   "asset": "industrial_caged_sconce",
+   "file": "industrial_caged_sconce/textures/industrial_caged_sconce_diff_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/industrial_caged_sconce/industrial_caged_sconce_diff_1k.jpg",
+   "bytes": 621431,
+   "sha256": "3f6e0006d15a49e144a98b679d4ba1d0af52bb578f01c5ecd4b663837a4ac08c"
+  },
+  {
+   "asset": "industrial_caged_sconce",
+   "file": "industrial_caged_sconce/textures/industrial_caged_sconce_arm_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/industrial_caged_sconce/industrial_caged_sconce_arm_1k.jpg",
+   "bytes": 770330,
+   "sha256": "e26d1438541367d9899a56d77d5e1852dc3035222abb431bba780b721fbc7cbe"
+  },
+  {
+   "asset": "industrial_caged_sconce",
+   "file": "industrial_caged_sconce/industrial_caged_sconce.bin",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/industrial_caged_sconce/industrial_caged_sconce.bin",
+   "bytes": 949472,
+   "sha256": "fc14f0b5210c1de70ac25e535b676fb1e74e0c10c1901f09992b038f2139ab2a"
+  },
+  {
+   "asset": "modular_industrial_pipes_01",
+   "file": "modular_industrial_pipes_01/modular_industrial_pipes_01_1k.gltf",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/modular_industrial_pipes_01/modular_industrial_pipes_01_1k.gltf",
+   "bytes": 15014,
+   "sha256": "455d3a0fe95b7900a08cbebb23cfb2c341672fcb67ae7355d776e53cfa3d0688"
+  },
+  {
+   "asset": "modular_industrial_pipes_01",
+   "file": "modular_industrial_pipes_01/textures/modular_industrial_pipes_01_group02_arm_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/modular_industrial_pipes_01/modular_industrial_pipes_01_group02_arm_1k.jpg",
+   "bytes": 898932,
+   "sha256": "4c65dcb651a3d345517fa93ad7c6e48f2388f4e8bb347446f70317c16049867b"
+  },
+  {
+   "asset": "modular_industrial_pipes_01",
+   "file": "modular_industrial_pipes_01/textures/modular_industrial_pipes_01_group01_diff_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/modular_industrial_pipes_01/modular_industrial_pipes_01_group01_diff_1k.jpg",
+   "bytes": 553576,
+   "sha256": "c0233f66b18e3374dfbbb8c8078a41f6571a0809d3eb14dd9d3c332265cfde7b"
+  },
+  {
+   "asset": "modular_industrial_pipes_01",
+   "file": "modular_industrial_pipes_01/textures/modular_industrial_pipes_01_group02_nor_gl_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/modular_industrial_pipes_01/modular_industrial_pipes_01_group02_nor_gl_1k.jpg",
+   "bytes": 725187,
+   "sha256": "84a43ca11a4f1ac84f7fc8336a4e9b7b333d30c13e540f3ff42e662dc6f91b53"
+  },
+  {
+   "asset": "modular_industrial_pipes_01",
+   "file": "modular_industrial_pipes_01/modular_industrial_pipes_01.bin",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/modular_industrial_pipes_01/modular_industrial_pipes_01.bin",
+   "bytes": 515160,
+   "sha256": "2e11e1a7dabd56b1e158364f48b0b388bf316fcab61a01274740db75dbafa448"
+  },
+  {
+   "asset": "modular_industrial_pipes_01",
+   "file": "modular_industrial_pipes_01/textures/modular_industrial_pipes_01_group01_nor_gl_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/modular_industrial_pipes_01/modular_industrial_pipes_01_group01_nor_gl_1k.jpg",
+   "bytes": 674568,
+   "sha256": "ed4728fde567efe420e3a6e1bdc4238b26c2782218737c7e2de88eeca1e91fb2"
+  },
+  {
+   "asset": "modular_industrial_pipes_01",
+   "file": "modular_industrial_pipes_01/textures/modular_industrial_pipes_01_group01_arm_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/modular_industrial_pipes_01/modular_industrial_pipes_01_group01_arm_1k.jpg",
+   "bytes": 860825,
+   "sha256": "7fff7d4604491eeb7531ad5f7520517015c72ec7316d1e865d62f23f976dfed6"
+  },
+  {
+   "asset": "modular_industrial_pipes_01",
+   "file": "modular_industrial_pipes_01/textures/modular_industrial_pipes_01_group02_diff_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/modular_industrial_pipes_01/modular_industrial_pipes_01_group02_diff_1k.jpg",
+   "bytes": 580676,
+   "sha256": "ef8a75c402a8871903dcaa147b023d57c640d0de4c7a8acdfdee822861656a92"
+  },
+  {
+   "asset": "power_box_01",
+   "file": "power_box_01/power_box_01_1k.gltf",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/power_box_01/power_box_01_1k.gltf",
+   "bytes": 4417,
+   "sha256": "edb54e68fb1229e9f59906459d782c2ddc576f6bd1141cf09ad864f48d7cb93b"
+  },
+  {
+   "asset": "power_box_01",
+   "file": "power_box_01/textures/power_box_01_arm_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/power_box_01/power_box_01_arm_1k.jpg",
+   "bytes": 801803,
+   "sha256": "4601e901e2f7c1584ab5ecf65e0e192a99a4be86da505527f1622658e1b1e527"
+  },
+  {
+   "asset": "power_box_01",
+   "file": "power_box_01/textures/power_box_01_nor_gl_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/power_box_01/power_box_01_nor_gl_1k.jpg",
+   "bytes": 646545,
+   "sha256": "199b6fe93776aa0934f7bc36d8c82f1b4db9be9243e82e0cb3727bbcf25d85f1"
+  },
+  {
+   "asset": "power_box_01",
+   "file": "power_box_01/power_box_01.bin",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/power_box_01/power_box_01.bin",
+   "bytes": 782096,
+   "sha256": "b46efdf668ec2d4e04ff51604b5f1486caf20df632f442aab62601718058db05"
+  },
+  {
+   "asset": "power_box_01",
+   "file": "power_box_01/textures/power_box_01_diff_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/power_box_01/power_box_01_diff_1k.jpg",
+   "bytes": 490782,
+   "sha256": "845c425ebc0ded263a7d49909e2c26710dd6160da11c0ca44aebd723f4f6f168"
+  },
+  {
+   "asset": "Barrel_01",
+   "file": "Barrel_01/Barrel_01_1k.gltf",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/Barrel_01/Barrel_01_1k.gltf",
+   "bytes": 2711,
+   "sha256": "e084945dedd6a3379c6f3e97842cac89df7169797707e123a5e5b42c135d6888"
+  },
+  {
+   "asset": "Barrel_01",
+   "file": "Barrel_01/Barrel_01.bin",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/Barrel_01/Barrel_01.bin",
+   "bytes": 81756,
+   "sha256": "fe8369c1ac796059b62a091c0db7367dc420aa2cee212672e48f991f4208da98"
+  },
+  {
+   "asset": "Barrel_01",
+   "file": "Barrel_01/textures/Barrel_01_explosive_diff_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/Barrel_01/Barrel_01_explosive_diff_1k.jpg",
+   "bytes": 179308,
+   "sha256": "a7e5a7b03bbe0c9c56bf1ac09b24121a5d19148428e9e6eac326c803fc297098"
+  },
+  {
+   "asset": "Barrel_01",
+   "file": "Barrel_01/textures/Barrel_01_explosive_nor_gl_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/Barrel_01/Barrel_01_explosive_nor_gl_1k.jpg",
+   "bytes": 185578,
+   "sha256": "fa4750d64c6f568c8de3e36bc631348710329cf2d6d9c8c87bd2e47a96bc4fcb"
+  },
+  {
+   "asset": "Barrel_01",
+   "file": "Barrel_01/textures/Barrel_01_explosive_arm_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/Barrel_01/Barrel_01_explosive_arm_1k.jpg",
+   "bytes": 243594,
+   "sha256": "eab507df7719f0e7a3615bd22bb7bc0c09fed83bfc44e72a51451f8069c2d374"
+  },
+  {
+   "asset": "WetFloorSign_01",
+   "file": "WetFloorSign_01/WetFloorSign_01_1k.gltf",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/WetFloorSign_01/WetFloorSign_01_1k.gltf",
+   "bytes": 2688,
+   "sha256": "ba5b10d2de7bb60b77dc3e44a96446181a078e35597947a490a4b6de906059e4"
+  },
+  {
+   "asset": "WetFloorSign_01",
+   "file": "WetFloorSign_01/textures/WetFloorSign_01_arm_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/WetFloorSign_01/WetFloorSign_01_arm_1k.jpg",
+   "bytes": 126370,
+   "sha256": "6cd1d7c6648c36d2d66a7ddfc620ea78374ac770a5726f879b6914366e133e1a"
+  },
+  {
+   "asset": "WetFloorSign_01",
+   "file": "WetFloorSign_01/textures/WetFloorSign_01_nor_gl_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/WetFloorSign_01/WetFloorSign_01_nor_gl_1k.jpg",
+   "bytes": 88138,
+   "sha256": "62269358f3b30569783c1872613d1d70d5eda36babe5b5f04fcfd5e92de1af62"
+  },
+  {
+   "asset": "WetFloorSign_01",
+   "file": "WetFloorSign_01/textures/WetFloorSign_01_diff_1k.jpg",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/WetFloorSign_01/WetFloorSign_01_diff_1k.jpg",
+   "bytes": 39755,
+   "sha256": "01e18486a858defc0f44a73ec5037c4bee770bae88e7fed5beb6877df120fa90"
+  },
+  {
+   "asset": "WetFloorSign_01",
+   "file": "WetFloorSign_01/WetFloorSign_01.bin",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/4k/WetFloorSign_01/WetFloorSign_01.bin",
+   "bytes": 9496,
+   "sha256": "d23cdec8975ac452d64ae97b08f1eecd22e38f052bd5d588d352dbc0f0373af0"
+  }
+ ]
+}

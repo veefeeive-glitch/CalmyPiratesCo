@@ -1,0 +1,84 @@
+{
+  "built": [
+    {
+      "space": "chain_locker",
+      "volume": [
+        53.8,
+        -3.6,
+        7.33,
+        57.8,
+        3.6,
+        9.93
+      ],
+      "floor": "Deck_Tween_Bow"
+    },
+    {
+      "space": "weather_service_house",
+      "volume": [
+        -29.6,
+        -3.6,
+        10.63,
+        -26.4,
+        3.6,
+        13.18
+      ],
+      "floor": "Deck_Weather_Aft"
+    },
+    {
+      "space": "ship_office",
+      "volume": [
+        -49.2,
+        -6.3,
+        18.97,
+        -45.6,
+        -3.4,
+        21.12
+      ],
+      "floor": "R3_Bridge_Floor"
+    },
+    {
+      "space": "foremast",
+      "volume": [
+        47.5,
+        -0.4,
+        12.0,
+        48.3,
+        0.4,
+        20.0
+      ],
+      "floor": "n/a"
+    }
+  ],
+  "skipped": [],
+  "lights": [
+    {
+      "name": "ChainLocker",
+      "blender_m": [
+        55.8,
+        0.0,
+        9.68
+      ]
+    },
+    {
+      "name": "EmergencyGen",
+      "blender_m": [
+        -28.0,
+        -1.825,
+        12.83
+      ]
+    },
+    {
+      "name": "ProvisionStore",
+      "blender_m": [
+        -28.0,
+        1.825,
+        12.83
+      ]
+    }
+  ],
+  "master_sha256": "8b4fe72d31e549649c0b36947a6cb5b906ebbd19b0955d5bd1f76d5f7da44f93",
+  "objects": 209,
+  "triangles": 44280,
+  "glb": "E:\\Game\\CalmyPiratesCoUE\\SourceAssets\\Generated\\ShipR7ServiceSpaces\\SM_R7_80_SERVICE_SPACES.glb",
+  "units": "GLB metres -> UE centimetres; Blender Y reflected by importer (same as R7 chunks)"
+}
