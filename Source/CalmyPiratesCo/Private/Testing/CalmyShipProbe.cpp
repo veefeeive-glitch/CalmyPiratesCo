@@ -57,19 +57,24 @@ void UCalmyShipProbe::Tick(float DT)
     auto Aim=[&](const FVector& From,const FVector& At){Camera->SetActorLocation(From);Camera->SetActorRotation((At-From).Rotation());PC->SetViewTarget(Camera);};
     if(Stage==0)
     {
-        int32 Meshes=0,Cargo=0,Helpers=0;
+        int32 Meshes=0,Cargo=0,Helpers=0;bool bServiceSpaces=false,bGuardrails=false,bDetails=false;
         for(TActorIterator<AStaticMeshActor> It(GetWorld());It;++It)
         {
             auto* C=It->GetStaticMeshComponent();UStaticMesh* M=C->GetStaticMesh();
             if(!M||!M->GetName().StartsWith(TEXT("SM_R7_")))continue;
             ++Meshes;
+            if(M->GetName()==TEXT("SM_R7_80_SERVICE_SPACES"))bServiceSpaces=true;
+            if(M->GetName()==TEXT("SM_R7_81_GUARDRAILS"))bGuardrails=true;
+            if(M->GetName()==TEXT("SM_R7_82_DETAILS"))bDetails=true;
             if(!C->IsCollisionEnabled()||!M->GetBodySetup()||M->GetBodySetup()->CollisionTraceFlag!=CTF_UseComplexAsSimple)
             {Finish(false,TEXT("imported_collision_contract"));return;}
         }
         for(TActorIterator<ACalmyCargo> It(GetWorld());It;++It)++Cargo;
         for(TActorIterator<ACalmyCrewHelper> It(GetWorld());It;++It)++Helpers;
-        if(Meshes!=10||Cargo!=4||Helpers!=1||!Ocean->IsInsideDryHull(FVector(-2800,580,300))||Ocean->IsInsideDryHull(FVector(-2800,1500,300)))
-        {Finish(false,FString::Printf(TEXT("scene_contract meshes=%d cargo=%d helpers=%d"),Meshes,Cargo,Helpers));return;}
+        // 10 R7 structure chunks + service spaces S1 (chain locker, service house, office, foremast and marks)
+        // + guardrails S2 + deck details S3 (bunker stations, hold vents, bridge-roof kit).
+        if(Meshes!=13||!bServiceSpaces||!bGuardrails||!bDetails||Cargo!=4||Helpers!=1||!Ocean->IsInsideDryHull(FVector(-2800,580,300))||Ocean->IsInsideDryHull(FVector(-2800,1500,300)))
+        {Finish(false,FString::Printf(TEXT("scene_contract meshes=%d service_spaces=%d guardrails=%d details=%d cargo=%d helpers=%d"),Meshes,int32(bServiceSpaces),int32(bGuardrails),int32(bDetails),Cargo,Helpers));return;}
         UE_LOG(LogTemp,Display,TEXT("CALMY_SHIP %s START meshes=%d cargo=%d helpers=%d pos=%s"),*Role,Meshes,Cargo,Helpers,*P->GetActorLocation().ToString());
         UE_LOG(LogTemp,Display,TEXT("CALMY_SHIP %s READY"),*Role);GLog->Flush();
         Previous=P->GetActorLocation();StageTime=Age;

@@ -67,8 +67,11 @@ void UCalmyFlySwarmProbe::Tick(float DT)
         bSpawned = true;
     }
     AFlySwarmMob* Swarm = nullptr;
+    // Actor Tags do not replicate: the runtime FlyStressTest tag exists only where the host spawned it,
+    // so clients pick the replicated colony by its instance count instead.
+    const bool bByTag = Placed || Host || Solo;
     for (TActorIterator<AFlySwarmMob> It(GetWorld()); It; ++It)
-        if (It->ActorHasTag(Placed ? TEXT("FlyR2_Gameplay") : TEXT("FlyStressTest"))) { Swarm = *It; break; }
+        if (bByTag ? It->ActorHasTag(Placed ? TEXT("FlyR2_Gameplay") : TEXT("FlyStressTest")) : It->GetVisibleFlyCount() == Expected) { Swarm = *It; break; }
     if (!Swarm || Swarm->GetVisibleFlyCount() != Expected) return;
     if (Placed && (!Swarm->FlyMesh || !Swarm->FlyMesh->GetPathName().Contains(TEXT("/Game/Creatures/FlyR2/SM_Fly_R2"))))
     { Finish(false, TEXT("placeholder_in_game")); return; }

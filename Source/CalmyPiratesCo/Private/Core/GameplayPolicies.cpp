@@ -261,6 +261,12 @@ bool FCalmyEmergencyDirectorPolicy::CanStartEvent(int32 EventsStarted, bool bEve
 		FMath::IsFinite(RemainingSeconds) && RemainingSeconds <= 0.f;
 }
 
+float FCalmyMeleePolicy::DamageFor(bool bAttackerIsHelper, bool bVictimIsHelper)
+{
+	if (bAttackerIsHelper) return 12.f;
+	return bVictimIsHelper ? 6.f : 0.f;
+}
+
 int32 FCalmyShiftEconomyPolicy::CalculatePayout(int32 SecondsRemaining, int32 Rescues, int32 DamagedDelivered)
 {
 	const int32 SafeTime = FMath::Clamp(SecondsRemaining, 0, DefaultDurationSeconds);

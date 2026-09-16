@@ -2,7 +2,9 @@
 #include "Gameplay/CalmyCharacter.h"
 #include "Gameplay/CalmyShift.h"
 #include "Gameplay/CalmyVoyageDirector.h"
+#include "Gameplay/CalmyShipMotion.h"
 #include "Core/GameplayPolicies.h"
+#include "Core/CalmyAudio.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/PostProcessComponent.h"
@@ -27,6 +29,40 @@ ACalmyLeak::ACalmyLeak()
 	Valve->SetRelativeScale3D(FVector(.75f, .75f, .85f));
 	Valve->SetMaterial(0, Material.Object);
 	Valve->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// A valve the crew can recognise from across the hold: the line it sits on, and a handwheel that shows the state.
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
+	Pipe = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BilgeLine"));
+	Pipe->SetupAttachment(Valve);
+	Pipe->SetStaticMesh(CylinderMesh.Object);
+	Pipe->SetMaterial(0, Material.Object);
+	Pipe->SetRelativeLocation(FVector(0, 0, -34));
+	Pipe->SetRelativeRotation(FRotator(0, 0, 90));
+	Pipe->SetRelativeScale3D(FVector(.26f, .26f, 2.4f));
+	Pipe->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Handwheel = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Handwheel"));
+	Handwheel->SetupAttachment(Valve);
+	Handwheel->SetStaticMesh(CylinderMesh.Object);
+	Handwheel->SetMaterial(0, Material.Object);
+	// Clear of the body face on its stem, so the wheel reads as a wheel and not as a disc printed on a box.
+	Handwheel->SetRelativeLocation(FVector(125, 0, 6));
+	Handwheel->SetRelativeRotation(FRotator(90, 0, 0));
+	Handwheel->SetRelativeScale3D(FVector(1.05f, 1.05f, .12f));
+	Handwheel->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Stem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HandwheelStem"));
+	Stem->SetupAttachment(Valve);
+	Stem->SetStaticMesh(CylinderMesh.Object);
+	Stem->SetMaterial(0, Material.Object);
+	Stem->SetRelativeLocation(FVector(88, 0, 6));
+	Stem->SetRelativeRotation(FRotator(90, 0, 0));
+	Stem->SetRelativeScale3D(FVector(.12f, .12f, .9f));
+	Stem->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	HandwheelSpokes = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HandwheelSpokes"));
+	HandwheelSpokes->SetupAttachment(Valve);
+	HandwheelSpokes->SetStaticMesh(Cube.Object);
+	HandwheelSpokes->SetMaterial(0, Material.Object);
+	HandwheelSpokes->SetRelativeLocation(FVector(123, 0, 6));
+	HandwheelSpokes->SetRelativeScale3D(FVector(.06f, 1.f, .09f));
+	HandwheelSpokes->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	WaterPatch = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WaterLevelIndicator"));
 	WaterPatch->SetupAttachment(Valve);
 	WaterPatch->SetUsingAbsoluteScale(true);
@@ -74,7 +110,13 @@ ACalmyLeak* ACalmyLeak::Find(const UWorld* World)
 void ACalmyLeak::BeginPlay()
 {
 	Super::BeginPlay();
+	// The valve must stay reachable while the ship heaves and drifts.
+	ACalmyShipMotion::AttachRider(this);
+	// On R7 the valve is a bulkhead-mounted valve box at chest height, not a 75 cm crate standing in the hold.
+	if (ACalmyVoyageDirector::IsShipMap(GetWorld())) SetActorScale3D(FVector(.3f, .55f, .55f));
 	ValveMaterial = Valve->CreateDynamicMaterialInstance(0);
+	HandwheelMaterial = Handwheel->CreateDynamicMaterialInstance(0);
+	if (auto* Spokes = HandwheelSpokes->CreateDynamicMaterialInstance(0)) SpokeMaterial = Spokes;
 	WaterMaterial = WaterPatch->CreateDynamicMaterialInstance(0);
 	if (WaterMaterial) WaterMaterial->SetVectorParameterValue(TEXT("Tint"), FLinearColor(.015f, .22f, .4f));
 	if (HasAuthority())
@@ -234,15 +276,36 @@ void ACalmyLeak::Tick(float DeltaSeconds)
 void ACalmyLeak::OnRep_State()
 {
 	const bool Active = State.Phase == ECalmyLeakPhase::Leaking;
-	if (ValveMaterial) ValveMaterial->SetVectorParameterValue(TEXT("Tint"), Active ? FLinearColor(1, .04f, .02f) :
-		(State.Phase == ECalmyLeakPhase::Warning ? FLinearColor(1, .65f, .02f) : FLinearColor(.04f, .6f, .2f)));
+	const FLinearColor StateTint = Active ? FLinearColor(1, .04f, .02f) :
+		(State.Phase == ECalmyLeakPhase::Warning ? FLinearColor(1, .65f, .02f) : FLinearColor(.04f, .6f, .2f));
+	if (ValveMaterial) ValveMaterial->SetVectorParameterValue(TEXT("Tint"), StateTint);
+	// The handwheel carries the same state colour; the body alone read as a painted box from a distance.
+	if (HandwheelMaterial) HandwheelMaterial->SetVectorParameterValue(TEXT("Tint"), StateTint);
+	if (SpokeMaterial) SpokeMaterial->SetVectorParameterValue(TEXT("Tint"), StateTint * .75f);
 	WaterPatch->SetVisibility(State.Water > 0);
-	// Readable rising blue indicator beside the valve; never cover the green delivery zone.
-	WaterPatch->SetWorldLocation(GetActorLocation() + FVector(0, -130, -GetActorLocation().Z + 2));
-	WaterPatch->SetWorldScale3D(FVector(1.8f + State.Water * .02f, 1.8f + State.Water * .02f, .01f));
+	if (ACalmyVoyageDirector::IsShipMap(GetWorld()))
+	{
+		// On R7 the flood is in hold 1: the sheet spreads over the tank top from the bilge well, riding the hull.
+		WaterPatch->SetWorldLocation(ACalmyVoyageDirector::ShipLocalToWorld(GetWorld(), ACalmyVoyageDirector::LeakPoolLocal()));
+		WaterPatch->SetWorldRotation(GetActorQuat());
+		WaterPatch->SetWorldScale3D(FVector(3.f + State.Water * .22f, 2.5f + State.Water * .1f, .02f));
+	}
+	else
+	{
+		// Labs: readable rising blue indicator beside the valve on the flat floor; never cover the green delivery zone.
+		WaterPatch->SetWorldLocation(GetActorLocation() + FVector(0, -130, -GetActorLocation().Z + 2));
+		WaterPatch->SetWorldScale3D(FVector(1.8f + State.Water * .02f, 1.8f + State.Water * .02f, .01f));
+	}
 	EmergencyLight->SetVisibility(State.bPowerDegraded);
 	TaskLight->SetVisibility(State.bPowerDegraded);
 	EmergencyGrade->BlendWeight = State.bPowerDegraded ? 1.f : 0.f;
+	FCalmyAudio::SetLeakAlarm(GetWorld(), Active || State.Phase == ECalmyLeakPhase::Warning);
+	if (LastHeardPhase != State.Phase &&
+		(State.Phase == ECalmyLeakPhase::Warning || State.Phase == ECalmyLeakPhase::Leaking))
+	{
+		FCalmyAudio::PlayAt(this, ECalmySoundCue::LeakAlarm, GetActorLocation(), .55f);
+	}
+	LastHeardPhase = State.Phase;
 }
 
 FString ACalmyLeak::GetStatusText() const
@@ -251,8 +314,9 @@ FString ACalmyLeak::GetStatusText() const
 	{
 	case ECalmyLeakPhase::Idle: return FString::Printf(TEXT("Valve ready | Next drill ~%ds | Event %d/%d"),
 		State.NextEventSeconds, State.EventSerial + 1, FCalmyEmergencyDirectorPolicy::MaxEventsPerRound);
-	case ECalmyLeakPhase::Warning: return FString::Printf(TEXT("LEAK WARNING: %ds | Event %d/%d | Find the yellow valve"),
-		State.WarningSeconds, State.EventSerial, FCalmyEmergencyDirectorPolicy::MaxEventsPerRound);
+	case ECalmyLeakPhase::Warning: return FString::Printf(TEXT("LEAK WARNING: %ds | Event %d/%d | %s"),
+		State.WarningSeconds, State.EventSerial, FCalmyEmergencyDirectorPolicy::MaxEventsPerRound,
+		ACalmyVoyageDirector::IsShipMap(GetWorld()) ? TEXT("Hold 1 bilge valve, foot of the hold stair") : TEXT("Find the yellow valve"));
 	case ECalmyLeakPhase::Leaking: return FString::Printf(TEXT("LEAK | Water %d%% | Repair %d%% | %s"), State.Water, State.Repair,
 		State.Repairer ? TEXT("REPAIRING") : TEXT("Hold F at red valve, empty hands, stand still"));
 	case ECalmyLeakPhase::Draining: return FString::Printf(TEXT("SEALED | Pump draining: water %d%%"), State.Water);

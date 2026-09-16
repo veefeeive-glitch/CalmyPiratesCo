@@ -4,12 +4,15 @@
 #include "Gameplay/CalmyCrewHelper.h"
 #include "Gameplay/CalmyShift.h"
 #include "Gameplay/CalmyLeak.h"
+#include "Gameplay/CalmyFuelStation.h"
 #include "Gameplay/CalmyOcean.h"
 #include "Gameplay/CalmyCrewPresentation.h"
 #include "Core/AimInteraction.h"
 #include "Gameplay/CalmyDoor.h"
+#include "Gameplay/CalmyMissionBoard.h"
 #include "Gameplay/CalmyGameMode.h"
 #include "Gameplay/FlySwarmMob.h"
+#include "Core/CalmyAudio.h"
 #include "GameFramework/GameStateBase.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -160,7 +163,10 @@ void ACalmyCharacter::SetupPlayerInputComponent(UInputComponent* Input)
 	Enhanced->BindAction(MakeAction(EKeys::A, EInputActionValueType::Axis1D), ETriggerEvent::Triggered, this, &ThisClass::Left);
 	Enhanced->BindAction(MakeAction(EKeys::MouseX, EInputActionValueType::Axis1D), ETriggerEvent::Triggered, this, &ThisClass::LookYaw);
 	Enhanced->BindAction(MakeAction(EKeys::MouseY, EInputActionValueType::Axis1D), ETriggerEvent::Triggered, this, &ThisClass::LookPitch);
-	Enhanced->BindAction(MakeAction(EKeys::E, EInputActionValueType::Boolean), ETriggerEvent::Started, this, &ThisClass::RequestGrab);
+	auto* InteractAction = MakeAction(EKeys::E, EInputActionValueType::Boolean);
+	Enhanced->BindAction(InteractAction, ETriggerEvent::Started, this, &ThisClass::RequestGrab);
+	Enhanced->BindAction(InteractAction, ETriggerEvent::Completed, this, &ThisClass::EndInteractInput);
+	Enhanced->BindAction(InteractAction, ETriggerEvent::Canceled, this, &ThisClass::EndInteractInput);
 	Enhanced->BindAction(MakeAction(EKeys::G, EInputActionValueType::Boolean), ETriggerEvent::Started, this, &ThisClass::RequestDrop);
 	Enhanced->BindAction(MakeAction(EKeys::LeftMouseButton, EInputActionValueType::Boolean), ETriggerEvent::Started, this, &ThisClass::RequestThrow);
 	Enhanced->BindAction(MakeAction(EKeys::R, EInputActionValueType::Boolean), ETriggerEvent::Started, this, &ThisClass::RequestRestart);
@@ -202,8 +208,19 @@ void ACalmyCharacter::MoveRelativeIntent(const FVector2D& Intent)
 	MoveIntent(FVector2D(WorldIntent.X, WorldIntent.Y));
 }
 
-void ACalmyCharacter::LookYaw(const FInputActionValue& Value) { AddControllerYawInput(Value.Get<float>()*LookSensitivity); }
-void ACalmyCharacter::LookPitch(const FInputActionValue& Value) { AddControllerPitchInput(Value.Get<float>()*LookSensitivity*(UCalmyPreferences::Get()->InvertY?1.f:-1.f)); }
+void ACalmyCharacter::LookYaw(const FInputActionValue& Value)
+{
+    const float V=Value.Get<float>();
+    if(bInteractHeld&&PendingDoor.IsValid()){DoorMouseX+=V;DoorMouseTotal+=FMath::Abs(V);}
+    // Holding a heavy leaf: the view barely turns while the mouse swings the door.
+    AddControllerYawInput(V*LookSensitivity*(HeldDoor.IsValid()?.25f:1.f));
+}
+void ACalmyCharacter::LookPitch(const FInputActionValue& Value)
+{
+    const float V=Value.Get<float>();
+    if(bInteractHeld&&PendingDoor.IsValid()){DoorMouseY+=V;DoorMouseTotal+=FMath::Abs(V);}
+    AddControllerPitchInput(V*LookSensitivity*(UCalmyPreferences::Get()->InvertY?1.f:-1.f)*(HeldDoor.IsValid()?.25f:1.f));
+}
 
 FVector ACalmyCharacter::GetInteractionOrigin() const
 {
@@ -285,7 +302,14 @@ FString ACalmyCharacter::GrabFeedbackText(ECalmyGrabFeedback Reason)
 }
 FString ACalmyCharacter::GetInteractionHint() const
 {
-    if(const auto* Door=ACalmyDoor::FindTarget(this))return Door->State==ECalmyDoorState::Blocked?TEXT("E - REVERSE DOOR | clear the swing area"):Door->State==ECalmyDoorState::Opening||Door->State==ECalmyDoorState::Closing?TEXT("DOOR MOVING"):Door->IsOpen()?TEXT("E - CLOSE DOOR"):TEXT("E - OPEN DOOR");
+    if(HeldDoor.IsValid())return TEXT("HOLDING DOOR | move the mouse to swing it | release E to let go");
+    if(const auto* Door=ACalmyDoor::FindTarget(this))return Door->State==ECalmyDoorState::Blocked?TEXT("E - REVERSE DOOR | clear the swing area"):Door->IsOpen()?TEXT("E - CLOSE | hold E + mouse - swing it"):Door->IsClosed()?TEXT("E - OPEN | hold E + mouse - swing it"):TEXT("E - OPEN OR CLOSE | hold E + mouse - swing it");
+    if (const auto* Board = ACalmyMissionBoard::Find(GetWorld()))
+    {
+        const bool Near = (Board->UseZone && Board->UseZone->IsOverlappingActor(this)) ||
+            FVector::DistSquared(GetActorLocation(), Board->GetActorLocation()) < FMath::Square(280.f);
+        if (Near) return Board->PromptText() + (GetNetMode() == NM_Client ? TEXT(" | host picks the contract") : TEXT(" | E / ENTER accept"));
+    }
     if(FeedbackUntil>GetWorld()->GetTimeSeconds()) return GrabFeedbackText(LastGrabFeedback);
     if(HeldCargo) return HeldCargo->GetHandlingHint(this);
     if (const auto* PC=Cast<ACalmyPlayerController>(GetController()))
@@ -304,13 +328,47 @@ void ACalmyCharacter::RequestGrab()
 {
     auto* PC = Cast<ACalmyPlayerController>(GetController());
     if (PC && PC->IsGameplayInputSuppressed()) return;
-    if(auto* Door=ACalmyDoor::FindTarget(this)){ServerDoor(Door,Door->Revision,++LastIssuedSequence);return;}
+    if(auto* Door=ACalmyDoor::FindTarget(this))
+    {
+        // Decided on release (tap) or after a short hold / mouse motion (grab the leaf).
+        PendingDoor=Door;bInteractHeld=true;InteractHeldSeconds=0;DoorMouseX=DoorMouseY=DoorMouseTotal=0;return;
+    }
+    // Only the host picks a contract; a client keeps E for cargo and doors near the board.
+    if (PC && GetNetMode() != NM_Client && ACalmyMissionBoard::IsPortMap(GetWorld()))
+    {
+        if (const auto* Board = ACalmyMissionBoard::Find(GetWorld()))
+        {
+            if (Board->UseZone && Board->UseZone->IsOverlappingActor(this))
+            {
+                PC->RequestMissionBoardAccept();
+                return;
+            }
+        }
+    }
     if (PC && PC->TryOpenFlyWheel()) return;
     ServerGrab(FindGrabTarget(), ++LastIssuedSequence);
 }
 void ACalmyCharacter::ServerDoor_Implementation(ACalmyDoor* Door,uint32 ExpectedRevision,uint32 Sequence)
 {
     if(!CommandGate.Accept(Sequence,GetWorld()->GetTimeSeconds())||!IsValid(Door)||Door->GetWorld()!=GetWorld()||!Door->RequestToggle(this,ExpectedRevision))++RejectedCommands;
+}
+void ACalmyCharacter::EndInteractInput()
+{
+    if(HeldDoor.IsValid()){ServerDoorGrab(HeldDoor.Get(),false,++LastDoorGrabIssued);HeldDoor.Reset();}
+    else if(bInteractHeld&&PendingDoor.IsValid()){ACalmyDoor* Door=PendingDoor.Get();ServerDoor(Door,Door->Revision,++LastIssuedSequence);}
+    bInteractHeld=false;PendingDoor.Reset();
+}
+void ACalmyCharacter::ServerDoorGrab_Implementation(ACalmyDoor* Door,bool bActive,uint32 Sequence)
+{
+    if(!Sequence||Sequence<=LastDoorGrabReceived||!IsValid(Door)||Door->GetWorld()!=GetWorld()){++RejectedCommands;return;}
+    LastDoorGrabReceived=Sequence;
+    if(!bActive){Door->ReleaseGrab(this);return;}
+    if(!IsControlled()||HeldCargo||IsInOcean()||!Door->TryGrab(this))++RejectedCommands;
+}
+void ACalmyCharacter::ServerDoorDrag_Implementation(ACalmyDoor* Door,int8 Push)
+{
+    // Unreliable stream: packets still in flight after a release are ignored, not counted as rejections.
+    if(IsValid(Door)&&Door->GetWorld()==GetWorld())Door->ApplyDrag(this,float(Push)/127.f);
 }
 void ACalmyCharacter::RequestDrop() { ServerDrop(++LastIssuedSequence); }
 void ACalmyCharacter::RequestThrow()
@@ -350,6 +408,7 @@ bool ACalmyCharacter::PerformPunch()
     if (!HasAuthority() || !IsControlled() || Health <= 0.f || HeldCargo || IsInOcean() || Now < NextPunchAt) return false;
     NextPunchAt = Now + (Cast<ACalmyCrewHelper>(this) ? 1.25f : .65f);
     PunchStartedAt = Now; ++PunchCount;
+    FCalmyAudio::PlayAt(this, ECalmySoundCue::Punch, GetInteractionOrigin());
     if (auto* Target = FindMeleeTarget())
     {
         if (auto* Swarm = Cast<AFlySwarmMob>(Target)) Swarm->ReceiveSwat(this);
@@ -360,9 +419,10 @@ bool ACalmyCharacter::PerformPunch()
 bool ACalmyCharacter::ReceiveMeleeHit(ACalmyCharacter* Attacker)
 {
     if (!HasAuthority() || !IsControlled() || !IsValid(Attacker) || Attacker == this || Attacker->GetWorld() != GetWorld()) return false;
-    Health = FMath::Max(0.f, Health - (Cast<ACalmyCrewHelper>(Attacker) ? 12.f : 6.f));
+    const float Damage = FCalmyMeleePolicy::DamageFor(Cast<ACalmyCrewHelper>(Attacker) != nullptr, Cast<ACalmyCrewHelper>(this) != nullptr);
+    Health = FMath::Max(0.f, Health - Damage);
     ++MeleeHitsReceived; LastMeleeHitAt = GetWorld()->GetTimeSeconds();
-    if (Health <= 0.f) BeginKnockdown(600.f, GetActorLocation()-Attacker->GetActorLocation());
+    if (Damage > 0.f && Health <= 0.f) BeginKnockdown(600.f, GetActorLocation()-Attacker->GetActorLocation());
     ForceNetUpdate(); return true;
 }
 float ACalmyCharacter::GetPunchBlend() const
@@ -383,7 +443,7 @@ void ACalmyCharacter::BeginRepairInput() { bRepairInput = true; RepairPulseCount
 void ACalmyCharacter::EndRepairInput()
 {
 	bRepairInput = false;
-	if (auto* Leak = ACalmyLeak::Find(GetWorld())) ServerRepair(Leak, Leak->State.Round, false, ++LastRepairIssued);
+	ServerHoldInteract(false, ++LastRepairIssued);
 }
 
 void ACalmyCharacter::ServerRepair_Implementation(ACalmyLeak* Leak, int32 ExpectedRound, bool bActive, uint32 Sequence)
@@ -393,6 +453,34 @@ void ACalmyCharacter::ServerRepair_Implementation(ACalmyLeak* Leak, int32 Expect
 	if (!IsValid(Leak) || Leak->GetWorld() != GetWorld() || Leak->State.Round != ExpectedRound) { ++RejectedCommands; return; }
 	if (!bActive) { Leak->StopRepair(this); return; }
 	if (!RepairGate.Accept(Sequence, GetWorld()->GetTimeSeconds()) || !Leak->TryRepairPulse(this, ExpectedRound)) ++RejectedCommands;
+}
+
+void ACalmyCharacter::ServerFuel_Implementation(bool bActive, uint32 Sequence)
+{
+	if (!Sequence || Sequence <= LastRepairReceived) { ++RejectedCommands; return; }
+	LastRepairReceived = Sequence;
+	auto* Fuel = ACalmyFuelStation::Find(GetWorld());
+	if (!IsValid(Fuel)) { ++RejectedCommands; return; }
+	if (!bActive) { Fuel->StopRefuel(this); return; }
+	if (!RepairGate.Accept(Sequence, GetWorld()->GetTimeSeconds()) || !Fuel->TryRefuelPulse(this)) ++RejectedCommands;
+}
+
+void ACalmyCharacter::ServerHoldInteract_Implementation(bool bActive, uint32 Sequence)
+{
+	if (!Sequence || Sequence <= LastRepairReceived) { ++RejectedCommands; return; }
+	LastRepairReceived = Sequence;
+	auto* Leak = ACalmyLeak::Find(GetWorld());
+	auto* Fuel = ACalmyFuelStation::Find(GetWorld());
+	if (!bActive)
+	{
+		if (IsValid(Leak)) Leak->StopRepair(this);
+		if (IsValid(Fuel)) Fuel->StopRefuel(this);
+		return;
+	}
+	if (!RepairGate.Accept(Sequence, GetWorld()->GetTimeSeconds())) { ++RejectedCommands; return; }
+	if (IsValid(Leak) && Leak->CanRepair(this)) { if (!Leak->TryRepairPulse(this, Leak->State.Round)) ++RejectedCommands; return; }
+	if (IsValid(Fuel) && Fuel->CanRefuel(this)) { if (!Fuel->TryRefuelPulse(this)) ++RejectedCommands; return; }
+	++RejectedCommands;
 }
 
 void ACalmyCharacter::RequestHandoff()
@@ -452,8 +540,48 @@ void ACalmyCharacter::Tick(float DeltaSeconds)
 		if (RepairPulseCountdown <= 0)
 		{
 			RepairPulseCountdown = .2f;
-			if (auto* Leak = ACalmyLeak::Find(GetWorld())) ServerRepair(Leak, Leak->State.Round, true, ++LastRepairIssued);
+			// One intent; the server decides between the leak valve and the fuel pump from its own state.
+			ServerHoldInteract(true, ++LastRepairIssued);
+			const auto* Leak = ACalmyLeak::Find(GetWorld());
+			const auto* Fuel = ACalmyFuelStation::Find(GetWorld());
+			if ((Leak && Leak->State.Repairer == this) || (Fuel && Fuel->Refueler == this))
+				FCalmyAudio::Play2D(this, ECalmySoundCue::RepairTick, .45f);
 		}
+	}
+	if (IsLocallyControlled() && bInteractHeld && PendingDoor.IsValid() && !HeldDoor.IsValid())
+	{
+		InteractHeldSeconds += DeltaSeconds;
+		if (InteractHeldSeconds >= .2f || DoorMouseTotal > 6.f)
+		{
+			HeldDoor = PendingDoor;
+			ServerDoorGrab(HeldDoor.Get(), true, ++LastDoorGrabIssued);
+			FCalmyAudio::PlayAt(this, ECalmySoundCue::DoorGrab, HeldDoor->GetGripLocation(), .6f);
+			DoorSendCountdown = 0;
+		}
+	}
+	if (IsLocallyControlled() && HeldDoor.IsValid())
+	{
+		ACalmyDoor* Door = HeldDoor.Get();
+		if (!IsControlled() || HeldCargo || FVector::DistSquared(GetActorLocation(), Door->GetGripLocation()) > FMath::Square(ACalmyDoor::HoldRangeCm))
+		{
+			ServerDoorGrab(Door, false, ++LastDoorGrabIssued);
+			HeldDoor.Reset(); PendingDoor.Reset(); bInteractHeld = false;
+		}
+		else if ((DoorSendCountdown -= DeltaSeconds) <= 0)
+		{
+			DoorSendCountdown = .05f;
+			const FRotationMatrix View(GetControlRotation());
+			const float Push = ACalmyDoor::PushFromMouse(View.GetUnitAxis(EAxis::X), View.GetUnitAxis(EAxis::Y), DoorMouseX, DoorMouseY,
+				Door->GetGripLocation() - Door->GetActorLocation(), Door->SwingSign);
+			ServerDoorDrag(Door, int8(FMath::Clamp(FMath::RoundToInt(Push * 127.f), -127, 127)));
+			DoorMouseX = DoorMouseY = 0;
+		}
+	}
+	if (!HasAuthority() && PunchCount != HeardPunchCount)
+	{
+		// Punches run on the server; clients hear them from the replicated counter.
+		if (HeardPunchCount >= 0) FCalmyAudio::PlayAt(this, ECalmySoundCue::Punch, GetInteractionOrigin());
+		HeardPunchCount = PunchCount;
 	}
     if(HasAuthority())
     {

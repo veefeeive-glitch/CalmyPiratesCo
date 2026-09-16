@@ -20,6 +20,8 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	static ACalmyShipMotion* Find(const UWorld* World);
+	/** Attaches a gameplay fixture placed in ship-local coordinates so heave, heel and drift carry it. No-op without a ship. */
+	static void AttachRider(AActor* Rider);
 	const FTransform& GetRestTransform() const { return RestTransform; }
 	FVector GetRestDryHullOrigin() const { return RestDryHullOrigin; }
 	bool HasRestPose() const { return bCapturedRest; }
@@ -46,7 +48,11 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ship Helm", meta=(ClampMin="0", ClampMax="300", Units="cm/s")) float HelmSurgeSpeed = 95.f;
 	UPROPERTY(EditAnywhere, Category="Ship Helm", meta=(ClampMin="0.5", ClampMax="20")) float MaxYawRateDeg = 6.f;
 	UPROPERTY(EditAnywhere, Category="Ship Helm", meta=(ClampMin="1", ClampMax="45")) float MaxHelmYawDeg = 18.f;
-	FTransform GetMotionDelta() const { return GetActorTransform() * LastAppliedTransform.Inverse(); }
+	/** World-space motion since the last carry: Rider * Delta (or Delta.TransformPosition) keeps a rider fixed to the hull. */
+	FTransform GetMotionDelta() const { return LastAppliedTransform.Inverse() * GetActorTransform(); }
+	/** Rider carry step: returns true with the motion since InOutLastApplied once it is measurable, and advances
+	 *  InOutLastApplied only then, so sub-threshold per-frame heel/drift accumulates instead of being lost. */
+	static bool ConsumeRiderDelta(FTransform& InOutLastApplied, const FTransform& Current, FTransform& OutDelta);
 private:
 	void CaptureRest();
 	void IntegrateWater(float DeltaSeconds);

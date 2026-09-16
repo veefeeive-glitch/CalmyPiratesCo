@@ -18,6 +18,25 @@ bool FCalmySession::CanAdmit(int32 ConnectedPlayersIncludingPending)
 	return ConnectedPlayersIncludingPending >= 0 && ConnectedPlayersIncludingPending < MaxCrew;
 }
 
+int32 FCalmySession::SeatsTakenAtPreLogin(int32 LocalPlayers, int32 OpenClientConnectionsIncludingJoiner, int32 NumPlayers)
+{
+	return FMath::Max(NumPlayers, FMath::Max(0, LocalPlayers) + FMath::Max(0, OpenClientConnectionsIncludingJoiner - 1));
+}
+
+bool FCalmySession::CanRequestSessionTravel(ENetMode NetMode, bool bLocalController)
+{
+	return bLocalController && (NetMode == NM_Standalone || NetMode == NM_ListenServer);
+}
+
+bool FCalmySession::IsAllowlistedVoyageTravel(const FString& FromMap, const FString& ToPackagePath)
+{
+	const bool FromPort = FromMap.Contains(TEXT("PortHub"));
+	const bool FromShip = FromMap.Contains(TEXT("OceanFreighterR7"));
+	const bool ToPort = ToPackagePath.Contains(TEXT("PortHub"));
+	const bool ToShip = ToPackagePath.Contains(TEXT("OceanFreighterR7"));
+	return (FromPort && ToShip) || (FromShip && ToPort);
+}
+
 int32 FCalmySession::ClampPort(int32 Port)
 {
 	return FMath::Clamp(Port, 1024, 65535);

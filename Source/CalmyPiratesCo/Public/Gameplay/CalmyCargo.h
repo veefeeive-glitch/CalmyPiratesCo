@@ -89,4 +89,6 @@ private:
 	double NextHandoffTime = -1;
 	int32 LastSeenDamageEvents = 0;
 	bool bSeenCondition = false;
+	ECalmyCarryState LastHeardCarry = ECalmyCarryState::Free;
+	bool bHeardDelivered = false;
 };

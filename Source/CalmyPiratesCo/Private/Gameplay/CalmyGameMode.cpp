@@ -1,9 +1,12 @@
 #include "Gameplay/CalmyGameMode.h"
 #include "Gameplay/CalmyBridgeTerminal.h"
+#include "Gameplay/CalmyBridgeDisplays.h"
 #include "Gameplay/CalmySettingsWidget.h"
 #include "Gameplay/CalmyJoinWidget.h"
 #include "Core/CalmySession.h"
 #include "GameFramework/GameSession.h"
+#include "Engine/NetDriver.h"
+#include "Engine/NetConnection.h"
 #include "HAL/PlatformApplicationMisc.h"
 #include "Gameplay/CalmyPreferences.h"
 #include "Engine/GameViewportClient.h"
@@ -23,10 +26,19 @@
 #include "Gameplay/CalmyTutorial.h"
 #include "Gameplay/CalmyLeak.h"
 #include "Gameplay/CalmyVoyageDirector.h"
+#include "Gameplay/CalmyMissionBoard.h"
+#include "Core/CalmyAudio.h"
 #include "Gameplay/CalmyOcean.h"
 #include "Gameplay/CalmyCrewHelper.h"
+#include "Core/CalmyHudLayout.h"
+#include "Engine/Font.h"
+#include "Fonts/FontMeasure.h"
+#include "Rendering/SlateRenderer.h"
 #include "Engine/Canvas.h"
 #include "CanvasItem.h"
+#include "RenderUtils.h"
+#include "Core/CalmyBreakdownCompass.h"
+#include "Gameplay/CalmyFuelStation.h"
 #include "Engine/Engine.h"
 #include "EngineUtils.h"
 #include "GameFramework/PlayerStart.h"
@@ -75,12 +87,18 @@ void ACalmyPlayerController::PlayerTick(float DeltaTime)
     {bAppliedLocalPreferences=true;if(!FApp::IsUnattended())UCalmyPreferences::Get()->Apply(this);}
     if(IsLocalController()&&FPlatformTime::Seconds()>=NextAudioUpdate)
     {NextAudioUpdate=FPlatformTime::Seconds()+1;ApplyAudioPreferences();}
+    MaybeLiveHold1Teleport();
     if (!bCheckedStartupPause && IsLocalController() && GetPawn() && GetWorld()->HasBegunPlay())
     {
         bCheckedStartupPause = true;
         if (BridgeEntry(GetWorld()) || FParse::Param(FCommandLine::Get(), TEXT("CalmyStartPaused"))) SetPauseMenuOpen(true);
     }
     if(bPauseMenuOpen&&BridgeTerminal&&!IsSettingsOpen())BridgeTerminal->Hover();
+    // Wheelhouse status screens carry the watch, alarms, crew and sea info instead of HUD panels.
+    if(!BridgeDisplays&&IsLocalController()&&GetPawn()&&BridgeEntry(GetWorld()))
+    {BridgeDisplays=GetWorld()->SpawnActor<ACalmyBridgeDisplays>();if(BridgeDisplays)BridgeDisplays->Initialize(this);}
+    // Ambient beds are local presentation: every player builds their own, not only the host.
+    if(!bEnsuredAmbience&&IsLocalController()&&GetPawn()){bEnsuredAmbience=true;FCalmyAudio::EnsureWorldAmbience(GetWorld());}
     if (bWheelInputLease)
     {
         const auto* P = Cast<ACalmyCharacter>(GetPawn());
@@ -273,23 +291,31 @@ void ACalmyPlayerController::ClientSetViewTarget_Implementation(AActor* Target,F
     }
     Super::ClientSetViewTarget_Implementation(Target,Params);
 }
-void ACalmyPlayerController::MenuUp(){if(!IsSettingsOpen()&&!IsJoinDialogOpen()&&bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Step(-1);}
-void ACalmyPlayerController::MenuDown(){if(!IsSettingsOpen()&&!IsJoinDialogOpen()&&bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Step(1);}
-void ACalmyPlayerController::MenuConfirm(){if(IsSettingsOpen()||IsJoinDialogOpen())return;if(bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Activate();else ResumeFromMenu();}
+void ACalmyPlayerController::MenuUp()
+{
+	if(!IsSettingsOpen()&&!IsJoinDialogOpen()&&bPauseMenuOpen&&BridgeTerminal){BridgeTerminal->Step(-1);return;}
+	if(!bPauseMenuOpen)RequestMissionBoardStep(-1);
+}
+void ACalmyPlayerController::MenuDown()
+{
+	if(!IsSettingsOpen()&&!IsJoinDialogOpen()&&bPauseMenuOpen&&BridgeTerminal){BridgeTerminal->Step(1);return;}
+	if(!bPauseMenuOpen)RequestMissionBoardStep(1);
+}
+void ACalmyPlayerController::MenuConfirm()
+{
+	if(IsSettingsOpen()||IsJoinDialogOpen())return;
+	if(bPauseMenuOpen&&BridgeTerminal)BridgeTerminal->Activate();
+	else if(ACalmyMissionBoard::IsPortMap(GetWorld()))RequestMissionBoardAccept();
+	else ResumeFromMenu();
+}
 
 void ACalmyPlayerController::TogglePauseMenu() {if(IsJoinDialogOpen()){CloseJoinDialog();return;} if(IsSettingsOpen()){CloseSettings();return;} if (bWheelInputLease) CloseFlyWheel(); else SetPauseMenuOpen(!bPauseMenuOpen); }
 void ACalmyPlayerController::ResumeFromMenu() { SetPauseMenuOpen(false); }
 void ACalmyPlayerController::RequestReplayTutorial()
 {
-	if (!IsLocalController() || !GetWorld()) return;
+	if (!GetWorld() || !FCalmySession::CanRequestSessionTravel(GetNetMode(), IsLocalController())) return;
 	CloseSettings();
 	SetPauseMenuOpen(false);
-	ACalmyTutorial::BeginForcedReplay();
-	if (GetNetMode() == NM_Client) ServerReplayTutorial();
-	else TravelToTrainingMap();
-}
-void ACalmyPlayerController::ServerReplayTutorial_Implementation()
-{
 	ACalmyTutorial::BeginForcedReplay();
 	TravelToTrainingMap();
 }
@@ -304,6 +330,21 @@ void ACalmyPlayerController::RequestRestartVoyage()
 	const auto* Voyage = ACalmyVoyageDirector::Find(GetWorld());
 	ServerRestartVoyage(Voyage ? Voyage->State.Round : 1);
 }
+void ACalmyPlayerController::RequestReturnToPort()
+{
+	if (!IsLocalController()) return;
+	ServerReturnToPort();
+}
+void ACalmyPlayerController::RequestMissionBoardStep(int32 Direction)
+{
+	if (!IsLocalController() || !ACalmyMissionBoard::IsPortMap(GetWorld())) return;
+	ServerMissionBoardStep(Direction);
+}
+void ACalmyPlayerController::RequestMissionBoardAccept()
+{
+	if (!IsLocalController() || !ACalmyMissionBoard::IsPortMap(GetWorld())) return;
+	ServerMissionBoardAccept();
+}
 void ACalmyPlayerController::ServerBeginVoyage_Implementation()
 {
 	auto* Voyage = ACalmyVoyageDirector::Find(GetWorld());
@@ -316,6 +357,24 @@ void ACalmyPlayerController::ServerRestartVoyage_Implementation(int32 ExpectedRo
 	auto* Crew = Cast<ACalmyCharacter>(GetPawn());
 	if (Voyage && Crew) Voyage->TryRestartWatch(Crew, ExpectedRound);
 }
+void ACalmyPlayerController::ServerReturnToPort_Implementation()
+{
+	auto* Voyage = ACalmyVoyageDirector::Find(GetWorld());
+	auto* Crew = Cast<ACalmyCharacter>(GetPawn());
+	if (Voyage && Crew) Voyage->TryReturnToPort(Crew);
+}
+void ACalmyPlayerController::ServerMissionBoardStep_Implementation(int32 Direction)
+{
+	auto* Board = ACalmyMissionBoard::Find(GetWorld());
+	auto* Crew = Cast<ACalmyCharacter>(GetPawn());
+	if (Board && Crew) Board->TryStep(Crew, Direction);
+}
+void ACalmyPlayerController::ServerMissionBoardAccept_Implementation()
+{
+	auto* Board = ACalmyMissionBoard::Find(GetWorld());
+	auto* Crew = Cast<ACalmyCharacter>(GetPawn());
+	if (Board && Crew) Board->TryAccept(Crew);
+}
 void ACalmyPlayerController::TravelToTrainingMap()
 {
 	UWorld* World = GetWorld();
@@ -325,6 +384,35 @@ void ACalmyPlayerController::TravelToTrainingMap()
 	{
 		UE_LOG(LogTemp, Error, TEXT("CALMY_TUTORIAL replay_travel_failed"));
 	}
+}
+void ACalmyPlayerController::MaybeLiveHold1Teleport()
+{
+	// Harness-only: -CalmyLiveHold1 teleports into HOLD 1 after Begin Watch, then to the green zone once cargo is held.
+#if UE_BUILD_SHIPPING
+	return;
+#else
+	if (!IsLocalController() || !GetWorld()) return;
+	if (LiveHold1Mode < 0) LiveHold1Mode = FParse::Param(FCommandLine::Get(), TEXT("CalmyLiveHold1")) ? 1 : 0;
+	if (LiveHold1Mode == 0) return;
+	const auto* Voyage = ACalmyVoyageDirector::Find(GetWorld());
+	auto* Crew = Cast<ACalmyCharacter>(GetPawn());
+	if (!Voyage || !Crew || Voyage->State.Phase != ECalmyVoyagePhase::Active) return;
+	if (!bLiveHold1Teleported)
+	{
+		bLiveHold1Teleported = true;
+		const FVector Hold1(-850.f, -420.f, 360.f);
+		Crew->SetActorLocationAndRotation(Hold1, FRotator(0.f, 90.f, 0.f), false, nullptr, ETeleportType::TeleportPhysics);
+		UE_LOG(LogTemp, Display, TEXT("CALMY_LIVE_HOLD1 teleported_to_hold1"));
+		return;
+	}
+	if (!bLiveHold1Delivered && Crew->HeldCargo)
+	{
+		bLiveHold1Delivered = true;
+		const FVector Green(0.f, -830.f, 1130.f);
+		Crew->SetActorLocationAndRotation(Green, FRotator(0.f, 0.f, 0.f), false, nullptr, ETeleportType::TeleportPhysics);
+		UE_LOG(LogTemp, Display, TEXT("CALMY_LIVE_HOLD1 teleported_to_green_zone held=%s"), *GetNameSafe(Crew->HeldCargo));
+	}
+#endif
 }
 void ACalmyPlayerController::MenuCamera()
 {
@@ -457,6 +545,17 @@ void ACalmyGameMode::BeginPlay()
 		GetWorld()->SpawnActor<ACalmyVoyageDirector>();
 		UE_LOG(LogTemp, Display, TEXT("CALMY_VOYAGE director_spawned map=%s"), *GetWorld()->GetMapName());
 	}
+	if (GetWorld()->GetNetMode() != NM_Client && ACalmyMissionBoard::IsPortMap(GetWorld()) && !ACalmyMissionBoard::Find(GetWorld()))
+	{
+		FActorSpawnParameters Spawn;
+		Spawn.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		auto* Board = GetWorld()->SpawnActor<ACalmyMissionBoard>(FVector(0.f, 0.f, 100.f), FRotator::ZeroRotator, Spawn);
+#if WITH_EDITOR
+		if (Board) Board->SetActorLabel(TEXT("PortHub_MissionBoard"));
+#endif
+		UE_LOG(LogTemp, Display, TEXT("CALMY_PORT mission_board_spawned map=%s"), *GetWorld()->GetMapName());
+	}
+	FCalmyAudio::EnsureWorldAmbience(GetWorld());
 }
 
 void ACalmyGameMode::Logout(AController* Exiting)
@@ -473,13 +572,24 @@ void ACalmyGameMode::PreLogin(const FString& Options, const FString& Address, co
 {
 	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
 	if (!ErrorMessage.IsEmpty()) return;
-	if (!FCalmySession::CanAdmit(GetNumPlayers()))
+	// The joining connection and clients still loading the map hold seats before they own a PlayerController.
+	int32 LocalPlayers = 0, OpenConnections = 0;
+	for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It) if (It->IsValid() && (*It)->IsLocalController()) ++LocalPlayers;
+	if (const UNetDriver* Driver = GetWorld()->GetNetDriver())
+		for (const UNetConnection* Connection : Driver->ClientConnections) if (Connection && Connection->GetConnectionState() != USOCK_Closed) ++OpenConnections;
+	if (!FCalmySession::CanAdmit(FCalmySession::SeatsTakenAtPreLogin(LocalPlayers, OpenConnections, GetNumPlayers())))
 	{
 		ErrorMessage = TEXT("This build supports at most four crew members.");
 	}
 }
 
-void ACalmyHUD::DrawScaledText(const FString& Text,FLinearColor Color,float X,float Y,UFont* Font,float Scale,bool ScalePosition)
+bool ACalmyHUD::bReviewCrowded=false;
+bool ACalmyHUD::bReviewBreakdown=false;
+FVector ACalmyHUD::ReviewBreakdownLocation=FVector::ZeroVector;
+bool ACalmyHUD::bLastLayoutValid=true;
+int32 ACalmyHUD::LastVisibleTop=0;
+int32 ACalmyHUD::LastTopItems=0;
+FString ACalmyHUD::LocalizeKeys(const FString& Text) const
 {
     const auto* Pref=UCalmyPreferences::Get();
     auto KeyName=[](FKey K){return K==EKeys::LeftMouseButton?FString(TEXT("LMB")):K==EKeys::RightMouseButton?FString(TEXT("RMB")):K==EKeys::SpaceBar?FString(TEXT("SPACE")):K.ToString();};
@@ -498,7 +608,11 @@ void ACalmyHUD::DrawScaledText(const FString& Text,FLinearColor Color,float X,fl
         FKey Key=Word==TEXT("LMB")?EKeys::LeftMouseButton:(Word==TEXT("SPACE")||Word==TEXT("Space"))?EKeys::SpaceBar:FKey(FName(*Word));
         Display+=UCalmyPreferences::DefaultKeys().Contains(Key)?KeyName(Pref->KeyFor(Key)):Word;
     }
-    Super::DrawText(Display,Color,X,Y,Font,Scale,ScalePosition);
+    return Display;
+}
+void ACalmyHUD::DrawScaledText(const FString& Text,FLinearColor Color,float X,float Y,UFont* Font,float Scale,bool ScalePosition)
+{
+    Super::DrawText(LocalizeKeys(Text),Color,X,Y,Font,Scale,ScalePosition);
 }
 void ACalmyHUD::DrawHUD()
 {
@@ -545,163 +659,300 @@ void ACalmyHUD::DrawHUD()
         return;
     }
     if (PC && PC->IsFlyWheelOpen()) { DrawFlyWheel(PC); return; }
-    const float UIScale=UCalmyPreferences::Get()->HUDScale;
-    const float OriginalX=Canvas->ClipX,OriginalY=Canvas->ClipY;
-    Canvas->ClipX/=UIScale;Canvas->ClipY/=UIScale;
-    Canvas->Canvas->PushRelativeTransform(FScaleMatrix(FVector(UIScale,UIScale,1)));
-    ON_SCOPE_EXIT {Canvas->Canvas->PopTransform();Canvas->ClipX=OriginalX;Canvas->ClipY=OriginalY;};
-    if(UCalmyPreferences::Get()->ShowFPS)
+    DrawGameplayHUD(PC, bShipReview);
+}
+
+void ACalmyHUD::Toast(const FString& Text,const FLinearColor& Color,float Seconds)
+{
+    ToastText=Text;ToastColor=Color;ToastUntil=FPlatformTime::Seconds()+Seconds;
+}
+
+void ACalmyHUD::DrawGameplayHUD(ACalmyPlayerController* PC, bool bShipReview)
+{
+    // Minimal HUD: crosshair, a prompt only when something is interactable, health only when hurt, one alert
+    // for an active leak, short toasts on watch changes and subtitles for the ship resident. Watch, alarms,
+    // crew and sea status live on the wheelhouse screens (ACalmyBridgeDisplays); controls and tips live in
+    // Settings -> Подсказки. Fonts are rasterised at the final pixel size in 1080-unit reference space.
+    const float S=FMath::Max(.1f,UCalmyPreferences::Get()->HUDScale*FMath::Clamp(Canvas->ClipY/1080.f,.6f,3.f));
+    const FVector2D Viewport(Canvas->ClipX/S,Canvas->ClipY/S);
+    const UFont* Face=GEngine->GetMediumFont();
+    const bool bCanMeasure=FSlateApplication::IsInitialized()&&FSlateApplication::Get().GetRenderer();
+    auto Font=[&](float Size,bool bBold,int32 Spacing){FSlateFontInfo F(Face,Size*S,bBold?FName(TEXT("Bold")):FName(TEXT("Regular")));F.LetterSpacing=Spacing;return F;};
+    auto Measure=[&](const FString& Str,const FSlateFontInfo& F)->FVector2D
     {
-        const float Ms=FApp::GetDeltaTime()*1000;
-        DrawScaledText(FString::Printf(TEXT("%.0f FPS | %.1f ms"),1000/FMath::Max(1.f,Ms),Ms),FLinearColor(.6,1,.8),Canvas->ClipX-205,18);
-    }
-	const auto* Shift = ACalmyShift::Find(GetWorld());
-    if (const auto* Swarm = AFlySwarmMob::FindConversationalSwarm(PC); Swarm && (!Swarm->Speech.IsEmpty() || Swarm->VisibleInscriptions.Num() > 0))
+        if(bCanMeasure)return FVector2D(FSlateApplication::Get().GetRenderer()->GetFontMeasureService()->Measure(Str,F))/S;
+        return FVector2D(Str.Len()*F.Size*.55f,F.Size*1.3f)/S;
+    };
+    auto Rect=[&](float X,float Y,float W,float H,const FLinearColor& Color){DrawRect(Color,X*S,Y*S,W*S,H*S);};
+    auto Text=[&](const FString& Str,float X,float Y,const FSlateFontInfo& F,const FLinearColor& Color)
+    {FCanvasTextItem Item(FVector2D(X*S,Y*S),FText::FromString(Str),F,Color);Item.BlendMode=SE_BLEND_Translucent;Canvas->DrawItem(Item);};
+
+    struct FLine{FString Text;FLinearColor Color;float Size=13;bool bBold=false;int32 Spacing=0;float Bar=-1;};
+    struct FRow{int32 Line=0;FString Text;bool bFirst=true;};
+    struct FCard{FLinearColor Accent;TArray<FLine> Lines;float MaxW=600;float Alpha=.72f;bool bBar=true;bool bCenter=false;TArray<FRow> Rows;FVector2D Size=FVector2D::ZeroVector;};
+    const float PadX=14,PadY=8,LineGap=2,BarW=150;
+    // Word-wraps every line to the block width; a block never grows past MaxW and never clips text.
+    auto Build=[&](FCard& Card)
     {
-        const float PanelH = Swarm->Speech.IsEmpty() ? 78.f : 108.f;
-        const float Y = Canvas->ClipY - 40.f - PanelH;
-        DrawRect(FLinearColor(.02f,.04f,.035f,.90f), 16, Y, FMath::Min(900.f, Canvas->ClipX-32.f), PanelH);
-        DrawScaledText(FString::Printf(TEXT("SHIP RESIDENT  |  %s%s"),
-            *FFlyCognition::ActivityLabel(Swarm->Activity),
-            Swarm->bTravelPlanning ? TEXT("  ·  THINKING") : TEXT("")), FLinearColor(.6f,1.f,.65f), 30, Y+10);
-        float LineY = Y + 34.f;
-        if (!Swarm->Speech.IsEmpty())
+        Card.Rows.Reset();Card.Size=FVector2D::ZeroVector;
+        if(Card.Lines.Num()==0)return;
+        float W=0,H=PadY*2;
+        for(int32 L=0;L<Card.Lines.Num();++L)
         {
-            DrawScaledText(Swarm->Speech, FLinearColor::White, 30, LineY);
-            LineY += 24.f;
+            FLine& Line=Card.Lines[L];
+            Line.Text=LocalizeKeys(Line.Text).Replace(TEXT(" | "),TEXT("   ·   "));
+            const FSlateFontInfo F=Font(Line.Size,Line.bBold,Line.Spacing);
+            const float Lead=Line.Bar>=0?BarW+12:0;
+            const float Limit=Card.MaxW-2*PadX-Lead;
+            TArray<FString> Words;Line.Text.ParseIntoArray(Words,TEXT(" "),false);
+            FString Row;bool bFirst=true;
+            auto Flush=[&]{const FVector2D M=Measure(Row.IsEmpty()?FString(TEXT(" ")):Row,F);W=FMath::Max(W,float(M.X)+Lead);H+=float(M.Y)+LineGap;Card.Rows.Add({L,Row,bFirst});Row.Reset();bFirst=false;};
+            for(const FString& Word:Words)
+            {
+                const FString Next=Row.IsEmpty()?Word:Row+TEXT(" ")+Word;
+                if(!Row.IsEmpty()&&Measure(Next,F).X>Limit){Flush();Row=Word;}
+                else Row=Next;
+            }
+            Flush();
         }
-        // Shared marks: nearest few, Dark Souls appraisal style (xEchoes).
-        struct FNearMark { const FFlyInscriptionView* Mark; float DistSq; };
-        TArray<FNearMark, TInlineAllocator<8>> Near;
-        const FVector Eye = PC->GetPawn() ? PC->GetPawn()->GetActorLocation() : FVector::ZeroVector;
-        for (const auto& Mark : Swarm->VisibleInscriptions)
+        Card.Size=FVector2D(FMath::Min(W+2*PadX,Card.MaxW),H-LineGap);
+    };
+    auto DrawCard=[&](const FCard& Card,const FCalmyHudRect& R)
+    {
+        if(R.IsEmpty())return;
+        Rect(R.X,R.Y,R.W,R.H,FLinearColor(.012f,.024f,.03f,Card.Alpha));
+        if(Card.bBar)Rect(R.X,R.Y,3,R.H,Card.Accent);
+        float Y=R.Y+PadY;
+        for(const FRow& Row:Card.Rows)
         {
-            const float DistSq = FVector::DistSquared(Mark.Location, Eye);
-            if (DistSq <= FMath::Square(900.f)) Near.Add({&Mark, DistSq});
+            const FLine& Line=Card.Lines[Row.Line];
+            const FSlateFontInfo F=Font(Line.Size,Line.bBold,Line.Spacing);
+            const FVector2D M=Measure(Row.Text.IsEmpty()?FString(TEXT(" ")):Row.Text,F);
+            const float Lead=Line.Bar>=0?BarW+12:0;
+            float X=Card.bCenter?R.X+(R.W-float(M.X)-Lead)*.5f:R.X+PadX;
+            if(Line.Bar>=0)
+            {
+                if(Row.bFirst)
+                {
+                    const float Fill=FMath::Clamp(Line.Bar,0.f,1.f);
+                    const float BarY=Y+float(M.Y)*.5f-3;
+                    Rect(X,BarY,BarW,6,FLinearColor(.07f,.11f,.12f,.95f));
+                    Rect(X,BarY,BarW*Fill,6,FMath::Lerp(FLinearColor(.95f,.28f,.2f),FLinearColor(.35f,.9f,.6f),Fill));
+                }
+                X+=Lead;
+            }
+            Text(Row.Text,X,Y,F,Line.Color);
+            Y+=float(M.Y)+LineGap;
         }
-        Near.Sort([](const FNearMark& A, const FNearMark& B) { return A.DistSq < B.DistSq; });
-        FString Marks;
-        for (int32 I = 0; I < Near.Num() && I < 3; ++I)
+    };
+
+    const FLinearColor Teal(.42f,.86f,.9f),Amber(1.f,.78f,.3f),Dim(.62f,.74f,.76f),White(.93f,.96f,.95f),Red(1.f,.4f,.32f),Green(.5f,.95f,.62f);
+    const auto* Shift=ACalmyShift::Find(GetWorld());
+    const auto* Tutorial=ACalmyTutorial::Find(GetWorld());
+    const auto* Leak=ACalmyLeak::Find(GetWorld());
+    const auto* Ocean=ACalmyOcean::Find(GetWorld());
+    const auto* Voyage=ACalmyVoyageDirector::Find(GetWorld());
+    const auto* Pawn=Cast<ACalmyCharacter>(GetOwningPawn());
+    const double Now=FPlatformTime::Seconds();
+
+    // Toasts only when something changes; the rest of the watch lives on the bridge screens.
+    if(Pawn&&!bShownControlsTip){bShownControlsTip=true;TipUntil=Now+8;}
+    if(Voyage)
+    {
+        if(int32(Voyage->State.Phase)!=SeenVoyagePhase||Voyage->State.Round!=SeenRound)
         {
-            if (I) Marks += TEXT("   ·   ");
-            Marks += FString::Printf(TEXT("[%dx] %s"), Near[I].Mark->Echoes + 1, *FFlyCognition::MessageLabel(Near[I].Mark->Kind));
+            SeenVoyagePhase=int32(Voyage->State.Phase);SeenRound=Voyage->State.Round;
+            if(Voyage->State.Phase==ECalmyVoyagePhase::Briefing)Toast(TEXT("WATCH BRIEFING  ·  details on the WATCH screen in the wheelhouse"),Amber,7);
+            else if(Voyage->State.Phase==ECalmyVoyagePhase::Outcome)
+            {
+                FString Head,Tail;const FString Outcome=Voyage->OutcomeText();
+                Toast(Outcome.Split(TEXT(" | "),&Head,&Tail)?Head:Outcome,Voyage->State.bShiftFailed?Red:Green,8);
+            }
+            else Toast(TEXT("WATCH STARTED  ·  deliver the manifest to the green zone"),Teal,7);
         }
-        if (!Marks.IsEmpty()) DrawScaledText(Marks, FLinearColor(.85f,.78f,.45f), 30, LineY);
     }
-	const auto* Tutorial = ACalmyTutorial::Find(GetWorld());
-	const auto* Leak = ACalmyLeak::Find(GetWorld());
-	DrawRect(FLinearColor(0.025f, .045f, .06f, .82f), 16, 16, FMath::Min(620.f,Canvas->ClipX-32.f), Shift ? 210 : 122);
-    DrawScaledText(bShipReview ? TEXT("CALMY PIRATES CO. | OCEAN FREIGHTER R7") : Tutorial ? TEXT("CREW TRAINING | NEXT STOP: OCEAN FREIGHTER") : ACalmyOcean::Find(GetWorld()) ? TEXT("CALMY PIRATES CO. | WATER LAB - FREE PRACTICE") : (Shift ? TEXT("CALMY PIRATES CO. | COASTAL CARGO SHIFT") : TEXT("CALMY PIRATES CO. | DECK TEST")), FLinearColor(.4f,.85f,.9f),30,26,GEngine->GetMediumFont());
-	DrawScaledText(TEXT("WASD move/swim | SPACE jump | E interact | G drop | LMB punch / throw | ESC pause"),FLinearColor::White,30,58);
-	if (const auto* Pawn = Cast<ACalmyCharacter>(GetOwningPawn()))
-	{
-        const float Hit = Pawn->GetHitFlash();
-        if (Hit>0.f)
+    else if(Shift&&int32(Shift->State.Phase)!=SeenShiftPhase)
+    {
+        SeenShiftPhase=int32(Shift->State.Phase);
+        if(Shift->State.Phase==ECalmyShiftPhase::Complete)Toast(FString::Printf(TEXT("SHIFT COMPLETE  ·  $%d  ·  %d/3"),Shift->State.FinalPayout,Shift->State.PerformanceStars),Green,8);
+        else if(Shift->State.Phase==ECalmyShiftPhase::Failed)Toast(TEXT("CONTRACT FAILED  ·  time expired"),Red,8);
+    }
+    if(Ocean)
+    {
+        const float Strength=ACalmyOcean::SeaStrength(Ocean->WaveTime());
+        const int32 Sea=Strength>1.8f?2:Strength>1.f?1:0;
+        if(SeenSea>=0&&Sea==2&&SeenSea!=2)Toast(TEXT("STRONG SWELL  ·  current pushes swimmers and loose cargo"),Red,6);
+        SeenSea=Sea;
+    }
+
+    TArray<FCard> Top;
+    auto Pill=[&](const FString& Title,const FLinearColor& Color,const FString& Sub,float Alpha)
+    {
+        FCard Card{Color};Card.bCenter=true;Card.bBar=false;Card.MaxW=900;Card.Alpha=Alpha;
+        Card.Lines.Add({Title,Color,15,true,40});
+        if(!Sub.IsEmpty())Card.Lines.Add({Sub,White,13});
+        Top.Add(Card);
+    };
+    if(Leak)
+    {
+        const auto& L=Leak->State;
+        if(L.Phase==ECalmyLeakPhase::Warning)Pill(FString::Printf(TEXT("LEAK WARNING  ·  %d s"),L.WarningSeconds),Amber,TEXT("Find the yellow valve near the green zone"),.78f);
+        else if(L.Phase==ECalmyLeakPhase::Leaking)Pill(FString::Printf(TEXT("LEAK  ·  WATER %d%%  ·  REPAIR %d%%"),L.Water,L.Repair),Red,L.Repairer?TEXT("Repairing: stay on the valve"):TEXT("Hold F at the red valve with empty hands"),.78f);
+        else if(L.Phase==ECalmyLeakPhase::Draining)Pill(FString::Printf(TEXT("SEALED  ·  PUMPING OUT  ·  WATER %d%%"),L.Water),Teal,FString(),.6f);
+    }
+    if(Voyage&&Voyage->State.Phase==ECalmyVoyagePhase::Active&&Voyage->State.bFuelStationArmed&&Voyage->State.FuelPercent<=25)
+        Pill(FString::Printf(TEXT("FUEL LOW  ·  %d%%"),Voyage->State.FuelPercent),Voyage->State.FuelPercent<=10?Red:Amber,TEXT("Hold F at the green-lit fuel pump"),.74f);
+    if(Now<ToastUntil)Pill(ToastText,ToastColor,FString(),.66f);
+    if(Tutorial)
+    {
+        FString Head,Tail;const FString Instruction=Tutorial->Instruction();
+        FString Guidance;
+        if(Pawn&&Tutorial->Step<ECalmyTutorialStep::Depart)
         {
-            const FLinearColor Flash(.6f,.05f,.025f,Hit*.55f);
-            DrawRect(Flash,0,0,Canvas->ClipX,8); DrawRect(Flash,0,Canvas->ClipY-8,Canvas->ClipX,8);
-            DrawRect(Flash,0,0,8,Canvas->ClipY); DrawRect(Flash,Canvas->ClipX-8,0,8,Canvas->ClipY);
+            const FVector Delta=Tutorial->ObjectiveLocation()-Pawn->GetActorLocation();
+            const float Angle=FMath::FindDeltaAngleDegrees(GetOwningPlayerController()->GetControlRotation().Yaw,Delta.Rotation().Yaw);
+            Guidance=FString::Printf(TEXT("%s  %.1f m  ·  %s"),Tutorial->Step==ECalmyTutorialStep::Deliver?TEXT("Green zone"):TEXT("Training crate"),Delta.Size2D()/100,
+                FMath::Abs(Angle)<30?TEXT("ahead"):FMath::Abs(Angle)>135?TEXT("behind you"):Angle>0?TEXT("turn right"):TEXT("turn left"));
         }
+        Pill(Instruction.Split(TEXT(" | "),&Head,&Tail)?Head:Instruction,Amber,Guidance,.62f);
+    }
+    if(Now<TipUntil)Pill(TEXT("ESC menu  ·  controls and tips: Settings → Подсказки"),Dim,FString(),.5f);
+
+    FLinearColor DotColor=White;FVector DotPx(Canvas->ClipX*.5f,Canvas->ClipY*.5f,1);
+    FCard Prompt{White};Prompt.bCenter=true;Prompt.bBar=false;Prompt.MaxW=760;Prompt.Alpha=.5f;
+    if(Pawn)
+    {
         const auto* Aimed=Pawn->FindGrabTarget();
         const auto Feedback=Pawn->GetGrabFeedback(Aimed);
-        const FVector Dot=Project(Pawn->GetInteractionOrigin()+Pawn->GetBaseAimRotation().Vector()*1500.f)/UIScale;
-        const FLinearColor DotColor=Feedback==ECalmyGrabFeedback::Ready?FLinearColor(.3f,1.f,.6f):Aimed?FLinearColor(1.f,.65f,.2f):FLinearColor::White;
-        if(UCalmyPreferences::Get()->ShowCrosshair)DrawRect(DotColor,Dot.X-2,Dot.Y-2,4,4);
-        FString Hint=Pawn->GetInteractionHint();
-        if(Pawn->HeldCargo && Pawn->HeldCargo->Kind==ECalmyCargoKind::Standard)
-            Hint=TEXT("CARRYING | G put down | LMB throw");
-        float HintWidth=0,HintHeight=0;GetTextSize(Hint,HintWidth,HintHeight,GEngine->GetSmallFont());
-        const float HintX=FMath::Max(20.f,(Canvas->ClipX-HintWidth)*.5f),HintY=Canvas->ClipY*.5f+32;
-        DrawRect(FLinearColor(.01f,.025f,.035f,.9f),HintX-12,HintY-8,HintWidth+24,HintHeight+16);
-        DrawRect(DotColor,HintX-12,HintY-8,3,HintHeight+16);
-        DrawScaledText(Hint,FLinearColor::White,HintX,HintY,GEngine->GetSmallFont());
-        if(const auto* Ocean=ACalmyOcean::Find(GetWorld()))
+        DotPx=Project(Pawn->GetInteractionOrigin()+Pawn->GetBaseAimRotation().Vector()*1500.f);
+        DotColor=Feedback==ECalmyGrabFeedback::Ready?FLinearColor(.3f,1.f,.6f):Aimed?FLinearColor(1.f,.65f,.2f):White;
+        FString PromptText=Pawn->GetInteractionHint();
+        if(Pawn->HeldCargo&&Pawn->HeldCargo->Kind==ECalmyCargoKind::Standard)PromptText=TEXT("CARRYING | G put down | LMB throw");
+        // Nothing to interact with: no text at all, only the crosshair.
+        if(PromptText==ACalmyCharacter::GrabFeedbackText(ECalmyGrabFeedback::NoTarget))PromptText.Reset();
+        if(!PromptText.IsEmpty())Prompt.Lines.Add({PromptText,Feedback==ECalmyGrabFeedback::Ready&&Aimed?FLinearColor(.6f,1.f,.75f):White,14});
+    }
+    FCard Vitals{Red};Vitals.MaxW=460;Vitals.Alpha=.55f;Vitals.bBar=false;
+    if(Pawn&&(Pawn->Health<99.5f||Pawn->Lifecycle!=ECalmyPlayerLifecycleState::Controlled))
+    {
+        const FString State=Pawn->Lifecycle==ECalmyPlayerLifecycleState::Controlled?FString():
+            TEXT("   ·   ")+StaticEnum<ECalmyPlayerLifecycleState>()->GetNameStringByValue(static_cast<int64>(Pawn->Lifecycle)).ToUpper();
+        Vitals.Lines.Add({FString::Printf(TEXT("HP %.0f%s"),Pawn->Health,*State),White,13,true,40,Pawn->Health/100.f});
+    }
+    FCard Subtitle{Green};Subtitle.bCenter=true;Subtitle.bBar=false;Subtitle.MaxW=900;Subtitle.Alpha=.5f;
+    if(const auto* Swarm=PC?AFlySwarmMob::FindConversationalSwarm(PC):nullptr;Swarm&&!Swarm->Speech.IsEmpty())
+    {
+        Subtitle.Lines.Add({TEXT("SHIP RESIDENT"),Green,11,true,90});
+        Subtitle.Lines.Add({Swarm->Speech,White,16});
+    }
+
+#if !UE_BUILD_SHIPPING
+    if(bReviewCrowded)
+    {
+        // Probe-only worst case: every minimal block at once.
+        Top.Reset();
+        Pill(TEXT("LEAK  ·  WATER 83%  ·  REPAIR 0%"),Red,TEXT("Hold F at the red valve with empty hands"),.78f);
+        Pill(TEXT("WATCH STARTED  ·  deliver the manifest to the green zone"),Teal,FString(),.66f);
+        Pill(TEXT("ESC menu  ·  controls and tips: Settings → Подсказки"),Dim,FString(),.5f);
+        Prompt.Lines.Reset();Prompt.Lines.Add({TEXT("TOO HEAVY ALONE - bring a free teammate within 3m, or ask Misha"),White,14});
+        Vitals.Lines.Reset();Vitals.Lines.Add({TEXT("HP 42   ·   RECOVERING"),White,13,true,40,.42f});
+        Subtitle.Lines.Reset();Subtitle.Lines.Add({TEXT("SHIP RESIDENT"),Green,11,true,90});
+        Subtitle.Lines.Add({TEXT("Someone is near. I want to make contact before the next swell reaches the lower deck."),White,16});
+    }
+#endif
+
+    // NFS-style breakdown arrow: points at the most urgent breakdown from replicated state.
+    FCalmyBreakdownTarget Breakdown;
+    if(Pawn)
+    {
+        const auto* Fuel=ACalmyFuelStation::Find(GetWorld());
+        const bool bFuelWatch=Fuel&&Voyage&&Voyage->State.Phase==ECalmyVoyagePhase::Active&&Voyage->State.bFuelStationArmed;
+        Breakdown=FCalmyBreakdownCompass::Select(Leak&&Leak->State.Phase==ECalmyLeakPhase::Warning,Leak&&Leak->State.Phase==ECalmyLeakPhase::Leaking,
+            Leak?Leak->GetActorLocation():FVector::ZeroVector,bFuelWatch,Voyage?Voyage->State.FuelPercent:100,Fuel?Fuel->GetActorLocation():FVector::ZeroVector);
+#if !UE_BUILD_SHIPPING
+        if(bReviewBreakdown){Breakdown.Kind=ECalmyBreakdownKind::Leak;Breakdown.Location=ReviewBreakdownLocation;}
+#endif
+    }
+    for(FCard& Card:Top)Build(Card);
+    Build(Prompt);Build(Vitals);Build(Subtitle);
+    const FString Fps=UCalmyPreferences::Get()->ShowFPS?FString::Printf(TEXT("%.0f FPS   ·   %.1f ms"),1000/FMath::Max(1.f,FApp::GetDeltaTime()*1000),FApp::GetDeltaTime()*1000):FString();
+    const FSlateFontInfo FpsFont=Font(12,true,40);
+    FCalmyHudLayoutInput In;
+    In.Viewport=Viewport;
+    const FVector2D ArrowBlock(380,120);
+    if(Breakdown.IsValid())In.Top.Add(ArrowBlock);
+    for(const FCard& Card:Top)In.Top.Add(Card.Size);
+    In.Prompt=Prompt.Size;In.PromptTop=float(DotPx.Y)/S+22;
+    In.Subtitle=Subtitle.Size;In.Vitals=Vitals.Size;
+    if(!Fps.IsEmpty())In.Fps=Measure(Fps,FpsFont);
+    const FCalmyHudLayout Layout=FCalmyHudLayoutSolver::Solve(In);
+    bLastLayoutValid=FCalmyHudLayoutSolver::IsValid(Layout,Viewport);
+    const int32 TopBase=Breakdown.IsValid()&&Layout.Top.Num()>0?1:0;
+    LastVisibleTop=Layout.Top.Num();LastTopItems=Top.Num()+(Breakdown.IsValid()?1:0);
+
+    if(Pawn)
+    {
+        if(const float Hit=Pawn->GetHitFlash();Hit>0.f)
         {
-            const float Strength=ACalmyOcean::SeaStrength(Ocean->WaveTime());
-            DrawScaledText(Strength>1.8f?TEXT("SEA: STRONG SWELL | current pushes swimmers and loose cargo"):
-                Strength>1.f?TEXT("SEA: CHANGING SWELL | watch the waves before entering"):
-                TEXT("SEA: CALM INTERVAL | stronger waves arrive in sets"),FLinearColor(.5f,.8f,.9f),30,Canvas->ClipY-80);
+            const FLinearColor Flash(.6f,.05f,.025f,Hit*.55f);
+            DrawRect(Flash,0,0,Canvas->ClipX,8);DrawRect(Flash,0,Canvas->ClipY-8,Canvas->ClipX,8);
+            DrawRect(Flash,0,0,8,Canvas->ClipY);DrawRect(Flash,Canvas->ClipX-8,0,8,Canvas->ClipY);
         }
-		const FString State = StaticEnum<ECalmyPlayerLifecycleState>()->GetNameStringByValue(static_cast<int64>(Pawn->Lifecycle));
-        DrawScaledText(FString::Printf(TEXT("V %s | M motion %.0f%% | B stumble | H %s"),Pawn->IsSteadyCamera()?TEXT("bodycam"):TEXT("steady camera"),Pawn->GetCameraMotionScale()*100,
-            Pawn->CrewHelper?TEXT("ask to wait"):Pawn->FindHelperTarget()?TEXT("ask Misha for help"):TEXT("approach Misha to ask for help")),FLinearColor(.65f,.85f,.9f),30,Canvas->ClipY-30);
-        if(Pawn->CrewHelper)
-            DrawScaledText(FString::Printf(TEXT("CREW MATE: %s | %.1fm | keep within 3m for heavy cargo"),
-                *StaticEnum<ECalmyHelperState>()->GetNameStringByValue(static_cast<int64>(Pawn->CrewHelper->Assistance)),Pawn->CrewHelper->FollowDistance/100),
-                FLinearColor(.8f,.8f,.35f),30,Canvas->ClipY-55);
-		DrawScaledText(FString::Printf(TEXT("HP %.0f | %s | Cargo: %s | %s"), Pawn->Health, *State, Pawn->HeldCargo ? TEXT("HELD") : TEXT("none"),
-			*FCalmySession::StatusLine(GetWorld())), FLinearColor::White, 30, 82);
-		const ACalmyCargo* Target = Pawn->HeldCargo ? Pawn->HeldCargo.Get() : Pawn->FindGrabTarget();
-        DrawScaledText(Pawn->IsInOcean() ? (bShipReview ? TEXT("SURFACE SWIM | Boarding route not implemented in this review") : TEXT("SURFACE SWIM | free hands | return along the orange-railed ramp")) : (Target ? Target->GetHandlingHint(Pawn) : (bShipReview ? TEXT("Explore the ship | E cargo | Q handoff | green delivery zone") : ACalmyOcean::Find(GetWorld()) ? TEXT("E cargo | Q handoff | test buoyancy at the water ramp") : TEXT("E cargo | Q handoff | deliver to the green zone"))),FLinearColor(.65f,.8f,.85f),30,106);
-	}
-	if (Tutorial)
-	{
-        DrawScaledText(Tutorial->Instruction(),FLinearColor(1,.8f,.3f),30,132);
-        DrawScaledText(TEXT("No time limit | Shared crew lesson | Then: ship, cabins and engine room"),FLinearColor(.5f,.85f,.9f),30,158);
-        FString Guidance=TEXT("Misha and water: optional practice | Entire crew travels together");
-        if(GetOwningPawn() && Tutorial->Step<ECalmyTutorialStep::Depart)
+        if(UCalmyPreferences::Get()->ShowCrosshair)DrawRect(DotColor,DotPx.X-2,DotPx.Y-2,4,4);
+    }
+    auto DrawBreakdownArrow=[&](const FCalmyHudRect& R)
+    {
+        const bool bCam=PC&&PC->PlayerCameraManager;
+        const FCalmyCompassArrow A=FCalmyBreakdownCompass::Arrow(bCam?PC->PlayerCameraManager->GetCameraRotation():Pawn->GetControlRotation(),
+            bCam?PC->PlayerCameraManager->GetCameraLocation():Pawn->GetActorLocation(),Breakdown.Location);
+        const bool bCritical=FCalmyBreakdownCompass::IsCritical(Breakdown.Kind);
+        const float Pulse=bCritical?.78f+.22f*FMath::Sin(float(Now)*6.f):1.f;
+        const FLinearColor Base=bCritical?FLinearColor(1.f,.24f,.16f):FLinearColor(1.f,.74f,.22f);
+        const FLinearColor Body(Base.R,Base.G,Base.B,.95f*Pulse),Shade(Base.R*.3f,Base.G*.3f,Base.B*.3f,.9f*Pulse);
+        const FVector2D Center((R.X+R.W*.5f)*S,(R.Y+48)*S);
+        const float Rad=FMath::DegreesToRadians(A.YawDelta),Cos=FMath::Cos(Rad),Sin=FMath::Sin(Rad);
+        // The chevron lies on a floor tilted toward the camera: the far end is smaller and flattened, as in NFS Underground.
+        auto Point=[&](float X,float Y,float Lift)
         {
-            const FVector Delta=Tutorial->ObjectiveLocation()-GetOwningPawn()->GetActorLocation();
-            const float Angle=FMath::FindDeltaAngleDegrees(GetOwningPlayerController()->GetControlRotation().Yaw,Delta.Rotation().Yaw);
-            Guidance=FString::Printf(TEXT("%s: %.1f m | %s"),Tutorial->Step==ECalmyTutorialStep::Deliver?TEXT("Green delivery zone"):TEXT("Wooden training crate"),Delta.Size2D()/100,
-                FMath::Abs(Angle)<30?TEXT("AHEAD"):FMath::Abs(Angle)>135?TEXT("TURN AROUND"):Angle>0?TEXT("TURN RIGHT"):TEXT("TURN LEFT"));
-        }
-        DrawScaledText(Guidance,FLinearColor::White,30,184);
-        if(GetOwningPawn() && Tutorial->Step<ECalmyTutorialStep::Depart)
+            const float RX=X*Cos-Y*Sin,RY=X*Sin+Y*Cos;
+            const float Depth=1.f/(1.f+RY*.006f);
+            return Center+FVector2D(RX*Depth,RY*.5f*Depth+Lift)*S;
+        };
+        struct FTri{float AX,AY,BX,BY,CX,CY;};
+        static const FTri Tris[]={{0,-46,-32,-4,32,-4},{-12,-4,-12,40,12,40},{-12,-4,12,40,12,-4}};
+        for(float Lift:{7.f,0.f})
+            for(const FTri& T:Tris)
+            {
+                FCanvasTriangleItem Tri(Point(T.AX,T.AY,Lift),Point(T.BX,T.BY,Lift),Point(T.CX,T.CY,Lift),GWhiteTexture);
+                Tri.SetColor(Lift>0?Shade:Body);Tri.BlendMode=SE_BLEND_Translucent;Canvas->DrawItem(Tri);
+            }
+        FString Label=FString(FCalmyBreakdownCompass::Label(Breakdown.Kind))+TEXT("   ·   ")+(A.bArrived?FString(TEXT("HERE")):FString::Printf(TEXT("%.0f m"),A.DistanceMeters));
+        if(A.DeckOffset==1)Label+=TEXT("   ·   DECK ABOVE");
+        else if(A.DeckOffset==-1)Label+=TEXT("   ·   DECK BELOW");
+        else if(A.DeckOffset!=0)Label+=FString::Printf(TEXT("   ·   %d DECKS %s"),FMath::Abs(A.DeckOffset),A.DeckOffset>0?TEXT("UP"):TEXT("DOWN"));
+        const FSlateFontInfo F=Font(13,true,50);const FVector2D M=Measure(Label,F);
+        Rect(R.X+(R.W-float(M.X))*.5f-10,R.Y+R.H-float(M.Y)-8,float(M.X)+20,float(M.Y)+6,FLinearColor(.012f,.024f,.03f,.55f));
+        Text(Label,R.X+(R.W-float(M.X))*.5f,R.Y+R.H-float(M.Y)-5,F,FLinearColor(Base.R,Base.G,Base.B,1));
+    };
+    if(TopBase&&Pawn)DrawBreakdownArrow(Layout.Top[0]);
+    for(int32 I=TopBase;I<Layout.Top.Num();++I)DrawCard(Top[I-TopBase],Layout.Top[I]);
+    DrawCard(Prompt,Layout.Prompt);
+    DrawCard(Vitals,Layout.Vitals);
+    DrawCard(Subtitle,Layout.Subtitle);
+    if(!Layout.Fps.IsEmpty())Text(Fps,Layout.Fps.X,Layout.Fps.Y,FpsFont,FLinearColor(.6f,1,.8f));
+    if(Tutorial&&Pawn&&Tutorial->Step<ECalmyTutorialStep::Depart)
+    {
+        const FVector Target=Tutorial->ObjectiveLocation();
+        const FVector Screen=Project(Target+FVector(0,0,100))/S;
+        const float TopBottom=Layout.Top.Num()?Layout.Top.Last().Bottom():0;
+        if(Screen.Z>0&&Screen.X>20&&Screen.X<Viewport.X-220&&Screen.Y>TopBottom+20&&Screen.Y<Viewport.Y-140)
         {
-            const FVector Target=Tutorial->ObjectiveLocation();
-            const FVector Screen=Project(Target+FVector(0,0,100));
-            if(Screen.Z>0 && Screen.X>20 && Screen.X<Canvas->ClipX-180 && Screen.Y>240 && Screen.Y<Canvas->ClipY-120)
-                DrawScaledText(FString::Printf(TEXT("%s  %.1f m"),Tutorial->Step==ECalmyTutorialStep::Deliver?TEXT("DELIVER HERE"):TEXT("TRAINING CRATE"),FVector::Dist2D(Target,GetOwningPawn()->GetActorLocation())/100),FLinearColor(1,.85f,.2f),Screen.X,Screen.Y);
+            const FString Label=FString::Printf(TEXT("%s   %.1f m"),Tutorial->Step==ECalmyTutorialStep::Deliver?TEXT("DELIVER HERE"):TEXT("TRAINING CRATE"),FVector::Dist2D(Target,Pawn->GetActorLocation())/100);
+            const FSlateFontInfo F=Font(13,true,60);const FVector2D M=Measure(Label,F);
+            Rect(Screen.X-10,Screen.Y-6,M.X+20,M.Y+12,FLinearColor(.012f,.024f,.03f,.7f));
+            Text(Label,Screen.X,Screen.Y,F,Amber);
         }
-	}
-	else if (Shift)
-	{
-		const auto* Voyage = ACalmyVoyageDirector::Find(GetWorld());
-		const auto& S = Shift->State;
-		if (Voyage && Voyage->State.Phase == ECalmyVoyagePhase::Briefing)
-		{
-			DrawScaledText(Voyage->BriefingText(), FLinearColor(1.f, .8f, .3f), 30, 132);
-			DrawScaledText(TEXT("Host: Esc bridge BEGIN WATCH NOW, or wait for auto-start | Leak valve near green zone"), FLinearColor(.5f, .85f, .9f), 30, 158);
-			DrawScaledText(TEXT("Contract: 1 STANDARD + 1 BULKY | Unstable/Fragile stay off-manifest this watch"), FLinearColor::White, 30, 184);
-		}
-		else if (Voyage && Voyage->State.Phase == ECalmyVoyagePhase::Outcome)
-		{
-			DrawScaledText(Voyage->OutcomeText(), Voyage->State.bShiftFailed ? FLinearColor::Red : FLinearColor::Green, 30, 132);
-			DrawScaledText(FString::Printf(TEXT("WATCH %d settled | Delivered %d / %d | Rescues %d | Damaged %d"),
-				Voyage->State.Round, S.Delivered, S.Required, S.Rescues, S.DamagedDelivered), FLinearColor(1, .75f, .15f), 30, 158);
-			DrawScaledText(TEXT("Host: press R or Esc bridge NEW WATCH for another cycle"), FLinearColor::White, 30, 184);
-		}
-		else
-		{
-			DrawScaledText(FString::Printf(TEXT("%s %d | Delivered %d / %d | Rescues: %d | Damaged: %d"),
-				Voyage ? TEXT("WATCH") : TEXT("SHIFT"), S.Round, S.Delivered, S.Required, S.Rescues, S.DamagedDelivered),
-				FLinearColor(1, .75f, .15f), 30, 132);
-			const int32 Minutes = S.SecondsRemaining / 60;
-			const int32 Seconds = S.SecondsRemaining % 60;
-			const FString Economy = S.Phase == ECalmyShiftPhase::Complete ?
-				FString::Printf(TEXT("CONTRACT PAID: $%d | RATING: %d/3"), S.FinalPayout, S.PerformanceStars) :
-				FString::Printf(TEXT("CONTRACT TIME %02d:%02d | Base $%d + speed bonus - losses"), Minutes, Seconds, 1200);
-			DrawScaledText(Economy, S.Phase == ECalmyShiftPhase::Failed ? FLinearColor::Red : FLinearColor(.4f, .85f, .9f), 30, 158);
-			const TCHAR* Hint = S.Phase == ECalmyShiftPhase::Complete ? TEXT("SHIFT COMPLETE! Host: press R for a new contract.") :
-				(S.Phase == ECalmyShiftPhase::Failed ? TEXT("CONTRACT FAILED: time expired. Host: press R to retry.") :
-				(S.Phase == ECalmyShiftPhase::InvalidManifest ? TEXT("Contract unavailable: invalid cargo manifest.") :
-				(Voyage ? TEXT("Ship watch live | Deliver STANDARD + BULKY | Repair leak with F when warned.") :
-				TEXT("Bring all crates to the GREEN zone. G drop, let them settle."))));
-			DrawScaledText(Hint, S.Phase == ECalmyShiftPhase::Complete ? FLinearColor::Green :
-				(S.Phase == ECalmyShiftPhase::Failed ? FLinearColor::Red : FLinearColor::White), 30, 184);
-		}
-	}
-	if (Leak)
-	{
-		const float BannerY = FMath::Max(240.f, Canvas->ClipY - 78.f);
-		DrawRect(FLinearColor(.025f, .045f, .06f, .9f), 16, BannerY, FMath::Min(760.f, Canvas->ClipX - 32.f), 62);
-		DrawScaledText(Leak->GetStatusText(), FLinearColor(1, .7f, .25f), 30, BannerY + 9);
-		const TCHAR* Consequence = Leak->State.bPowerDegraded ? TEXT("EMERGENCY POWER | Red valve + blue delivery task lights remain active") :
-			(Leak->GetDeckSpeedScale() < 1 ? TEXT("FLOODED DECK: movement -30% until water drops below 50%") :
-			TEXT("F repair | Leave the valve to pause; teammates can resume your work"));
-		DrawScaledText(Consequence, FLinearColor(.4f, .85f, 1), 30, BannerY + 35);
-	}
+    }
 }
 
 void ACalmyHUD::NotifyHitBoxClick(FName BoxName)

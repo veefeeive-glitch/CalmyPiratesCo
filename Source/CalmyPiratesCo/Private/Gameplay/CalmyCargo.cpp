@@ -3,13 +3,13 @@
 #include "Gameplay/CalmyCrewHelper.h"
 #include "Core/CargoGrip.h"
 #include "Core/TeamCarryPace.h"
+#include "Core/CalmyAudio.h"
 #include "Gameplay/CalmyShift.h"
 #include "Gameplay/CalmyOcean.h"
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "EngineUtils.h"
 #include "Kismet/GameplayStatics.h"
-#include "Sound/SoundWaveProcedural.h"
 #include "Net/UnrealNetwork.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
@@ -70,6 +70,17 @@ void ACalmyCargo::OnRep_Carry()
 		Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		Mesh->SetSimulatePhysics(true);
 	}
+	if (LastHeardCarry != Carry.State || bHeardDelivered != Carry.bDelivered)
+	{
+		if (Carry.State == ECalmyCarryState::Held && LastHeardCarry != ECalmyCarryState::Held)
+			FCalmyAudio::PlayAt(this, ECalmySoundCue::CargoGrab, GetActorLocation());
+		else if (Carry.State == ECalmyCarryState::Thrown)
+			FCalmyAudio::PlayAt(this, ECalmySoundCue::CargoThrow, GetActorLocation());
+		else if (Carry.State == ECalmyCarryState::Free && (LastHeardCarry == ECalmyCarryState::Held || LastHeardCarry == ECalmyCarryState::Reserved))
+			FCalmyAudio::PlayAt(this, ECalmySoundCue::CargoDrop, GetActorLocation());
+		LastHeardCarry = Carry.State;
+		bHeardDelivered = Carry.bDelivered;
+	}
 	UpdateTint();
 }
 
@@ -102,21 +113,7 @@ void ACalmyCargo::UpdateTint()
 
 void ACalmyCargo::PlayDamageCue()
 {
-	if (GetNetMode() == NM_DedicatedServer || !GetWorld()->AllowAudioPlayback()) return;
-	// Locally synthesized short impact tone; no copyrighted or editor-only sound asset dependency.
-	auto* Wave = NewObject<USoundWaveProcedural>(this);
-	Wave->SetSampleRate(22050);
-	Wave->NumChannels = 1;
-	Wave->Duration = .18f;
-	TArray<int16> Samples;
-	Samples.SetNumUninitialized(3969);
-	for (int32 I = 0; I < Samples.Num(); ++I)
-	{
-		const float T = I / 22050.f;
-		Samples[I] = static_cast<int16>(7500.f * FMath::Exp(-25.f * T) * FMath::Sin(2.f * PI * (700.f * T - 1000.f * T * T)));
-	}
-	Wave->QueueAudio(reinterpret_cast<const uint8*>(Samples.GetData()), Samples.Num() * sizeof(int16));
-	UGameplayStatics::PlaySoundAtLocation(this, Wave, GetActorLocation(), .4f);
+	FCalmyAudio::PlayAt(this, ECalmySoundCue::CargoDamage, GetActorLocation(), .9f);
 }
 
 void ACalmyCargo::OnRep_Condition()

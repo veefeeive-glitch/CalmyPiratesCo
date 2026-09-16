@@ -1,6 +1,7 @@
 #include "Gameplay/CalmyTutorial.h"
 #include "Gameplay/CalmyPreferences.h"
 #include "Gameplay/CalmyCargo.h"
+#include "Gameplay/CalmyShift.h"
 #include "Misc/AutomationTest.h"
 #include "Misc/PackageName.h"
 #include "Misc/ConfigCacheIni.h"
@@ -22,6 +23,10 @@ bool FCalmyTutorialTest::RunTest(const FString&)
     TestFalse(TEXT("Not active on unrelated test worlds"),ACalmyTutorial::Enabled(W));
     T->Step=ECalmyTutorialStep::Deliver;T->Tick(1);
     TestEqual(TEXT("No physical delivery means no departure"),T->Step,ECalmyTutorialStep::Deliver);
+    TestTrue(TEXT("Lesson freezes the contract clock"),ACalmyShift::FreezesContractTimer(true,false));
+    TestTrue(TEXT("Lesson still accepts the training crate"),ACalmyShift::AcceptsDeliveries(true,false));
+    TestFalse(TEXT("Voyage briefing blocks deliveries"),ACalmyShift::AcceptsDeliveries(false,true));
+    TestFalse(TEXT("Live contract clock runs"),ACalmyShift::FreezesContractTimer(false,false));
     W->DestroyWorld(false);return true;
 }
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCalmyTutorialProgressTest,"CalmyPiratesCo.Gameplay.TutorialProgressPersist",EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)

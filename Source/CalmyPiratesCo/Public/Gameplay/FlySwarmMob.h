@@ -154,6 +154,12 @@ public:
     bool ReceiveSwat(class ACalmyCharacter* Attacker);
     UPROPERTY(Replicated, BlueprintReadOnly) int32 SwatCount = 0;
     UPROPERTY(Replicated, BlueprintReadOnly) bool bScattering = false;
+    // Server-clock stamps of the last swat / spoken reply. Clients play the cue only for fresh stamps, so late joiners
+    // stay silent. Server-written only; the counters record client presentations for probes.
+    UPROPERTY(ReplicatedUsing=OnRep_SwatAudio) float SwatAudioAt = -1.f;
+    UPROPERTY(ReplicatedUsing=OnRep_VoiceAudio) float VoiceAudioAt = -1.f;
+    int32 HeardSwats = 0;
+    int32 HeardVoices = 0;
     static AFlySwarmMob* FindConversationalSwarm(const class APlayerController* PC);
     const FFlyCognition& GetCognition() const { return Mind; }
     bool SaveMemory();
@@ -175,6 +181,9 @@ private:
     UPROPERTY(ReplicatedUsing=OnRep_Poses) TArray<FFlySwarmPose> Poses;
     UFUNCTION() void OnRep_Poses();
     UFUNCTION() void OnRep_Visuals();
+    UFUNCTION() void OnRep_SwatAudio();
+    UFUNCTION() void OnRep_VoiceAudio();
+    float AudioClock() const;
     void SimulateSwarm();
     void UpdateInstances();
     void UpdateCognition(float Dt);

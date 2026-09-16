@@ -1,4 +1,5 @@
 #include "Testing/CalmyFlyTravelProbe.h"
+#include "Gameplay/CalmyShipMotion.h"
 #include "Gameplay/FlySwarmMob.h"
 #include "Gameplay/CalmyGameMode.h"
 #include "EngineUtils.h"
@@ -56,10 +57,15 @@ void UCalmyFlyTravelProbe::Tick(float Dt)
             FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("Verification")/Dir/FString::Printf(TEXT("%02d-travelling-colony.png"),++Photos),false,false);
         }
     }
+    // The freighter drifts and heels, carrying the colony with it. Compare samples in the ship frame so ship motion
+    // between two probe ticks is not mistaken for a fly moving through a wall.
+    const ACalmyShipMotion* Ship=ACalmyShipMotion::Find(GetWorld());
+    const FTransform ShipFrame=Ship?Ship->GetActorTransform():FTransform::Identity;
+    const FVector PreviousNow=ShipFrame.TransformPosition(PreviousLocal);
     Walked+=FVector::Dist(Center,Previous);MaxDistance=FMath::Max(MaxDistance,float(FVector::Dist(Center,Initial)));
-    if(Server && FVector::Dist(Center,Previous)>1 && !F->CanFlySegment(Previous,Center,17.f))
+    if(Server && bHavePreviousLocal && FVector::Dist(Center,PreviousNow)>1 && !F->CanFlySegment(PreviousNow,Center,17.f))
     {Finish(false,TEXT("leader_crossed_collision"));return;}
-    Previous=Center;
+    Previous=Center;PreviousLocal=ShipFrame.InverseTransformPosition(Center);bHavePreviousLocal=true;
     LeftHold|=Center.Z>1100 || Center.X<-2100 || Center.X>1100 || FMath::Abs(Center.Y)>850;
     Rested|=F->Activity==EFlyActivity::Rest;
     MaxStep=FMath::Max(MaxStep,F->GetLastSimulationMilliseconds());
@@ -70,10 +76,11 @@ void UCalmyFlyTravelProbe::Tick(float Dt)
         {
             const FVector P=Poses[I].Position;
             MaxSpread=FMath::Max(MaxSpread,float(FVector::Dist(P,Center)));
-            if(Server && PreviousFlies.Num()==32 && FVector::Dist(PreviousFlies[I],P)>1 && !F->CanFlySegment(PreviousFlies[I],P,2.f))
-            {Finish(false,FString::Printf(TEXT("fly_crossed_collision i=%d from=%s to=%s"),I,*PreviousFlies[I].ToString(),*P.ToString()));return;}
+            const FVector From=PreviousFlies.Num()==32?ShipFrame.TransformPosition(PreviousFlies[I]):P;
+            if(Server && PreviousFlies.Num()==32 && FVector::Dist(From,P)>1 && !F->CanFlySegment(From,P,2.f))
+            {Finish(false,FString::Printf(TEXT("fly_crossed_collision i=%d from=%s to=%s"),I,*From.ToString(),*P.ToString()));return;}
         }
-        PreviousFlies.Reset();for(const auto& P:Poses)PreviousFlies.Add(P.Position);
+        PreviousFlies.Reset();for(const auto& P:Poses)PreviousFlies.Add(ShipFrame.InverseTransformPosition(FVector(P.Position)));
     }
     if(Age-LastReport>10)
     {

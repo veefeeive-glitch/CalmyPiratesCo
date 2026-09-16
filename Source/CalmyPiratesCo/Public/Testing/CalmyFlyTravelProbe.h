@@ -15,7 +15,9 @@ private:
     void Finish(bool OK, const FString& Detail);
     FString Role;
     FVector Initial = FVector::ZeroVector, Previous = FVector::ZeroVector;
-    TArray<FVector> PreviousFlies;
+    TArray<FVector> PreviousFlies; // ship-local
+    FVector PreviousLocal=FVector::ZeroVector;
+    bool bHavePreviousLocal=false;
     float Age=0, Walked=0, MaxDistance=0, MaxSpread=0, LastReport=0;
     double MaxStep=0;
     bool Started=false, Ready=false, LeftHold=false, Rested=false, Finished=false;

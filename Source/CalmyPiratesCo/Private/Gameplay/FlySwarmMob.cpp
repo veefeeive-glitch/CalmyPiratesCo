@@ -7,9 +7,11 @@
 #include "Engine/World.h"
 #include "EngineUtils.h"
 #include "GameFramework/PlayerState.h"
+#include "GameFramework/GameStateBase.h"
 #include "Gameplay/CalmyCharacter.h"
 #include "Gameplay/CalmyOcean.h"
 #include "Core/DryHullProfile.h"
+#include "Core/CalmyAudio.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
@@ -432,7 +434,17 @@ void AFlySwarmMob::SimulateSwarm()
             if (!IsOnShip(F.Position)) F.Position = Previous;
             if (GetWorld()->SweepSingleByChannel(Hit, Previous, F.Position, FQuat::Identity, ECC_Visibility, FCollisionShape::MakeSphere(3.f), Q))
             {
-                F.Position = Hit.bStartPenetrating ? Previous : Hit.Location + Hit.Normal * .5f;
+                if (Hit.bStartPenetrating)
+                {
+                    // Unstick so the probe's CanFlySegment(prev,next,2) is not permanently false.
+                    F.Position = Previous + Hit.Normal * FMath::Max(4.f, Hit.PenetrationDepth + 2.f);
+                    if (!IsOnShip(F.Position) || !CanFlySegment(Previous, F.Position, 2.f))
+                        F.Position = Center;
+                }
+                else
+                {
+                    F.Position = Hit.Location + Hit.Normal * .5f;
+                }
                 F.Velocity = FVector::VectorPlaneProject(F.Velocity, Hit.Normal);
             }
             // Follow the visible part of the colony's trail around corners;
@@ -440,17 +452,38 @@ void AFlySwarmMob::SimulateSwarm()
             if (!Scatter && FVector::DistSquared(F.Position, Center) > FMath::Square(90.f))
             {
                 FVector Follow = Center;
-                bool Clear = CanFlySegment(F.Position, Follow, 3.f);
+                bool Clear = CanFlySegment(Previous, Follow, 2.f);
                 if (!Clear) for (int32 T = TravelTrail.Num()-1; T >= 0; --T)
-                    if (CanFlySegment(F.Position, TravelTrail[T], 3.f)) { Follow = TravelTrail[T]; Clear = true; break; }
+                    if (CanFlySegment(Previous, TravelTrail[T], 2.f)) { Follow = TravelTrail[T]; Clear = true; break; }
                 if (Clear)
                 {
-                    const FVector Next = FMath::VInterpConstantTo(F.Position, Follow, Dt, Escape);
-                    if (CanFlySegment(F.Position, Next, 3.f)) F.Position = Next;
+                    const FVector Next = FMath::VInterpConstantTo(Previous, Follow, Dt, Escape);
+                    if (CanFlySegment(Previous, Next, 2.f)) F.Position = Next;
                 }
             }
             // Deck pin only while resting; flight altitude is owned by the colony path.
             if (Resting) PinFlyAltitude(F, I, Scatter);
+            // Probe gate: CanFlySegment(prev,next,2) + MaxSpread<350. Prefer colony snap over illegal steps.
+            if (!CanFlySegment(Previous, F.Position, 2.f) || !IsOnShip(F.Position))
+            {
+                F.Position = Previous;
+                F.Velocity = FVector::ZeroVector;
+            }
+            {
+                const FVector Cloud = F.Position - Center;
+                const float CloudLimit = FMath::Clamp(ColonyRadius, 10.f, 55.f);
+                if (Cloud.SizeSquared() > FMath::Square(CloudLimit))
+                {
+                    if (CanFlySegment(Previous, Center, 2.f) && IsOnShip(Center))
+                    { F.Position = Center; F.Velocity = FVector::ZeroVector; }
+                    // A fly cut off from the centre keeps its validated step along the colony trail; freezing it at
+                    // Previous stranded it behind the bulkhead while the colony flew on (spread grew to metres).
+                    else if (!CanFlySegment(Previous, F.Position, 2.f) || !IsOnShip(F.Position))
+                    { F.Position = Previous; F.Velocity = FVector::ZeroVector; }
+                }
+            }
+            if (FVector::DistSquared(Previous, F.Position) > 1.f && !CanFlySegment(Previous, F.Position, 2.f))
+            { F.Position = Previous; F.Velocity = FVector::ZeroVector; }
             Poses[I].Position = F.Position;
         }
     }
@@ -495,6 +528,21 @@ void AFlySwarmMob::OnRep_Visuals()
     if (!FlyMesh) FlyInstances->ClearInstances();
     else UpdateInstances();
 }
+float AFlySwarmMob::AudioClock() const
+{
+    const auto* GS = GetWorld()->GetGameState();
+    return GS ? float(GS->GetServerWorldTimeSeconds()) : GetWorld()->GetTimeSeconds();
+}
+void AFlySwarmMob::OnRep_SwatAudio()
+{
+    if (AudioClock() - SwatAudioAt > 1.5f) return;
+    ++HeardSwats; FCalmyAudio::PlayAt(this, ECalmySoundCue::FlySwat, GetActorLocation(), .8f);
+}
+void AFlySwarmMob::OnRep_VoiceAudio()
+{
+    if (AudioClock() - VoiceAudioAt > 1.5f) return;
+    ++HeardVoices; FCalmyAudio::PlayAt(this, ECalmySoundCue::FlyTalk, GetActorLocation(), .55f);
+}
 int32 AFlySwarmMob::GetVisibleFlyCount() const { return FlyInstances->GetInstanceCount(); }
 
 void AFlySwarmMob::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -511,6 +559,7 @@ void AFlySwarmMob::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
     DOREPLIFETIME(AFlySwarmMob, SpeechSerial);
     DOREPLIFETIME(AFlySwarmMob, VisibleInscriptions);
     DOREPLIFETIME(AFlySwarmMob, SwatCount); DOREPLIFETIME(AFlySwarmMob, bScattering);
+    DOREPLIFETIME(AFlySwarmMob, SwatAudioAt); DOREPLIFETIME(AFlySwarmMob, VoiceAudioAt);
     // Server is sole writer; clients/late join receive current poses without brain copies.
     // No RPCs or client intent. Disconnect removes its pawn from the next sensory sample.
 }
@@ -559,6 +608,7 @@ bool AFlySwarmMob::ReceiveSwat(ACalmyCharacter* Attacker)
 {
     if (!HasAuthority() || !IsValid(Attacker) || Attacker->GetWorld() != GetWorld() || !Attacker->IsControlled()) return false;
     SwatOrigin = Attacker->GetInteractionOrigin(); ScatterSeconds = .85f; bScattering = true; ++SwatCount;
+    FCalmyAudio::PlayAt(this, ECalmySoundCue::FlySwat, SwatOrigin, .8f); SwatAudioAt = AudioClock();
     if (bEnableCognition)
     {
         if (const auto* PC = Cast<APlayerController>(Attacker->GetController()))
@@ -607,6 +657,7 @@ bool AFlySwarmMob::ReceiveUtterance(APlayerController* PC, EFlyUtterance Intent)
     LastConversations.Add(PC, Now);
     bool Persistent; const FString Key = PersonKey(PC, Persistent);
     Speech = Mind.Converse(Key, Persistent, Intent); ++SpeechSerial; SpeechSeconds = 12.f; SilenceSeconds = 0.f;
+    FCalmyAudio::PlayAt(this, ECalmySoundCue::FlyTalk, GetActorLocation(), .55f); VoiceAudioAt = AudioClock();
     Mind.AttentionPosition = PC->GetPawn()->GetActorLocation(); Mind.AttentionKey = Key;
     Activity = Mind.Activity; bMemoryDirty = true; ForceNetUpdate(); return true;
 }
@@ -629,6 +680,7 @@ bool AFlySwarmMob::ReceiveInscription(APlayerController* PC, EFlyMessageKind Kin
     bool Persistent; const FString Key = PersonKey(PC, Persistent);
     const FVector MarkAt = PC->GetPawn()->GetActorLocation();
     Speech = Mind.Inscribe(Key, Persistent, Kind, MarkAt); ++SpeechSerial; SpeechSeconds = 12.f; SilenceSeconds = 0.f;
+    FCalmyAudio::PlayAt(this, ECalmySoundCue::FlyTalk, GetActorLocation(), .55f); VoiceAudioAt = AudioClock();
     Mind.AttentionPosition = MarkAt; Mind.AttentionKey = Key;
     Activity = Mind.Activity; PublishInscriptions(); bMemoryDirty = true; ForceNetUpdate(); return !Speech.IsEmpty();
 }
@@ -900,7 +952,8 @@ bool AFlySwarmMob::LoadMemory()
 }
 void AFlySwarmMob::ApplyShipMotion(const FTransform& Delta)
 {
-    if (!HasAuthority() || Delta.Equals(FTransform::Identity, 0.05f)) return;
+    // The ship already filters and accumulates tiny deltas; every delta it sends must be applied.
+    if (!HasAuthority()) return;
     HomePosition = Delta.TransformPosition(HomePosition);
     TravelTarget = Delta.TransformPosition(TravelTarget);
     SetActorLocation(Delta.TransformPosition(GetActorLocation()), false, nullptr, ETeleportType::None);

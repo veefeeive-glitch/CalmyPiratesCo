@@ -41,10 +41,15 @@ public:
 	bool TryRestart(ACalmyCharacter* Requester, int32 ExpectedRound);
 	void RecordRescue();
 	static ACalmyShift* Find(const UWorld* World);
+	/** Tutorial lesson and a non-active voyage both stop the contract clock. */
+	static bool FreezesContractTimer(bool bTutorialLesson, bool bVoyageFrozen) { return bTutorialLesson || bVoyageFrozen; }
+	/** Only a voyage briefing/outcome blocks delivery; the tutorial still accepts its training crate. */
+	static bool AcceptsDeliveries(bool bTutorialLesson, bool bVoyageFrozen) { return !bVoyageFrozen; }
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UBoxComponent> DeliveryZone;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Contract", meta=(ClampMin="30", ClampMax="1800")) int32 ContractDurationSeconds = 300;
 	UPROPERTY(Replicated, BlueprintReadOnly) FCalmyShiftSnapshot State;
 private:
+	friend class UCalmyPlaythroughProbe;
 	bool IsEligible(const ACalmyCargo* Cargo) const;
 	TMap<int32, TWeakObjectPtr<ACalmyCargo>> Manifest;
 	TMap<int32, float> SettledTime;

@@ -7,6 +7,7 @@
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
 #include "Misc/Paths.h"
+#include "Misc/FileHelper.h"
 #include "Misc/ConfigCacheIni.h"
 #include "Misc/OutputDeviceRedirector.h"
 #include "HAL/FileManager.h"
@@ -44,16 +45,18 @@ void UCalmySettingsProbe::Tick(float Dt)
     {
         FParse::Value(FCommandLine::Get(),TEXT("CalmyReviewDir="),Dir);
         if(Dir.IsEmpty())Dir=TEXT("Settings-S1-")+Role+TEXT("-")+FDateTime::Now().ToString(TEXT("%Y%m%d-%H%M%S"));
-        const FString Folder=FPaths::ProjectSavedDir()/TEXT("Verification")/FPaths::GetCleanFilename(Dir);IFileManager::Get().MakeDirectory(*Folder,true);
-        // All settings writes (including engine SaveSettings) stay in this process's isolated file.
-        GGameUserSettingsIni=FPaths::ConvertRelativePathToFull(Folder/(Role+TEXT("-GameUserSettings.ini")));
+        // Evidence stays in the project's Saved/Verification even though -UserDir moves ProjectSavedDir().
+        const FString Folder=FPaths::ProjectDir()/TEXT("Saved/Verification")/FPaths::GetCleanFilename(Dir);IFileManager::Get().MakeDirectory(*Folder,true);
+        // UE 5.8 SaveSettings re-resolves GGameUserSettingsIni, so redirecting the global cannot isolate writes.
+        // Require a throwaway -UserDir so video/controls/preferences never touch the player's real settings.
+        FString UserDir;if(!FParse::Value(FCommandLine::Get(),TEXT("UserDir="),UserDir)){Finish(false,TEXT("needs_isolated_UserDir"));return;}
         UCalmyPreferences::Get()->Bindings.Reset();
         PC->OpenSettings();PawnPosition=P->GetActorLocation();
         UE_LOG(LogTemp,Display,TEXT("CALMY_SETTINGS_TEST %s START"),*Role);GLog->Flush();
         Stage=1;Since=Now;return;
     }
     auto W=PC->GetSettingsWidget();
-    auto Photo=[&](const TCHAR* Name){if(Role==TEXT("Visual"))FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("Verification")/Dir/Name,true,false);};
+    auto Photo=[&](const TCHAR* Name){if(Role==TEXT("Visual"))FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir()/TEXT("Saved/Verification")/Dir/Name,true,false);};
     if(Stage==1)
     {
         if(!W.IsValid()||!PC->IsMoveInputIgnored()||!PC->IsLookInputIgnored()||GetWorld()->IsPaused()!=(GetWorld()->GetNetMode()==NM_Standalone))
@@ -82,16 +85,24 @@ void UCalmySettingsProbe::Tick(float Dt)
     {
         if(W->GetDraft()->KeyFor(EKeys::E)!=EKeys::Z){Finish(false,TEXT("slate_key_capture"));return;}
         Photo(TEXT("03-controls.png"));
-        W->GetDraft()->Sensitivity=1.75;W->GetDraft()->InvertY=true;W->GetDraft()->MasterVolume=.35;W->GetDraft()->AmbienceVolume=.45;
+        W->GetDraft()->Sensitivity=1.75f;W->GetDraft()->InvertY=true;W->GetDraft()->MasterVolume=.35f;W->GetDraft()->AmbienceVolume=.45f;
         W->GetDraft()->ShowFPS=true;W->GetDraft()->MotionBlur=false;W->GetDraft()->FieldOfView=100;
         W->GetVideoDraft().Quality[2]=1;W->GetVideoDraft().Limit=45;Press(PC,TEXT("Apply"));Stage=5;
     }
     else if(Stage==5)
     {
-        auto* Loaded=NewObject<UCalmyPreferences>();Loaded->LoadConfig(UCalmyPreferences::StaticClass(),*GGameUserSettingsIni);
+        // Read back what actually reached disk (not GConfig's in-memory branch).
+        FConfigFile DiskFile;DiskFile.Read(GGameUserSettingsIni);
+        UObject::FLoadConfigParams FromDisk;FromDisk.ConfigClass=UCalmyPreferences::StaticClass();FromDisk.OverrideFile=&DiskFile;
+        auto* Loaded=NewObject<UCalmyPreferences>();Loaded->LoadConfig(FromDisk);
         if(!FMath::IsNearlyEqual(P->GetLookSensitivity(),1.75f)||Loaded->KeyFor(EKeys::E)!=EKeys::Z||!FMath::IsNearlyEqual(Loaded->MasterVolume,.35f)||GEngine->GetGameUserSettings()->GetShadowQuality()!=1
             ||IConsoleManager::Get().FindConsoleVariable(TEXT("r.MotionBlurQuality"))->GetInt()!=0)
-        {Finish(false,TEXT("applied_controls_graphics_or_saved_preferences"));return;}
+        {
+            FString RawVolume;DiskFile.GetString(TEXT("/Script/CalmyPiratesCo.CalmyPreferences"),TEXT("MasterVolume"),RawVolume);
+            UE_LOG(LogTemp,Display,TEXT("CALMY_SETTINGS_TEST %s DISK path=%s size=%lld sections=%d raw_volume=%s"),*Role,*GGameUserSettingsIni,IFileManager::Get().FileSize(*GGameUserSettingsIni),DiskFile.Num(),*RawVolume);
+            Finish(false,FString::Printf(TEXT("applied_controls_graphics_or_saved_preferences sensitivity=%.2f saved_key=%s saved_volume=%.2f shadows=%d motion_blur_cvar=%d"),
+            P->GetLookSensitivity(),*Loaded->KeyFor(EKeys::E).ToString(),Loaded->MasterVolume,GEngine->GetGameUserSettings()->GetShadowQuality(),IConsoleManager::Get().FindConsoleVariable(TEXT("r.MotionBlurQuality"))->GetInt()));return;
+        }
         if(W->IsConfirmingVideo())W->KeepVideo();
         OldResolution=W->GetVideoDraft().Resolution;OldMode=int32(W->GetVideoDraft().Mode);
         W->GetVideoDraft().Resolution=FIntPoint(1024,768);W->GetVideoDraft().Mode=EWindowMode::Windowed;

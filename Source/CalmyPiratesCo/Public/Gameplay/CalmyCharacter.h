@@ -83,6 +83,8 @@ public:
 	void RequestHandoff();
 	void BeginRepairInput();
 	void EndRepairInput();
+	void EndInteractInput();
+	bool IsHoldingDoor() const { return HeldDoor.IsValid(); }
 	bool ReturnToDeck(bool bIncident = true);
 	bool CanGrab(const ACalmyCargo* Cargo) const;
 	bool ReceiveCargoImpact(float Speed,FVector Direction=FVector::ZeroVector);
@@ -116,6 +118,15 @@ private:
     // Duplicate/stale commands do nothing; late join receives door angle/state/revision.
     // Door operation has no user lease: disconnect leaves the server-driven door in its current motion.
     UFUNCTION(Server,Reliable) void ServerDoor(ACalmyDoor* Door,uint32 ExpectedRevision,uint32 Sequence);
+    // Owning client -> server pawn when E is held on a door (bActive) and when it is released. Monotonic sequence;
+    // the server re-checks controlled/dry/empty-handed state and the 220cm aim at the leaf on begin, keeps one holder
+    // per door and drops the hold when the pawn walks more than 3m away, loses control, picks up cargo or disconnects.
+    // Duplicate or out-of-order begin/end are ignored; late joiners see the replicated angle, velocity and holder.
+    UFUNCTION(Server,Reliable) void ServerDoorGrab(ACalmyDoor* Door,bool bActive,uint32 Sequence);
+    // Owning client -> server, unreliable ~20 Hz while holding. Push is quantised to [-127,127] and only the door's
+    // current holder moves it; it expires after 0.25 s, so lost or delayed packets let the heavy leaf coast instead
+    // of running away. Client angles or velocities are never sent. Disconnect clears the holder on the server.
+    UFUNCTION(Server,Unreliable) void ServerDoorDrag(ACalmyDoor* Door,int8 Push);
     friend class UCalmyInteractionProbe;
     friend class UCalmyDoorProbe;
     friend class UCalmyCharacterProbe;
@@ -125,11 +136,18 @@ private:
 	friend class UCalmyCargoProbe;
     friend class UCalmyWaterProbe;
 	friend class UCalmyLeakProbe;
+	friend class UCalmyPlaythroughProbe;
 	// Owning client -> server pawn. Monotonic sequence, heartbeat rate, current round, target world,
 	// empty hands, controlled + stationary grounded pawn, 180cm and visibility validated server-side.
 	// No client progress/time. Release consumes sequence but bypasses rate limit; replay is a no-op.
 	// Late join gets the leak snapshot. Lease expires in .65s; Logout/EndPlay also clears repairer.
 	UFUNCTION(Server, Reliable) void ServerRepair(ACalmyLeak* Leak, int32 ExpectedRound, bool bActive, uint32 Sequence);
+	// Owning client -> server. Kept for probes; gameplay input uses ServerHoldInteract.
+	UFUNCTION(Server, Reliable) void ServerFuel(bool bActive, uint32 Sequence);
+	// Owning client -> server while F is held (0.2 s pulses) or released. Server picks leak valve or fuel pump from its own
+	// state (range, phase, empty hands, lease). Stale/duplicate sequences and rate-gate misses are rejected and counted.
+	// Late join needs nothing (progress replicates on the leak/director); disconnect clears via Logout/EndPlay lease expiry.
+	UFUNCTION(Server, Reliable) void ServerHoldInteract(bool bActive, uint32 Sequence);
 	// RPC contract (all three below): caller = owning client; receiver = server on owned pawn.
 	// Gate validates monotonic sequence and server-time rate. Grab additionally validates lifecycle,
 	// target class/world, first aimed proxy, short surface range, visibility and exclusive reservation;
@@ -196,6 +214,14 @@ private:
 	uint32 LastRepairIssued = 0;
 	uint32 LastRepairReceived = 0;
 	bool bRepairInput = false;
+	// E on a door: a short tap toggles it, holding grabs the leaf and mouse motion swings it.
+	TWeakObjectPtr<ACalmyDoor> PendingDoor;
+	TWeakObjectPtr<ACalmyDoor> HeldDoor;
+	bool bInteractHeld = false;
+	float InteractHeldSeconds = 0, DoorMouseX = 0, DoorMouseY = 0, DoorMouseTotal = 0, DoorSendCountdown = 0;
+	uint32 LastDoorGrabIssued = 0;
+	uint32 LastDoorGrabReceived = 0;
+	int32 HeardPunchCount = -1;
 	float RepairPulseCountdown = 0;
 	uint32 LastIssuedSequence = 0;
 	FTimerHandle RecoveryTimer;

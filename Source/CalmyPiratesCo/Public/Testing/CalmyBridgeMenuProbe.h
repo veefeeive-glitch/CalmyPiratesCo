@@ -14,6 +14,9 @@ public:
 private:
     void Finish(bool OK,const FString& Detail);
     void Photo(const FString& Name);
+    int32 CrewCount() const;
+    FVector ShipLocal(const AActor* Actor) const;
     FString Role;double Start=0,Since=0;int32 Stage=0;
     FVector Spawn;float Clock=0;bool Steady=false;
+    int32 CrewAtMenu=0,Rebases=0,LastCrew=-1,TourStep=0;double LastCrewChange=0;
 };

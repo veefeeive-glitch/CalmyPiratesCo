@@ -36,6 +36,14 @@ ACalmyShipMotion::ACalmyShipMotion()
 }
 ACalmyShipMotion* ACalmyShipMotion::Find(const UWorld* World)
 { if (!World) return nullptr; for (TActorIterator<ACalmyShipMotion> It(World); It; ++It) return *It; return nullptr; }
+void ACalmyShipMotion::AttachRider(AActor* Rider)
+{
+	if (!IsValid(Rider) || !Rider->GetWorld() || !Rider->GetRootComponent()) return;
+	ACalmyShipMotion* Ship = Find(Rider->GetWorld());
+	if (!Ship || Ship == Rider || Rider->GetAttachParentActor() == Ship) return;
+	Rider->GetRootComponent()->SetMobility(EComponentMobility::Movable);
+	Rider->AttachToActor(Ship, FAttachmentTransformRules::KeepWorldTransform);
+}
 void ACalmyShipMotion::BeginPlay()
 { Super::BeginPlay(); Ocean = ACalmyOcean::Find(GetWorld()); CaptureRest(); if (ACalmyOcean* O = Ocean.Get()) O->SetShipMotion(this); LinearVelocity = FVector::ZeroVector; AngularVelocityDeg = FVector::ZeroVector; }
 void ACalmyShipMotion::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -119,18 +127,29 @@ void ACalmyShipMotion::IntegrateWater(float DeltaSeconds)
 	const FTransform Clamped = ClampShipTransform(FTransform(NextRot, NextLoc, RestTransform.GetScale3D()), HeaveCm, HeelDeg, DriftSpeed);
 	SetActorLocationAndRotation(FMath::VInterpTo(GetActorLocation(), Clamped.GetLocation(), DeltaSeconds, FollowInterp), FMath::QInterpTo(GetActorQuat(), Clamped.GetRotation(), DeltaSeconds, FollowInterp).Rotator(), false, nullptr, ETeleportType::None);
 }
+bool ACalmyShipMotion::ConsumeRiderDelta(FTransform& InOutLastApplied, const FTransform& Current, FTransform& OutDelta)
+{
+	// A slow heel is far below the old 0.05 tolerance per frame; dropping it let loose cargo, Misha and fly
+	// colonies slide relative to the hull (flies ended up inside bulkheads). Keep accumulating until measurable.
+	// UE composes left to right: undo the last applied hull pose, then apply the current one, so rotation pivots
+	// on the hull rather than on the world origin.
+	OutDelta = InOutLastApplied.Inverse() * Current;
+	if (OutDelta.Equals(FTransform::Identity, KINDA_SMALL_NUMBER)) return false;
+	InOutLastApplied = Current;
+	return true;
+}
 void ACalmyShipMotion::CarryWorldRiders()
 {
 	if (!HasAuthority()) return;
-	const FTransform Delta = GetActorTransform() * LastAppliedTransform.Inverse(); LastAppliedTransform = GetActorTransform();
-	if (Delta.Equals(FTransform::Identity, 0.05f)) return;
+	FTransform Delta;
+	if (!ConsumeRiderDelta(LastAppliedTransform, GetActorTransform(), Delta)) return;
 	for (TActorIterator<AFlySwarmMob> It(GetWorld()); It; ++It) It->ApplyShipMotion(Delta);
 	for (TActorIterator<ACalmyCargo> It(GetWorld()); It; ++It)
 	{
 		ACalmyCargo* Cargo = *It; if (!IsValid(Cargo) || Cargo->Carry.bDelivered || Cargo->Carry.Holder) continue;
 		UPrimitiveComponent* Mesh = Cast<UPrimitiveComponent>(Cargo->GetRootComponent());
 		if (Mesh && Mesh->IsSimulatingPhysics()) continue;
-		Cargo->SetActorTransform(Delta * Cargo->GetActorTransform(), false, nullptr, ETeleportType::TeleportPhysics);
+		Cargo->SetActorTransform(Cargo->GetActorTransform() * Delta, false, nullptr, ETeleportType::TeleportPhysics);
 	}
 	for (TActorIterator<ACalmyCrewHelper> It(GetWorld()); It; ++It)
 	{

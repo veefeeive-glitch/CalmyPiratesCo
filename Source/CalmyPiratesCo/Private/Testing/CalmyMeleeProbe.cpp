@@ -121,12 +121,13 @@ void UCalmyMeleeProbe::Tick(float Dt)
     else if(Stage==5&&Age-Since>.5f)
     {
         if(!PC->IsFlyWheelOpen()||!PC->IsMoveInputIgnored()||!PC->IsLookInputIgnored()||GetWorld()->IsPaused()){Finish(false,TEXT("wheel_input_lease_failed"));return;}
-        int32 W,H;PC->GetViewportSize(W,H);PC->SetMouseLocation(W/2+FMath::Min(W,H)*.17f,H/2);Advance(6);
+        // Sector 1 ("be wary") is the upper-right wedge of the eight-way wheel.
+        int32 W,H;PC->GetViewportSize(W,H);const int32 R=FMath::RoundToInt(FMath::Min(W,H)*.12f);PC->SetMouseLocation(W/2+R,H/2-R);Advance(6);
     }
     else if(Stage==6&&Age-Since>.6f)
     {
         // NullRHI has no OS cursor; the GPU probe exercises real mouse hover.
-        if(!Visual)PC->WheelSelection=ACalmyPlayerController::WheelSector(FVector2D(130,0),200);
+        if(!Visual)PC->WheelSelection=ACalmyPlayerController::WheelSector(FVector2D(92,-92),200);
         if(PC->GetFlyWheelSelection()!=1){Finish(false,TEXT("wheel_hover_failed"));return;}
         Photo(TEXT("03-interaction-wheel"));Advance(7);
     }
@@ -138,7 +139,7 @@ void UCalmyMeleeProbe::Tick(float Dt)
     }
     else if(Stage==8&&Age-Since>.6f)
     {
-        if(PC->IsFlyWheelOpen()||PC->IsMoveInputIgnored()||PC->IsLookInputIgnored()||P->PunchCount!=3||F->SpeechSerial<1)
+        if(PC->IsFlyWheelOpen()||PC->IsMoveInputIgnored()||PC->IsLookInputIgnored()||P->PunchCount!=3||F->SpeechSerial<1||(!Visual&&F->HeardVoices<1))
         {Finish(false,TEXT("wheel_confirm_click_leaked_or_no_reply"));return;}
         Key(EKeys::E);Advance(9);
     }
@@ -162,7 +163,7 @@ void UCalmyMeleeProbe::Tick(float Dt)
     }
     else if(Stage==12&&Age-Since>1.f)
     {
-        Finish(SawCounter&&SawScatter&&M->MeleeHitsReceived==3&&P->PunchCount==4&&P->Health>0&&P->Health<100,
-            FString::Printf(TEXT("hits_misha=%d punches=%d response_damage=%.0f wheel_hover_confirm_cancel=1 no_click_leak=1 swat=%d"),M->MeleeHitsReceived,P->PunchCount,100-P->Health,F->SwatCount));
+        Finish(SawCounter&&SawScatter&&M->MeleeHitsReceived==3&&P->PunchCount==4&&P->Health>0&&P->Health<100&&(Visual||F->HeardSwats>=1),
+            FString::Printf(TEXT("hits_misha=%d punches=%d response_damage=%.0f wheel_hover_confirm_cancel=1 no_click_leak=1 swat=%d client_swat_audio=%d client_voice_audio=%d"),M->MeleeHitsReceived,P->PunchCount,100-P->Health,F->SwatCount,F->HeardSwats,F->HeardVoices));
     }
 }

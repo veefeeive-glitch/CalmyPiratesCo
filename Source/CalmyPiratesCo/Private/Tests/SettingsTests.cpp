@@ -24,7 +24,7 @@ bool FCalmyPreferencesTest::RunTest(const FString&)
     TestEqual(TEXT("Volume bounded"),P->MasterVolume,1.f);TestEqual(TEXT("Sensitivity bounded"),P->Sensitivity,.25f);
     TestEqual(TEXT("FOV bounded"),P->FieldOfView,110.f);TestEqual(TEXT("Unknown AA uses supported mode"),P->AAMethod,4);
     const FString Path=FPaths::ProjectSavedDir()/TEXT("Verification/Preferences-automation.ini");
-    P->MasterVolume=.35;P->InvertY=true;P->SaveConfig(CPF_Config,*Path);
+    P->MasterVolume=.35f;P->InvertY=true;P->SaveConfig(CPF_Config,*Path);
     auto* Loaded=NewObject<UCalmyPreferences>();Loaded->LoadConfig(UCalmyPreferences::StaticClass(),*Path);
     TestEqual(TEXT("Disk audio round trip"),Loaded->MasterVolume,.35f);TestTrue(TEXT("Disk invert round trip"),Loaded->InvertY);
     TestEqual(TEXT("Disk binding round trip"),Loaded->KeyFor(EKeys::E),EKeys::Z);

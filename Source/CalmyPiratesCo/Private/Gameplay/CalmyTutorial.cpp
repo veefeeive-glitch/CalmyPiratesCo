@@ -43,6 +43,8 @@ bool ACalmyTutorial::Enabled(const UWorld* World)
 	// Explicit -CalmyLab also permits free practice without automatic departure.
 	if (FParse::Param(*Command,TEXT("CalmyLab"))) return false;
 	if (Command.Contains(TEXT("Probe=")) && !Command.Contains(TEXT("CalmyTutorialProbe="))) return false;
+	// The tutorial probe always exercises the lesson, even on a machine whose saved progress already completed it.
+	if (Command.Contains(TEXT("CalmyTutorialProbe="))) return true;
 	if (bForceReplaySession) return true;
 	if (UCalmyPreferences::Get()->bTutorialCompleted) return false;
 	return true;
@@ -132,7 +134,7 @@ FString ACalmyTutorial::Instruction() const
 	case ECalmyTutorialStep::Grab: return TEXT("2/3  PICK UP THE WOODEN CRATE  [aim + E]");
 	case ECalmyTutorialStep::Deliver: return TEXT("3/3  GREEN ZONE: PUT THE CRATE DOWN  [G]  and let it settle");
 	case ECalmyTutorialStep::Depart: return FString::Printf(TEXT("TRAINING COMPLETE | Entire crew boards the ship in %d s"),DepartureSeconds);
-	default: return TEXT("SHIP LOAD FAILED | Restart or launch OceanFreighterR7 directly");
+	default: return TEXT("SHIP LOAD FAILED | Restart or launch PortHub / OceanFreighterR7 directly");
 	}
 }
 FVector ACalmyTutorial::ObjectiveLocation() const

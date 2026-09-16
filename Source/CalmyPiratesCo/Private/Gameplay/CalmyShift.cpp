@@ -5,6 +5,7 @@
 #include "Gameplay/CalmyCharacter.h"
 #include "Gameplay/CalmyCrewHelper.h"
 #include "Gameplay/CalmyLeak.h"
+#include "Gameplay/CalmyShipMotion.h"
 #include "Core/GameplayPolicies.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -33,6 +34,8 @@ ACalmyShift* ACalmyShift::Find(const UWorld* World)
 void ACalmyShift::BeginPlay()
 {
 	Super::BeginPlay();
+	// The delivery zone rides the drifting hull with the cargo it accepts.
+	ACalmyShipMotion::AttachRider(this);
 	if (HasAuthority()) InitializeManifest();
 }
 
@@ -53,6 +56,16 @@ void ACalmyShift::InitializeManifest()
 	const bool bCurated = ACalmyVoyageDirector::UsesCuratedManifest(GetWorld());
 	bool bHaveStandard = false;
 	bool bHaveBulky = false;
+	bool bHaveFragile = false;
+	bool bHaveUnstable = false;
+	int32 NeedStandard = 1, NeedBulky = 1, NeedFragile = 1, NeedUnstable = 1;
+	if (const auto* Voyage = ACalmyVoyageDirector::Find(GetWorld()))
+	{
+		NeedStandard = Voyage->State.RequiredStandard;
+		NeedBulky = Voyage->State.RequiredBulky;
+		NeedFragile = Voyage->State.RequiredFragile;
+		NeedUnstable = Voyage->State.RequiredUnstable;
+	}
 	for (TActorIterator<ACalmyCargo> It(GetWorld()); It; ++It)
 	{
 		if (It->CargoId <= 0 || Manifest.Contains(It->CargoId))
@@ -62,22 +75,37 @@ void ACalmyShift::InitializeManifest()
 		}
 		if (bCurated)
 		{
-			if (It->Kind == ECalmyCargoKind::Standard && !bHaveStandard)
+			if (It->Kind == ECalmyCargoKind::Standard && !bHaveStandard && NeedStandard > 0)
 			{
 				Manifest.Add(It->CargoId, *It);
 				bHaveStandard = true;
 			}
-			else if (It->Kind == ECalmyCargoKind::Bulky && !bHaveBulky)
+			else if (It->Kind == ECalmyCargoKind::Bulky && !bHaveBulky && NeedBulky > 0)
 			{
 				Manifest.Add(It->CargoId, *It);
 				bHaveBulky = true;
+			}
+			else if (It->Kind == ECalmyCargoKind::Fragile && !bHaveFragile && NeedFragile > 0)
+			{
+				Manifest.Add(It->CargoId, *It);
+				bHaveFragile = true;
+			}
+			else if (It->Kind == ECalmyCargoKind::Unstable && !bHaveUnstable && NeedUnstable > 0)
+			{
+				Manifest.Add(It->CargoId, *It);
+				bHaveUnstable = true;
 			}
 			continue;
 		}
 		Manifest.Add(It->CargoId, *It);
 	}
 	State.Required = Manifest.Num();
-	if (!State.Required || (bCurated && (!bHaveStandard || !bHaveBulky)))
+	const bool bMissingCurated =
+		(NeedStandard > 0 && !bHaveStandard) ||
+		(NeedBulky > 0 && !bHaveBulky) ||
+		(NeedFragile > 0 && !bHaveFragile) ||
+		(NeedUnstable > 0 && !bHaveUnstable);
+	if (!State.Required || (bCurated && bMissingCurated))
 	{
 		State.Phase = ECalmyShiftPhase::InvalidManifest;
 	}
@@ -128,11 +156,13 @@ void ACalmyShift::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	if (!HasAuthority() || State.Phase != ECalmyShiftPhase::Loading || !FMath::IsFinite(DeltaSeconds) || DeltaSeconds <= 0.f) return;
 	const int32 PreviousSeconds = State.SecondsRemaining;
-	const bool bFreezeTimer = ACalmyTutorial::Enabled(GetWorld()) || ACalmyVoyageDirector::ShouldFreezeShiftTimer(GetWorld());
-	if (!bFreezeTimer) RemainingSecondsExact = FMath::Max(0.f, RemainingSecondsExact - DeltaSeconds);
+	const bool bTutorialLesson = ACalmyTutorial::Enabled(GetWorld());
+	const bool bVoyageFrozen = ACalmyVoyageDirector::ShouldFreezeShiftTimer(GetWorld());
+	if (!FreezesContractTimer(bTutorialLesson, bVoyageFrozen)) RemainingSecondsExact = FMath::Max(0.f, RemainingSecondsExact - DeltaSeconds);
 	State.SecondsRemaining = FMath::CeilToInt(RemainingSecondsExact);
 	if (State.SecondsRemaining != PreviousSeconds) ForceNetUpdate();
-	if (bFreezeTimer) return;
+	// The lesson only stops the clock; its training crate must still be accepted in the green zone.
+	if (!AcceptsDeliveries(bTutorialLesson, bVoyageFrozen)) return;
 	if (RemainingSecondsExact <= 0.f)
 	{
 		State.Phase = ECalmyShiftPhase::Failed;
@@ -155,8 +185,12 @@ bool ACalmyShift::TryRestart(ACalmyCharacter* Requester, int32 ExpectedRound)
 {
 	// Local listen host / solo only. A remote client's owned pawn is still NOT allowed to restart.
 	const auto* PC = IsValid(Requester) ? Cast<APlayerController>(Requester->GetController()) : nullptr;
+	// Settled: the shift finished, its manifest broke, or the voyage ended it (fuel starvation keeps the shift in Loading).
+	const auto* SettledVoyage = ACalmyVoyageDirector::Find(GetWorld());
+	const bool bSettled = State.Phase == ECalmyShiftPhase::Complete || State.Phase == ECalmyShiftPhase::Failed ||
+		State.Phase == ECalmyShiftPhase::InvalidManifest || (SettledVoyage && SettledVoyage->State.Phase == ECalmyVoyagePhase::Outcome);
 	if (!HasAuthority() || !PC || !PC->IsLocalController() || Requester->GetWorld() != GetWorld() ||
-		(State.Phase != ECalmyShiftPhase::Complete && State.Phase != ECalmyShiftPhase::Failed) || State.Round != ExpectedRound) return false;
+		!bSettled || State.Round != ExpectedRound) return false;
 	for (auto& Entry : Manifest) if (Entry.Value.IsValid()) Entry.Value->ResetHome(false);
 	for (TActorIterator<ACalmyCharacter> It(GetWorld()); It; ++It)
     {

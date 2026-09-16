@@ -56,7 +56,7 @@ void UCalmyPreferences::Sanitize()
 {
     auto Clamp=[](float& V,float Min,float Max,float Fallback){V=FMath::IsFinite(V)?FMath::Clamp(V,Min,Max):Fallback;};
     Clamp(MasterVolume,0,1,1);Clamp(AmbienceVolume,0,1,1);Clamp(EffectsVolume,0,1,1);
-    Clamp(Sensitivity,.25,3,1);Clamp(FieldOfView,70,110,92);Clamp(CameraMotion,0,1,1);Clamp(HUDScale,.75,1.5,1);Clamp(Gamma,1.6,2.8,2.2);
+    Clamp(Sensitivity,.25f,3,1);Clamp(FieldOfView,70,110,92);Clamp(CameraMotion,0,1,1);Clamp(HUDScale,.75f,1.5f,1);Clamp(Gamma,1.6f,2.8f,2.2f);
     if(AAMethod!=0&&AAMethod!=1&&AAMethod!=2&&AAMethod!=4)AAMethod=4;
     TSet<FKey> Used;bool Valid=true;
     for(const FKey& K:DefaultKeys()) {const FKey V=KeyFor(K);if(!IsBindableKey(V)||Used.Contains(V))Valid=false;Used.Add(V);}

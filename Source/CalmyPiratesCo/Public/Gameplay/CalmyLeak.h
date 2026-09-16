@@ -51,6 +51,11 @@ public:
 	FString GetStatusText() const;
 	UPROPERTY(ReplicatedUsing=OnRep_State, BlueprintReadOnly) FCalmyLeakSnapshot State;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UStaticMeshComponent> Valve;
+	/** Bilge suction valve made readable: body, the line it sits on and a handwheel that carries the state colour. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UStaticMeshComponent> Pipe;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UStaticMeshComponent> Handwheel;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UStaticMeshComponent> HandwheelSpokes;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UStaticMeshComponent> Stem;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UPointLightComponent> EmergencyLight;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UPointLightComponent> TaskLight;
 private:
@@ -58,6 +63,8 @@ private:
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> WaterPatch;
 	UPROPERTY() TObjectPtr<UPostProcessComponent> EmergencyGrade;
 	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> ValveMaterial;
+	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> HandwheelMaterial;
+	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> SpokeMaterial;
 	UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> WaterMaterial;
 	float PhaseAge = 0;
 	float WaterAmount = 0;
@@ -66,4 +73,5 @@ private:
 	float CooldownRemaining = 0;
 	double RepairLeaseEnd = 0;
 	int32 BaseDirectorSeed = 0;
+	ECalmyLeakPhase LastHeardPhase = ECalmyLeakPhase::Idle;
 };

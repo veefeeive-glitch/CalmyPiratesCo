@@ -155,6 +155,14 @@ public:
 	static int32 CalculateStars(int32 SecondsRemaining, int32 Rescues, int32 DamagedDelivered, int32 Payout);
 };
 
+/** Server melee damage. Crew punching crew is a harmless shove (hit flash only): no knockout, rescue cost or teleport.
+ *  Misha still answers provocation, and crew punches still provoke Misha. */
+class CALMYPIRATESCO_API FCalmyMeleePolicy
+{
+public:
+	static float DamageFor(bool bAttackerIsHelper, bool bVictimIsHelper);
+};
+
 /** Per-pawn server command gate. Consumes rejected sequences too, so retries cannot toggle state. */
 class CALMYPIRATESCO_API FCalmyCommandGate
 {

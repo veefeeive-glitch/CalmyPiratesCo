@@ -1,6 +1,7 @@
 #include "Gameplay/CalmyCharacter.h"
 #include "Gameplay/CalmyCrewHelper.h"
 #include "Gameplay/CalmyGameMode.h"
+#include "Core/GameplayPolicies.h"
 #include "Components/BoxComponent.h"
 #include "Engine/World.h"
 #include "Misc/AutomationTest.h"
@@ -29,6 +30,12 @@ bool FMeleeThresholdTest::RunTest(const FString&)
     TestTrue(TEXT("Misha can physically answer with the same attack resolver"),M->PerformPunch());
     TestEqual(TEXT("Retaliation damages attacker"),A->Health,88.f);
     TestEqual(TEXT("Bystander unhurt"),B->Health,100.f);
+    for(int32 I=0;I<20;++I)B->ReceiveMeleeHit(A);
+    TestEqual(TEXT("Crew punching crew is a shove, not damage"),B->Health,100.f);
+    TestEqual(TEXT("Crew shove still registers as a hit"),B->MeleeHitsReceived,20);
+    TestTrue(TEXT("Crew shove never knocks down"),B->Lifecycle==ECalmyPlayerLifecycleState::Controlled);
+    TestEqual(TEXT("Crew provokes Misha for 6"),FCalmyMeleePolicy::DamageFor(false,true),6.f);
+    TestEqual(TEXT("Misha answers for 12"),FCalmyMeleePolicy::DamageFor(true,false),12.f);
     A->SetActorRotation(FRotator(0,180,0)); TestNull(TEXT("Facing away misses"),A->FindMeleeTarget());
     A->SetActorRotation(FRotator::ZeroRotator); M->SetActorLocation(FVector(500,0,100));
     TestNull(TEXT("Beyond reach misses"),A->FindMeleeTarget());

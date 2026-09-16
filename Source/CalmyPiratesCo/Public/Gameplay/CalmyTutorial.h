@@ -20,7 +20,7 @@ public:
 	/** Completed training: skip lesson and board the ship on a normal WaterLab launch. */
 	static bool ShouldAutoBoard(const UWorld* World);
 	static ACalmyTutorial* Find(const UWorld* World);
-	static const TCHAR* Destination() { return TEXT("/Game/Maps/OceanFreighterR7"); }
+	static const TCHAR* Destination() { return TEXT("/Game/Maps/PortHub"); }
 	static const TCHAR* TrainingMap() { return TEXT("/Game/Maps/WaterLab"); }
 	static void BeginForcedReplay();
 	static bool IsForcedReplay();
