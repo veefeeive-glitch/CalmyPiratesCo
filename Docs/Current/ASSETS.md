@@ -1,6 +1,25 @@
+# Ассеты и происхождение — 30 октября 2026
+
+Runtime: CrewR8 (`/Game/Characters/CrewR8`), Cargo R3, Fly R2 в HOLD 1; R6B сохранён как предыдущая версия. Мастер корабля R7-Cargo-C06 находится в SourceAssets/Generated/OceanFreighter; игровая карта OceanFreighterR7 дополнена S1/S2/S3 и Poly Haven props. Не переимпортировать мастер поверх игровых дополнений без отдельной проверки.
+
+[Каталог моделей](../Handover/MODELS.md) · [исходники](../../SourceAssets/README.md) · [судно](SHIP.md).
+
+FlyWire-данные встроены в C++ под **CC BY-NC 4.0**; код адаптации DesktopFly имеет отдельную MIT-лицензию. Конвертация данных в .inl не снимает некоммерческое ограничение. [Локальный provenance](../../SourceAssets/ThirdParty/DesktopFly/README.md), [лицензия данных](../../SourceAssets/ThirdParty/DesktopFly/DATA_LICENSE.md). Коммерческое использование требует отдельного решения по правам/замене данных. Единую MIT-лицензию всему проекту не назначать.
+
+Kenney, Poly Haven и ambientCG учтены в локальных источниках как CC0; подробный состав/авторы/даты ниже. [Poly Haven provenance 15 сентября](../../SourceAssets/ThirdParty/PolyHaven/LICENSE-PROVENANCE-2026-09-15.md) относится к игровым props. Эта чистка не скачивала новые материалы и не повторяла полный аудит прав.
+
+Higgsfield отложен; подписка не оформлена, ассеты не импортированы. [Существующая запись 23 сентября](../Changes/HIGGSFIELD_MCP_DEFERRED_2026-09-23.md) сохранена; приведённые там тарифы исторические и требуют новой проверки перед покупкой.
+
+<details>
+<summary>История этапов, исходные критерии и подробные записи до 30 октября 2026</summary>
+
+Сведения ниже относятся к датам соответствующих этапов; текущий статус указан выше.
+
 # Ассеты и происхождение — 2026-09-06
 
 **11 сентября — [Windows share P1](../Changes/WINDOWS_SHARE_P1_2026-09-11.md).** Для standalone cook явно включены динамически загружаемые CrewR6B/CargoR3/BridgeMenu; сами assets не изменялись. В ZIP сохранены DesktopFly MIT/FlyWire CC BY-NC 4.0 notices и credits других наборов. Добавлен [локальный Poly Haven license record](../../SourceAssets/ThirdParty/PolyHaven/LICENSE-PROVENANCE-2026-09-11.md) по официальной странице CC0; прежняя заметка ниже о недостающем record теперь историческая.
+
+**23 сентября — [Higgsfield MCP отложен](../Changes/HIGGSFIELD_MCP_DEFERRED_2026-09-23.md).** Подписки нет, ничего не куплено и не импортировано. Сервер прописан в `.mcp.json`, авторизация не пройдена. Ключевое: 3D у Higgsfield живёт в отдельной браузерной среде и **через MCP недоступен**, кредиты в MCP тратятся всегда; коммерческое использование разрешено на всех тарифах, но контент используется для обучения их моделей везде, кроме Enterprise.
 
 **10 сентября — [Water Interaction W1](../Changes/WATER_INTERACTION_W1_2026-09-10.md):** новый собственный Unreal material `Content/Materials/M_WaterInteraction_W1.uasset`, VertexColor + процедурные мягкие края, без внешних текстур/моделей. Создание: `Scripts/create_water_interaction_material.py`, настройка: `Scripts/tune_water_interaction_material.py`. Назначается C++ default `CalmyOcean.InteractionMaterial`; старый FoamR3 и карты не переписаны. Геометрия локальных волн/пены/капель формируется runtime-кодом. R6B/R8 и ship master не изменялись.
 
@@ -139,3 +158,6 @@ new marketplace licence, paid service or downloaded asset was added for this pas
 Kenney: `SourceAssets/ThirdParty/KenneyFactoryKit_3.0/extracted/License.txt` прочитан, содержит CC0. ambientCG: `SourceAssets/External/ambientCG/ASSET_MANIFEST.json` содержит ID, даты, CC0-1.0 и хеши архивов. Poly Haven: локальные model/texture файлы присутствуют; отдельный локальный текст лицензии в этом обходе не найден — прежняя provenance-ссылка сохранена, требуется добавить снимок лицензии/метаданных перед распространением. Отсутствие найденного файла не доказывает отсутствие лицензии.
 
 Перед новой внешней загрузкой записывать источник, автора, версию, лицензию, дату, локальный путь, назначение, импортированный поднабор и hash. Fab/Megascans не значится в подтверждённом provenance; приобретения и принятие новых условий не выполнялись. Ассет-библиотека не заменяет проверку масштаба, проходов и единого визуального качества.
+
+
+</details>

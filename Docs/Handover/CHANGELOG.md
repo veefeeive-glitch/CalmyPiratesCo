@@ -1,5 +1,13 @@
 # Журнал продолжения проекта
 
+## 2026-10-30 — приватный GitHub игры
+
+[Подготовка](../Changes/GITHUB_PREPARATION_2026-10-30.md): отдельная копия и очищенная история main, сохранён исходный репозиторий, Git LFS для ассетов. Игровой код и payloads не менялись. Автотесты существующей DLL — 61/61; чистая сборка/packaged/network/human gate остаются.
+
+## 2026-10-30 — актуализация и чистка перед GitHub
+
+[Отчёт](../Changes/CLEANUP_2026-10-30.md). Удалено 9,786 ГиБ генерируемых файлов, включая кэши двух worktree, IDE-решения и 9 .blend1 при сохранённых .blend. Обновлены текущие инструкции и пометки истории, SourceAssets R8/R6B, roadmap и инвентарь. Launcher принимает PortHub и путь движка. Android File Server отключён, литеральный токен удалён из рабочего конфига; история Git не переписывалась. Расширен ignore. Существующая запись Higgsfield и пользовательские правки сохранены. C++/UE-ассеты, Evidence, Saved/Verification, архивы и намеренные backups не менялись. Automation 61/61 на имеющейся DLL; чистая сборка, сеть/GPU и human gate ещё нужны. Коммит/push не выполнялись.
+
 ## 2026-09-16 — Full project audit
 
 [Отчёт](../Changes/FULL_AUDIT_2026-09-16.md): срез после playability/S3/heavy doors/voyage; automation 61/61; критично — 0 remotes + untracked Content; package Share 12 сен устарел; CrewR8 doc drift.

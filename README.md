@@ -1,29 +1,25 @@
 # Calmy Pirates Co.
 
-Файлы всей рабочей папки: [E:/Game/README](../README.md). Готовый ZIP для друга — [Releases/Windows/2026-09-11](../Releases/Windows/2026-09-11/CalmyPiratesCo-Windows-2026-09-11.zip); старые Unity-версии — Archive. Текущий UE-проект остаётся здесь, внутренние рабочие пути сохранены. [Сортировка F1](Docs/Changes/FILE_ORGANIZATION_F1_2026-09-11.md) · [проверка репо 11 сентября](Docs/Changes/REPO_CHECK_FIX_2026-09-11.md).
+Кооперативная игра на современном грузовом судне: first-person/bodycam, физическое взаимодействие, 2–4 игрока и solo с помощником. Unreal Engine **5.8.2**. Состояние: 30 октября 2026.
 
-Современный грузовой корабль, first-person/bodycam, low-poly и кооперативная физика для 2–4 игроков + solo с NPC. Unreal Engine **5.8.2**. Обновлено 2026-09-11.
+Приватный репозиторий игры: [veefeeive-glitch/CalmyPiratesCo](https://github.com/veefeeive-glitch/CalmyPiratesCo). В него входят исходники, ассеты через Git LFS и история разработки. Игровые билды и локальные доказательства хранятся отдельно.
 
-## Начать здесь
+Начать разработку: [HANDOVER](HANDOVER.md). Запуск и инструменты: [OPERATIONS](Docs/Current/OPERATIONS.md). [Документы](Docs/INDEX.md) · [модели](Docs/Handover/MODELS.md) · [перенос](Docs/Handover/TRANSFER.md).
 
-**[HANDOVER — полное состояние и продолжение на другом устройстве](HANDOVER.md)**
-
-- [Модели и оба AI-концепта](Docs/Handover/MODELS.md): в игре **R8**; R6B Content сохранён.
-- [Перенос проекта и запуск](Docs/Handover/TRANSFER.md): локальный Git+LFS baseline B1 есть; remote нет; Evidence копировать отдельно.
-- [Журнал сделанного и оставшегося](Docs/Handover/CHANGELOG.md).
-- [Все документы](Docs/INDEX.md), [скрипты по назначению](Scripts/README.md), [исходники ассетов](SourceAssets/README.md).
-
-Обычный запуск — **обучающая платформа WaterLab → корабль OceanFreighterR7**. Пройти 4 м, взять деревянный ящик E, поставить в зелёной зоне G; через 8 секунд после приёмки вся команда оказывается в рубке. Enter — продолжить из терминала. [Play-Calmy.cmd](Scripts/Play-Calmy.cmd) запускает текущую Editor-game версию на исходном ПК; `-MapName OceanFreighterR7` позволяет сразу на корабль. Судно статическое, без управления/качки.
-
-**Отправить другу:** [ZIP P1](../Releases/Windows/2026-09-11/CalmyPiratesCo-Windows-2026-09-11.zip) (SHA256 в соседнем `.sha256`). Старый `Builds/Windows-Current` от 4 сентября **не** заменяет этот ZIP.
+Игра запускается с WaterLab. После обучения команда переходит в PortHub, выбирает контракт и выходит на OceanFreighterR7; после рейса возвращается в порт. На судне есть движение/качка через ShipMotion, грузовые задачи, течь, топливо, тяжёлые двери и рой в HOLD 1. Это ещё не полная Chaos-физика корпуса или принятая человеком финальная игра. Текущие герои — CrewR8; R6B сохранён как предыдущая версия.
 
 ```powershell
-# Указать установленный на этом устройстве движок:
+# Из корня проекта; указать свой путь UE 5.8.2.
 ./Scripts/Project.ps1 -Action Play -EngineRoot 'E:/Games/UE_5.8' -StartPaused
+# Прямой вход в порт:
+./Scripts/Project.ps1 -Action Play -EngineRoot 'E:/Games/UE_5.8' -MapName PortHub
 ```
 
-Esc/Enter — пауза/продолжить; WASD/мышь — движение/обзор; E — груз/дверь/колесо мух, G — поставить, ЛКМ — удар или бросок, H рядом с Мишей — помощь, V/M — bodycam. [Полное управление](Docs/Current/GAMEPLAY.md).
+WASD/мышь — движение/обзор; E — взаимодействие, удержание E + мышь — тяжёлая дверь; G — поставить груз; ЛКМ — удар/бросок; H рядом с Мишей — помощь; Esc — меню. [Механики и управление](Docs/Current/GAMEPLAY.md).
 
-Текущая editor DLL — [Settings / performance S1](Docs/Changes/SETTINGS_PERFORMANCE_S1_2026-09-11.md) поверх [Fly travel R6](Docs/Changes/FLY_TRAVEL_R6_2026-09-11.md) / Interaction R5 / Tutorial T1; meshes R6B. Automation PASS на своих ревизиях не означает finished game или художественную приёмку. [Проверки](Docs/Current/VALIDATION.md) · [Игра roadmap](Docs/Roadmaps/GAME.md) · [Корабль roadmap](Docs/Roadmaps/SHIP.md).
+Основой служит игровой срез 16 сентября, дополненный чисткой 30 октября. Для этого репозитория история main очищена от dev-токена Android File Server; хеши коммитов отличаются от старой локальной истории. Таблица соответствия и исходный репозиторий сохранены локально; старые хеши в исторических отчётах оставлены как ссылки на исходные результаты. Git LFS обязателен для ассетов. Автотесты 30 октября: 61/61 на имеющейся DLL; чистая сборка и новый standalone-пакет ещё требуют проверки. Старые пакеты 4/11/12 сентября не заменяют текущий проект.
 
-Старые корневые handover/verification имена — ссылки совместимости. История в Docs/History/Changes, frozen evidence не переписывается. После работы обновлять HANDOVER и журнал согласно [AGENTS](AGENTS.md).
+FlyWire-данные встроены в модуль под CC BY-NC 4.0; MIT относится отдельно к коду симуляции. [Происхождение и ограничения ассетов](Docs/Current/ASSETS.md). Проекту не назначена единая открытая лицензия. [Состав публикации и проверки](Docs/Changes/GITHUB_PREPARATION_2026-10-30.md).
+
+
+Предыдущий текст со всеми этапами и деталями сохранён в [истории документа](Docs/History/Before-Cleanup-2026-10-30/README.md).

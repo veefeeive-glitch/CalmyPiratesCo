@@ -2,7 +2,7 @@
 param(
  [ValidateSet('Check','Build','Automation','Play','Models')][string]$Action='Check',
  [string]$EngineRoot=$env:CALMY_UE_ROOT,[string]$BlenderExe=$env:CALMY_BLENDER_EXE,
- [ValidateSet('WaterLab','OceanFreighterR7')][string]$MapName='WaterLab',
+ [ValidateSet('WaterLab','PortHub','OceanFreighterR7')][string]$MapName='WaterLab',
  [switch]$StartPaused,[switch]$DryRun
 )
 $ErrorActionPreference='Stop'

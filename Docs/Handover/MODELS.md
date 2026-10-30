@@ -1,5 +1,7 @@
 # Каталог моделей и референсов
 
+Актуально на 30 октября 2026: runtime CrewR8, Cargo R3 и Fly R2 в HOLD 1. R6B сохранён как предыдущая версия. Датированные записи ниже описывают историю переходов; R8 уже импортирован 11 сентября. Новых моделей эта чистка не создаёт.
+
 **Hero G1 (12 сентября):** [sockets/fingers scaffold](../Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md). На существующих `SM_Cargo_*` — `Grip_Near/Far_L/R`; на CrewR8 `SM_*_Forearm*` — `Wrist`/`Palm`/`Tip`. Новых мешей нет; continuous skinned body / articulated fingers в Content отсутствуют (список нужд в отчёте).
 
 **Interaction R5:** [правая рука при ударе и плавный разворот Миши](../Changes/INTERACTION_R5_2026-09-10.md) реализованы runtime моторной IK. Новых Blender/Static Mesh/материалов нет: Crew R6B и Fly R2 прежние. Это не исправление всех стыков старых моделей и не новая skinned боевая анимация.

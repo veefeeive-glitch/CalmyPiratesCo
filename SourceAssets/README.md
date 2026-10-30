@@ -4,8 +4,8 @@
 
 | Раздел | Содержимое |
 |---|---|
-| [Generated/CrewR8](Generated/CrewR8) | Последние Blender-кандидаты героев, 20 PNG рядом с blend; не в игре |
-| [Generated/CrewR6B](Generated/CrewR6B) | Исходники текущих игровых героев |
+| [Generated/CrewR8](Generated/CrewR8) | Исходники текущих игровых героев CrewR8; 20 PNG рядом с blend |
+| [Generated/CrewR6B](Generated/CrewR6B) | Исходники предыдущих игровых героев R6B |
 | [Generated/OceanFreighter](Generated/OceanFreighter) | Основной master корабля и история авторинга |
 | [References/CrewR6](References/CrewR6) | AI-борды Миши/Deckhand и prompts, не 3D |
 | [Incoming/Characters](Incoming/Characters) | Новые внешние кандидаты пользователя |
