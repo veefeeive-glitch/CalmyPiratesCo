@@ -1,97 +1,99 @@
 {
   "schema": 1,
-  "generated_utc": "2026-10-30T22:53:22.8711465Z",
+  "generated_utc": "2026-10-30T23:22:34.7015126Z",
   "paths": "relative to project root",
   "runtime_character_path": "CrewR8",
   "authoring_candidates": [
     {
+      "runtime_folder_exists": true,
       "glb_count": 20,
       "triangles": {
         "Deckhand": 4726,
         "Misha": 4811
       },
-      "runtime_folder_exists": true,
-      "revision": "CrewR6",
       "texture_png_count": 0,
+      "revision": "CrewR6",
       "folder": "SourceAssets/Generated/CrewR6"
     },
     {
+      "runtime_folder_exists": true,
       "glb_count": 20,
       "triangles": {
         "Deckhand": 4802,
         "Misha": 4882
       },
-      "runtime_folder_exists": true,
-      "revision": "CrewR6B",
       "texture_png_count": 0,
+      "revision": "CrewR6B",
       "folder": "SourceAssets/Generated/CrewR6B"
     },
     {
+      "runtime_folder_exists": false,
       "glb_count": 20,
       "triangles": {
         "Deckhand": 5462,
         "Misha": 5442
       },
-      "runtime_folder_exists": false,
-      "revision": "CrewR7",
       "texture_png_count": 0,
+      "revision": "CrewR7",
       "folder": "SourceAssets/Generated/CrewR7"
     },
     {
+      "runtime_folder_exists": true,
       "glb_count": 20,
       "triangles": {
         "Deckhand": 6012,
         "Misha": 6048
       },
-      "runtime_folder_exists": true,
-      "revision": "CrewR8",
       "texture_png_count": 20,
+      "revision": "CrewR8",
       "folder": "SourceAssets/Generated/CrewR8"
     }
   ],
   "git": {
-    "tracked_count": 3225,
-    "remote_names": [],
-    "has_tracked_baseline": true
+    "has_tracked_baseline": true,
+    "tracked_count": 3227,
+    "remote_names": [
+      "origin"
+    ]
   },
   "current_dll_sha256": null,
   "frozen_r6": {
     "manifest_entries": 0,
-    "status": "not_available_in_git_clone",
     "source_changed_since_baseline": null,
+    "status": "not_available_in_git_clone",
     "hash_mismatches": null
   },
   "scope": "Metadata: Source/Config/Content/Scripts/SourceAssets/Docs/Evidence. Excludes caches, Saved, Builds, .git, tools and sibling Unity. Primary hashes are narrower than metadata.",
   "folder_totals": [
     {
-      "folder": "Config",
+      "files": 4,
       "bytes": 12344.0,
-      "files": 4
+      "folder": "Config"
     },
     {
-      "folder": "Content",
+      "files": 1106,
       "bytes": 280564431.0,
-      "files": 1106
+      "folder": "Content"
     },
     {
-      "folder": "Docs",
-      "bytes": 1421347.0,
-      "files": 124
+      "files": 125,
+      "bytes": 1425740.0,
+      "folder": "Docs"
     },
     {
-      "folder": "Scripts",
-      "bytes": 985257.0,
-      "files": 194
+      "files": 194,
+      "bytes": 985774.0,
+      "folder": "Scripts"
     },
     {
-      "folder": "Source",
+      "files": 171,
       "bytes": 1424852.0,
-      "files": 171
+      "folder": "Source"
     },
     {
-      "folder": "SourceAssets",
+      "files": 1582,
       "bytes": 715189738.0,
-      "files": 1582
+      "folder": "SourceAssets"
     }
   ],
   "scripts_with_machine_paths": [
@@ -6863,8 +6865,8 @@
       "path": "Scripts/verify_ocean_r6_acceptance.py"
     },
     {
-      "bytes": 2202,
-      "sha256": "a2ef0ff7e5d9a625c4a60f13428d05706b492928ebb13279494e3e8f5d70b100",
+      "bytes": 2719,
+      "sha256": "e463108efc85def56ef468b36ec14e1005beae9035db9518db258efdc3d8538c",
       "path": "Scripts/verify_project_docs.ps1"
     },
     {
@@ -12852,6 +12854,10 @@
       "path": "Docs/Changes/BRIDGE_MENU_VISUAL_M1_2026-09-12.md"
     },
     {
+      "bytes": 2129,
+      "path": "Docs/Changes/CLEAN_BUILD_2026-10-31.md"
+    },
+    {
       "bytes": 7984,
       "path": "Docs/Changes/CLEANUP_2026-10-30.md"
     },
@@ -12980,7 +12986,7 @@
       "path": "Docs/Changes/HERO_G1_SOCKETS_FINGERS_2026-09-12.md"
     },
     {
-      "bytes": 9937,
+      "bytes": 10029,
       "path": "Docs/Changes/HIGGSFIELD_MCP_DEFERRED_2026-09-23.md"
     },
     {
@@ -13128,7 +13134,7 @@
       "path": "Docs/Current/SHIP.md"
     },
     {
-      "bytes": 2420,
+      "bytes": 2901,
       "path": "Docs/Current/STATUS.md"
     },
     {
@@ -13144,7 +13150,7 @@
       "path": "Docs/document-register.json"
     },
     {
-      "bytes": 36279,
+      "bytes": 37086,
       "path": "Docs/Handover/CHANGELOG.md"
     },
     {
@@ -13160,7 +13166,7 @@
       "path": "Docs/Handover/Tooling/calmy-dream-loop/SKILL.md"
     },
     {
-      "bytes": 5090,
+      "bytes": 5974,
       "path": "Docs/Handover/TRANSFER.md"
     },
     {
@@ -14080,7 +14086,7 @@
       "path": "Scripts/verify_ocean_r6_acceptance.py"
     },
     {
-      "bytes": 2202,
+      "bytes": 2719,
       "path": "Scripts/verify_project_docs.ps1"
     },
     {

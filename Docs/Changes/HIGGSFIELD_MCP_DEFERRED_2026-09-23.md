@@ -4,7 +4,7 @@
 
 ## Что уже сделано в репозитории
 
-- [.mcp.json](../../.mcp.json) в корне: сервер `higgsfield`, transport `http`, URL `https://mcp.higgsfield.ai/mcp`. Файл не закоммичен.
+- `.mcp.json` в корне: сервер `higgsfield`, transport `http`, URL `https://mcp.higgsfield.ai/mcp`. Файл не закоммичен и не входит в GitHub-копию.
 - Авторизация **не пройдена**: нужен OAuth через браузер (`claude mcp add --transport http --scope user higgsfield https://mcp.higgsfield.ai/mcp`, вход при первом вызове инструмента). Без входа инструменты недоступны.
 
 ## Тарифы (проверено 2026-09-23 по обзорам; официальная страница цен отдаёт контент только после входа)
